@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "764132354117",
+    "project_id": "cs310-gameaway",
+    "storage_bucket": "cs310-gameaway.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764132354117:android:f8ddd1bef1171e00915b2c",
+        "android_client_info": {
+          "package_name": "com.gameaway.gameaway"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "764132354117-tcu3svf2bl35o4u9nh35kgulrefa1fe0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUSdDrEVS6AkLIB-75TCIdevdiX_B-vUI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "764132354117-tcu3svf2bl35o4u9nh35kgulrefa1fe0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
