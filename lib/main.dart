@@ -5,12 +5,19 @@ import 'package:gameaway/pages/homepage.dart';
 import 'package:gameaway/root.dart';
 import 'package:gameaway/pages/sign_up.dart';
 import 'package:gameaway/pages/walkthrough.dart';
+import 'package:gameaway/services/auth.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/product_preview.dart';
+import 'package:provider/provider.dart';
 
-void main() {
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
+void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   runApp(const AppInitialization());
 }
 
