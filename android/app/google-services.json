@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "764132354117-q04pce14bj7ss1015dh0u0ff7rch5qo1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gameaway.gameaway",
+            "certificate_hash": "7384998f9e37aa0db1420dbeff42f512ddd1c2fd"
+          }
+        },
+        {
           "client_id": "764132354117-sh7g7ngh4vl28di607qhuea172l7bcfs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
