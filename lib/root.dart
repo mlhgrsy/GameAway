@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/pages/homepage.dart';
 import 'package:gameaway/pages/profile.dart';
@@ -7,6 +8,7 @@ import 'package:gameaway/pages/suggestions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'pages/basket.dart';
 import 'pages/favorites.dart';
+
 
 class Root extends StatefulWidget {
   const Root({Key? key}) : super(key: key);
@@ -39,6 +41,7 @@ class _RootState extends State<Root> {
   void initState() {
     super.initState();
     walk();
+    //FirebaseCrashlytics.instance.crash();
     // obtain shared preferences
   }
 
