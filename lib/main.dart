@@ -1,4 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/pages/homepage.dart';
@@ -14,7 +15,6 @@ import 'package:provider/provider.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
@@ -65,17 +65,22 @@ class BaseApp extends StatelessWidget {
   const BaseApp({Key? key}) : super(key: key);
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorObservers: <NavigatorObserver>[observer],
-      home: Root(analytics: analytics,observer: observer),
-      routes: {
-        '/walk': (context) => const WalkThrough(),
-        '/signUp': (context) => const SignUp()
-      },
+    return StreamProvider<User?>.value(
+      initialData: null,
+      value: AuthService().user,
+      child: MaterialApp(
+        navigatorObservers: <NavigatorObserver>[observer],
+        home: Root(analytics: analytics, observer: observer),
+        routes: {
+          '/walk': (context) => const WalkThrough(),
+          '/signUp': (context) => const SignUp()
+        },
+      ),
     );
   }
 }

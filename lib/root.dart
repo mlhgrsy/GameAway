@@ -46,7 +46,7 @@ class _RootState extends State<Root> {
     super.initState();
     _sendAnalyticsEvent();
     walk();
-    //FirebaseCrashlytics.instance.crash();
+    // FirebaseCrashlytics.instance.crash();
     // obtain shared preferences
   }
 
@@ -68,6 +68,7 @@ class _RootState extends State<Root> {
       _selectedBottomTabIndex = index;
     });
     widget.analytics.setCurrentScreen(screenName: routes[index].toString());
+
   }
 
   @override
