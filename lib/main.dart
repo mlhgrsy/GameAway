@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/pages/homepage.dart';
@@ -39,13 +40,7 @@ class _AppInitializationState extends State<AppInitialization> {
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          return MaterialApp(
-            home: const Root(),
-            routes: {
-              '/walk': (context) => const WalkThrough(),
-              '/signUp': (context) => const SignUp()
-            },
-          );
+          return BaseApp();
         }
         return const MaterialApp(
           home: Scaffold(
@@ -54,6 +49,25 @@ class _AppInitializationState extends State<AppInitialization> {
             ),
           ),
         );
+      },
+    );
+  }
+}
+
+class BaseApp extends StatelessWidget {
+  const BaseApp({Key? key}) : super(key: key);
+
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      navigatorObservers: <NavigatorObserver>[observer],
+      home: Root(analytics: analytics,observer: observer),
+      routes: {
+        '/walk': (context) => const WalkThrough(),
+        '/signUp': (context) => const SignUp()
       },
     );
   }

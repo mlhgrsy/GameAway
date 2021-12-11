@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/pages/homepage.dart';
 import 'package:gameaway/pages/profile.dart';
@@ -9,7 +10,10 @@ import 'pages/basket.dart';
 import 'pages/favorites.dart';
 
 class Root extends StatefulWidget {
-  const Root({Key? key}) : super(key: key);
+  const Root({Key? key, required this.analytics, required this.observer}) : super(key: key);
+
+  final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
 
   @override
   _RootState createState() => _RootState();
@@ -38,8 +42,19 @@ class _RootState extends State<Root> {
   @override
   void initState() {
     super.initState();
+    _sendAnalyticsEvent();
     walk();
     // obtain shared preferences
+  }
+
+  Future<void> _sendAnalyticsEvent() async {
+    await widget.analytics.setCurrentScreen(screenName: "Root Page");
+    // await widget.analytics.logEvent(
+    //   name: 'test_event',
+    //   parameters: <String, dynamic>{
+    //     'testParam': 'testing',
+    //   },
+    // );
   }
 
   //BottomNavigation
@@ -49,6 +64,7 @@ class _RootState extends State<Root> {
     setState(() {
       _selectedBottomTabIndex = index;
     });
+    widget.analytics.setCurrentScreen(screenName: routes[index].toString());
   }
 
   @override
