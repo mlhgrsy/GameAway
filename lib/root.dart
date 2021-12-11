@@ -7,10 +7,11 @@ import 'package:gameaway/pages/suggestions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'pages/basket.dart';
 import 'pages/favorites.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 
 class Root extends StatefulWidget {
   const Root({Key? key}) : super(key: key);
-
   @override
   _RootState createState() => _RootState();
 }

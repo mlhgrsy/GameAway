@@ -7,9 +7,11 @@ import 'package:gameaway/pages/walkthrough.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/product_preview.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   runApp(const AppInitialization());
 }
 
