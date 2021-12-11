@@ -40,18 +40,18 @@ class _AppInitializationState extends State<AppInitialization> {
         }
         if (snapshot.connectionState == ConnectionState.done) {
           return MaterialApp(
-            home: MaterialApp(
-              routes: {
-                '/': (context) => const Root(),
-                '/walk': (context) => const WalkThrough(),
-                '/signUp': (context) => const SignUp()
-              },
-            ),
+            home: const Root(),
+            routes: {
+              '/walk': (context) => const WalkThrough(),
+              '/signUp': (context) => const SignUp()
+            },
           );
         }
         return const MaterialApp(
-          home: Center(
-            child: Text('Connecting to Firebase'),
+          home: Scaffold(
+            body: Center(
+              child: Text('Connecting to Firebase'),
+            ),
           ),
         );
       },
