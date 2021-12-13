@@ -143,6 +143,7 @@ class _SignInState extends State<SignIn> {
                       child: OutlinedButton(
                         onPressed: () {
                          auth.signInWithGoogle();
+                         Navigator.pop(context);
                         },
                         child: Padding(
                           padding: Dimen.smallPadding,
