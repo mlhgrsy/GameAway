@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:gameaway/pages/homepage.dart';
+import 'package:gameaway/pages/homepage/homepage.dart';
 import 'package:gameaway/pages/profile.dart';
 import 'package:gameaway/pages/sell_product.dart';
 import 'package:gameaway/pages/sign_in.dart';
@@ -82,23 +82,6 @@ class _RootState extends State<Root> {
     int currentNavIndex = Provider.of<BottomNav>(context).index;
 
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.notifications,
-                color: Colors.red,
-                size: 40,
-              ))
-        ],
-        title: const Text(
-          'GameAway',
-        ),
-        backgroundColor: Colors.green,
-        centerTitle: true,
-        elevation: 0.0,
-      ),
       body: routes[currentNavIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
