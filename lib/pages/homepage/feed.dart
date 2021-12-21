@@ -1,47 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
+import 'package:gameaway/views/action_bar.dart';
+import 'package:gameaway/views/category_tag_selection.dart';
 import 'package:gameaway/views/product_preview.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class Feed extends StatefulWidget {
+  const Feed({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  _FeedState createState() => _FeedState();
 }
 
-class _HomePageState extends State<HomePage> {
-
-  //Categories
-  static final _categories = [
-    "Games",
-    "Board Games",
-    "Hardware",
-    "Accounts",
-    "Boost"
-  ];
-  static int _currentCategory = 0;
-
-  //DropDown
-  static String _dropdownValue = 'All';
-  static final _dropdownItemsString = [
-    <String>['All', 'Horror', 'RPG', 'Shooters', "Sandbox", "Open World", "Others"],
-    <String>['All', 'Abstract', 'Area Control', 'Campaign', "Deckbuilder", "Drafting","Dungeon-crawler","Others"],
-    <String>['All', "PC", "XBOX", "PlayStation", "Nintendo", "Atari", "Others"],
-    <String>['All', 'Steam', 'Epic Games', 'Uplay', "Battle.net", "Origin", "Others"],
-    <String>['All', 'Ranking', 'Achievement', 'Level',"Others"]
-  ];
-  static final _dropdownItems = _dropdownItemsString
-      .map((e) => e.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList())
-      .toList();
-
-  //ProductPreview
+class _FeedState extends State<Feed> {
   static final _productPreviewList = <Product>[
     Product(
         url:
@@ -104,50 +75,16 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const ActionBar(),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Row(children: [
-              Expanded(child: TextFormField()),
-              IconButton(onPressed: () {}, icon: Icon(Icons.search))
-            ]),
-            SizedBox(
-              height: 60,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: List.generate(_categories.length, (int index) {
-                  return OutlinedButton(
-                    onPressed: () {
-                      setState(() {
-                        _currentCategory = index;
-                        _dropdownValue =
-                            _dropdownItemsString[_currentCategory][0];
-                      });
-                    },
-                    child: Container(
-                      height: 50.0,
-                      child: Text(_categories[index]),
-                    ),
-                  );
-                }),
-              ),
-            ),
-            Container(
-              padding:EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(color: AppColors.headingColor.withAlpha(50),),
-              width: 200,
-              child: DropdownButton(
-                isExpanded: true,
-                dropdownColor: AppColors.headingColor.withAlpha(250),
-                items: _dropdownItems[_currentCategory],
-                value: _dropdownValue,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _dropdownValue = newValue!;
-                  });
+            OutlinedButton.icon(
+                onPressed: () {
+                  Navigator.pushNamed(context, "homepage/explore");
                 },
-              ),
-            ),
+                icon: const Icon(Icons.search),
+                label: const Text("Explore Products")),
             Text(
               "Promotions",
               style: kHeadingTextStyle,
@@ -161,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                       _productPreviewList.length,
                       (index) => Row(children: [
                             productPreview(_productPreviewList[index]),
-                            SizedBox(width: 8)
+                            const SizedBox(width: 8)
                           ])),
                 ),
               ),
@@ -179,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                       _productPreviewList.length,
                       (index) => Row(children: [
                             productPreview(_productPreviewList[index]),
-                            SizedBox(width: 8)
+                            const SizedBox(width: 8)
                           ])),
                 ),
               ),
