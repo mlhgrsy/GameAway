@@ -1,17 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:gameaway/pages/homepage.dart';
+import 'package:gameaway/pages/homepage/homepage.dart';
 import 'package:gameaway/pages/profile.dart';
 import 'package:gameaway/pages/sell_product.dart';
 import 'package:gameaway/pages/sign_in.dart';
 import 'package:gameaway/pages/suggestions.dart';
+import 'package:gameaway/services/bottom_nav.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'pages/basket.dart';
 import 'pages/favorites.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-
 
 class Root extends StatefulWidget {
-  const Root({Key? key}) : super(key: key);
+  const Root({Key? key, required this.analytics, required this.observer})
+      : super(key: key);
+
+  final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
+
   @override
   _RootState createState() => _RootState();
 }
@@ -23,7 +31,7 @@ class _RootState extends State<Root> {
     const Favorites(),
     const Suggestions(),
     const SellProduct(),
-    const SignIn()
+    const Profile()
   ];
 
   Future<void> walk() async {
@@ -39,40 +47,42 @@ class _RootState extends State<Root> {
   @override
   void initState() {
     super.initState();
+    _sendAnalyticsEvent();
     walk();
+
+    // FirebaseCrashlytics.instance.crash();
     // obtain shared preferences
   }
 
+  Future<void> _sendAnalyticsEvent() async {
+    await widget.analytics.setCurrentScreen(screenName: "Root Page");
+    // await widget.analytics.logEvent(
+    //   name: 'test_event',
+    //   parameters: <String, dynamic>{
+    //     'testParam': 'testing',
+    //   },
+    // );
+  }
+
   //BottomNavigation
-  static int _selectedBottomTabIndex = 0;
 
   void _onBottomTabPress(int index) {
-    setState(() {
-      _selectedBottomTabIndex = index;
-    });
+    bool isSignedIn = null != Provider.of<User?>(context, listen: false);
+    if (!isSignedIn && index == 5) {
+      Navigator.pushNamed(context, "/signIn");
+    } else {
+      Provider.of<BottomNav>(context,listen: false).switchTo(index);
+      widget.analytics.setCurrentScreen(screenName: routes[index].toString());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+
+    int currentNavIndex = Provider.of<BottomNav>(context).index;
+
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.notifications,
-                color: Colors.red,
-                size: 40,
-              ))
-        ],
-        title: const Text(
-          'GameAway',
-        ),
-        backgroundColor: Colors.green,
-        centerTitle: true,
-        elevation: 0.0,
-      ),
-      body: routes[_selectedBottomTabIndex],
+      body: routes[currentNavIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -100,7 +110,7 @@ class _RootState extends State<Root> {
               label: 'Profile',
               backgroundColor: Colors.green)
         ],
-        currentIndex: _selectedBottomTabIndex,
+        currentIndex: currentNavIndex,
         selectedItemColor: Colors.amber[800],
         onTap: _onBottomTabPress,
       ),

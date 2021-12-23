@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:gameaway/services/auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -12,6 +15,7 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
+  AuthService auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +141,10 @@ class _SignInState extends State<SignIn> {
                     Expanded(
                       flex: 1,
                       child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                         auth.signInWithGoogle();
+                         Navigator.pop(context);
+                        },
                         child: Padding(
                           padding: Dimen.smallPadding,
                           child: Stack(
@@ -210,5 +217,17 @@ class _SignInState extends State<SignIn> {
         ),
       ),
     );
+  }
+  Future<UserCredential> signInWithGoogle() async{
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication googleAuth= await googleUser!.authentication;
+    final credential= GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+
+
   }
 }
