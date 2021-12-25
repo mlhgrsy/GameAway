@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gameaway/views/action_bar.dart';
 import 'package:gameaway/views/category_tag_selection.dart';
+import 'package:gameaway/views/product_preview.dart';
 
 class Explore extends StatefulWidget {
   const Explore({Key? key}) : super(key: key);
@@ -16,9 +17,11 @@ class _ExploreState extends State<Explore> {
       appBar: const ActionBar(),
       body: SingleChildScrollView(
         child: Column(
-          children: const [CategoryTagSelection()],
+          children:
+            const [CategoryTagSelection()],
         ),
       ),
     );
   }
 }
+
