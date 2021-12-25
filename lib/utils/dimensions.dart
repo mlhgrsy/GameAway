@@ -13,4 +13,5 @@ class Dimen {
   static get regularPadding => const EdgeInsets.all(parentMargin);
   static get smallPadding => const EdgeInsets.all(smallMargin);
   static get productPadding => const EdgeInsets.all(textFieldHeight);
+  static get listPadding => const EdgeInsets.only(top:regularMargin );
 }
