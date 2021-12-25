@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "764132354117-gis0r5urgfdh6qtneif7eu6d40v7p6h4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gameaway.gameaway",
+            "certificate_hash": "429135c9909fcb2ccf22ecc7dfaa520b9483bda0"
+          }
+        },
+        {
           "client_id": "764132354117-q04pce14bj7ss1015dh0u0ff7rch5qo1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
