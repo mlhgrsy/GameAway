@@ -146,11 +146,11 @@ class _SignUpState extends State<SignUp> {
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
                             if (value == null) {
-                              return "password can not be empty";
+                              return "email can not be empty";
                             } else {
                               String trimmedValue = value.trim();
                               if (trimmedValue.isEmpty) {
-                                return "password can not be empty";
+                                return "email can not be empty";
                               }
                               if (!EmailValidator.validate(trimmedValue)) {
                                 return "email is not valid";

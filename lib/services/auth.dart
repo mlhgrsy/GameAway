@@ -66,6 +66,19 @@ class AuthService {
     }
   }
 
+  Future updateMail(String newMail, String pass) async {
+    AuthCredential cred = EmailAuthProvider.credential(
+        email: _auth.currentUser!.email!, password: pass);
+    try {
+      await _auth.currentUser!.reauthenticateWithCredential(cred);
+      await _auth.currentUser!.updateEmail(newMail);
+      return true;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();

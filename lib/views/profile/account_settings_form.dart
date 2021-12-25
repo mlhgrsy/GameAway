@@ -3,6 +3,7 @@ import 'package:gameaway/services/auth.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
+import 'package:gameaway/views/profile/account_settings_forms/account_settings_mail.dart';
 import 'package:gameaway/views/profile/account_settings_forms/account_settings_name.dart';
 import 'package:gameaway/views/profile/account_settings_forms/account_settings_password.dart';
 
@@ -25,6 +26,7 @@ class _AccountSettingsFormState extends State<AccountSettingsForm> {
         child: Column(
           children: const [
             AccountSettingsName(),
+            AccountSettingsMail(),
             AccountSettingsPassword()
           ],
         ),

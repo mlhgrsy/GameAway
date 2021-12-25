@@ -18,7 +18,6 @@ class ActionBar extends StatelessWidget with PreferredSizeWidget {
         IconButton(
             onPressed: () {
               if(user !=null) {
-                print(User);
                 Navigator.push(context,MaterialPageRoute(builder: (context) =>notify()));
               }
               },

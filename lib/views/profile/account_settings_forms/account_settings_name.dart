@@ -21,7 +21,6 @@ class _AccountSettingsNameState extends State<AccountSettingsName> {
 
   @override
   Widget build(BuildContext context) {
-    print(Provider.of<User?>(context)!.displayName);
     return Form(
         key: _formKey,
         child: Column(
