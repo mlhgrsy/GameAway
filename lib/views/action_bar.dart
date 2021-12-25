@@ -1,14 +1,28 @@
-import 'package:flutter/material.dart';
 
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:gameaway/pages/notifications.dart';
+import 'package:gameaway/services/auth.dart';
+import 'package:provider/provider.dart';
 class ActionBar extends StatelessWidget with PreferredSizeWidget {
   const ActionBar({Key? key}) : super(key: key);
 
+
+
   @override
   Widget build(BuildContext context) {
+    AuthService auth = AuthService();
+    final user = Provider.of<User?>(context);
     return AppBar(
       actions: [
         IconButton(
-            onPressed: () {},
+            onPressed: () {
+              if(user !=null) {
+                print(User);
+                Navigator.push(context,MaterialPageRoute(builder: (context) =>notify()));
+              }
+              },
             icon: const Icon(
               Icons.notifications,
               color: Colors.red,
@@ -26,4 +40,10 @@ class ActionBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(56);
+
 }
+
+
+
+
+

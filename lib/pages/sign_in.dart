@@ -17,6 +17,7 @@ class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   AuthService auth = AuthService();
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,7 +182,7 @@ class _SignInState extends State<SignIn> {
                     Expanded(
                       flex: 1,
                       child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () {Navigator.pushNamed(context, '/Notify');},
                         child: Padding(
                           padding: Dimen.smallPadding,
                           child: Stack(
