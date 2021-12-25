@@ -16,7 +16,8 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   AuthService auth = AuthService();
-
+  String mail = "";
+  String pass = "";
 
   @override
   Widget build(BuildContext context) {
@@ -44,20 +45,25 @@ class _SignInState extends State<SignIn> {
                     Expanded(
                       flex: 1,
                       child: TextFormField(
-                        decoration: InputDecoration(
-                          fillColor: AppColors.DarkTextColor,
-                          filled: true,
-                          hintText: "Email",
-                          hintStyle: kButtonLightTextStyle,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: AppColors.primary,
+                          decoration: InputDecoration(
+                            fillColor: AppColors.DarkTextColor,
+                            filled: true,
+                            hintText: "Email",
+                            hintStyle: kButtonLightTextStyle,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: AppColors.primary,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30)),
                             ),
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
                           ),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                      ),
+                          keyboardType: TextInputType.emailAddress,
+                          onSaved: (value) {
+                            if (value != null) {
+                              mail = value;
+                            }
+                          }),
                     ),
                   ],
                 ),
@@ -68,22 +74,27 @@ class _SignInState extends State<SignIn> {
                     Expanded(
                       flex: 1,
                       child: TextFormField(
-                        decoration: InputDecoration(
-                          fillColor: AppColors.DarkTextColor,
-                          filled: true,
-                          hintText: "Password",
-                          hintStyle: kButtonLightTextStyle,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: AppColors.primary,
+                          decoration: InputDecoration(
+                            fillColor: AppColors.DarkTextColor,
+                            filled: true,
+                            hintText: "Password",
+                            hintStyle: kButtonLightTextStyle,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: AppColors.primary,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30)),
                             ),
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
                           ),
-                        ),
-                        keyboardType: TextInputType.text,
-                        obscureText: true,
-                        autocorrect: false,
-                      ),
+                          keyboardType: TextInputType.text,
+                          obscureText: true,
+                          autocorrect: false,
+                          onSaved: (value) {
+                            if (value != null) {
+                              pass = value;
+                            }
+                          }),
                     ),
                   ],
                 ),
@@ -94,7 +105,31 @@ class _SignInState extends State<SignIn> {
                     Expanded(
                       flex: 1,
                       child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          _formKey.currentState!.save();
+                          auth.signInWithMailAndPass(mail, pass).then((value) {
+                            if (value == null) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                        title: const Text("Login Error"),
+                                        content: const Text("Invalid Credentials"),
+                                        actions: [
+                                          TextButton(
+                                            child: const Text("Close"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ]);
+                                  });
+                            } else {
+                              auth.signInWithMailAndPass(mail, pass);
+                              Navigator.pop(context);
+                            }
+                          });
+                        },
                         child: Padding(
                           padding: Dimen.smallPadding,
                           child: Text(
@@ -143,8 +178,8 @@ class _SignInState extends State<SignIn> {
                       flex: 1,
                       child: OutlinedButton(
                         onPressed: () {
-                         auth.signInWithGoogle();
-                         Navigator.pop(context);
+                          auth.signInWithGoogle();
+                          Navigator.pop(context);
                         },
                         child: Padding(
                           padding: Dimen.smallPadding,
@@ -182,7 +217,9 @@ class _SignInState extends State<SignIn> {
                     Expanded(
                       flex: 1,
                       child: OutlinedButton(
-                        onPressed: () {Navigator.pushNamed(context, '/Notify');},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/Notify');
+                        },
                         child: Padding(
                           padding: Dimen.smallPadding,
                           child: Stack(
@@ -219,16 +256,16 @@ class _SignInState extends State<SignIn> {
       ),
     );
   }
-  Future<UserCredential> signInWithGoogle() async{
+
+  Future<UserCredential> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication googleAuth= await googleUser!.authentication;
-    final credential= GoogleAuthProvider.credential(
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser!.authentication;
+    final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
     return await FirebaseAuth.instance.signInWithCredential(credential);
-
-
   }
 }

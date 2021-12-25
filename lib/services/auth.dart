@@ -28,6 +28,18 @@ class AuthService {
     }
   }
 
+  Future signInWithMailAndPass(String mail, String pass) async {
+    try {
+      UserCredential result =
+          await _auth.signInWithEmailAndPassword(email: mail, password: pass);
+      User user = result.user!;
+      return _userFromFirebase(user);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
   Future signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
