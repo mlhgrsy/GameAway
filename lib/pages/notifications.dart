@@ -6,6 +6,7 @@ import 'package:gameaway/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gameaway/services/db.dart';
 
 class notify extends StatefulWidget {
   const notify({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class notify extends StatefulWidget {
 
 class _notifyState extends State<notify> {
   FirebaseFirestore _firestore= FirebaseFirestore.instance;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,8 @@ class _notifyState extends State<notify> {
     var response =  loguser.get();
     var notify =loguser.collection("notifications");
     ScrollController controller= ScrollController();
+    bool state = false;
+    DBService db= DBService();
 
     return Scaffold(
         appBar: AppBar(
@@ -92,7 +96,7 @@ class _notifyState extends State<notify> {
            Padding(
              padding: const EdgeInsets.all(15.0),
              child: Row(
-              // mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                children: [
                  Column(
                    mainAxisAlignment: MainAxisAlignment.start,
@@ -102,9 +106,22 @@ class _notifyState extends State<notify> {
                      Text("When your game bought, notify me")
                    ],
                  ),
+             Switch(
+               value: state,
+               onChanged: (bool s){
+                 setState(() {
+                   state=s;
+                 });
+               },
+               ),
+
                ],
              ),
-           )
+           ),
+           TextButton(onPressed:()=>db.addnotif("a notification has been send"),
+            child: Text("send notification"))
+
+
 
     ],),
 
@@ -122,4 +139,6 @@ class _notifyState extends State<notify> {
 
   }
 }
+
+
 

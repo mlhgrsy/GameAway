@@ -1,5 +1,6 @@
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/pages/notifications.dart';
@@ -19,7 +20,7 @@ class ActionBar extends StatelessWidget with PreferredSizeWidget {
         IconButton(
             onPressed: () {
               if(user !=null) {
-                print(User);
+                //final CollectionReference f= FirebaseFirestore.instance.collection("Users");
                 Navigator.push(context,MaterialPageRoute(builder: (context) =>notify()));
               }
               },
