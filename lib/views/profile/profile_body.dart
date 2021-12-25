@@ -18,13 +18,13 @@ class ProfileBody extends StatelessWidget {
       child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("Users")
-              .doc(Provider.of<User?>(context)!.email)
+              .doc(Provider.of<User?>(context)!.uid)
               .snapshots(),
           builder: (context, AsyncSnapshot snapshot) {
+            String pp = Provider.of<User?>(context)!.photoURL!;
+            String name = Provider.of<User?>(context)!.displayName!;
+            String email = Provider.of<User?>(context)!.email!;
             if (!snapshot.hasData) return const Text("Loading...");
-            String pp = snapshot.data!["picture_url"];
-            String name = snapshot.data!["name"];
-            String email = snapshot.data!["email"];
             return Column(
               children: [
                 CircleAvatar(

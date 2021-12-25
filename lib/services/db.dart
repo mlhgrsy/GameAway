@@ -4,11 +4,8 @@ class DBService {
   static final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('Users');
 
-  static Future addUser(String name, String mail, bool hasProvider) async {
-    userCollection.doc(mail).set({
-      'name': name, // First name + Last name
-      'email': mail,
-      'picture_url': "https://i.ytimg.com/vi/tZp8sY06Qoc/maxresdefault.jpg",
+  static Future addUser(String uid, bool hasProvider) async {
+    userCollection.doc(uid).set({
       'has_provider': hasProvider
     });
   }

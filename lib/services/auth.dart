@@ -11,7 +11,8 @@ class AuthService {
   }
 
   Stream<User?> get user {
-    return _auth.authStateChanges().map(_userFromFirebase);
+    print("user getter rerun");
+    return _auth.userChanges().map(_userFromFirebase);
   }
 
   Future signupWithMailAndPass(
@@ -21,7 +22,10 @@ class AuthService {
           email: mail, password: pass);
       //Şifre değiştirmeyi unutma
       User user = result.user!;
-      DBService.addUser(name + " " + surname, mail, false);
+      DBService.addUser(user.uid, false);
+      await user.updateDisplayName(name + " " + surname);
+      await user.updatePhotoURL(
+          "https://i.ytimg.com/vi/tZp8sY06Qoc/maxresdefault.jpg");
       return _userFromFirebase(user);
     } catch (e) {
       print(e.toString());
@@ -53,11 +57,18 @@ class AuthService {
     }
   }
 
+  Future updateName(String newName) async {
+    try {
+      await _auth.currentUser!.updateDisplayName(newName);
+      return true;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      //User user=googleUser.email as User;
-
       final GoogleSignInAuthentication googleAuth =
           await googleUser!.authentication;
       final credential = GoogleAuthProvider.credential(
@@ -65,8 +76,7 @@ class AuthService {
         idToken: googleAuth.idToken,
       );
       await FirebaseAuth.instance.signInWithCredential(credential);
-      DBService.addUser(
-          _auth.currentUser!.displayName!, _auth.currentUser!.email!, true);
+      DBService.addUser(_auth.currentUser!.uid, true);
       return;
     } catch (e) {
       print(e.toString());
