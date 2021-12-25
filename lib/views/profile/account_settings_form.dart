@@ -6,6 +6,7 @@ import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/profile/account_settings_forms/account_settings_mail.dart';
 import 'package:gameaway/views/profile/account_settings_forms/account_settings_name.dart';
 import 'package:gameaway/views/profile/account_settings_forms/account_settings_password.dart';
+import 'package:gameaway/views/profile/account_settings_forms/account_settings_pp.dart';
 
 class AccountSettingsForm extends StatefulWidget {
   const AccountSettingsForm({Key? key}) : super(key: key);
@@ -25,6 +26,7 @@ class _AccountSettingsFormState extends State<AccountSettingsForm> {
       child: SingleChildScrollView(
         child: Column(
           children: const [
+            AccountSettingsPP(),
             AccountSettingsName(),
             AccountSettingsMail(),
             AccountSettingsPassword()
