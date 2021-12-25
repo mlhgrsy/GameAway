@@ -12,7 +12,6 @@ class ActionBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthService auth = AuthService();
     final user = Provider.of<User?>(context);
     return AppBar(
       actions: [

@@ -14,6 +14,20 @@ class AuthService {
     return _auth.authStateChanges().map(_userFromFirebase);
   }
 
+  Future signupWithMailAndPass(
+      String mail, String pass, String name, String surname) async {
+    try {
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+          email: mail, password: pass);
+      User user = result.user!;
+      DBService.addUser(name + " " + surname, mail);
+      return _userFromFirebase(user);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
   Future signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -26,7 +40,8 @@ class AuthService {
         idToken: googleAuth.idToken,
       );
       await FirebaseAuth.instance.signInWithCredential(credential);
-      DBService.addUser(_auth.currentUser!.displayName!, _auth.currentUser!.email!);
+      DBService.addUser(
+          _auth.currentUser!.displayName!, _auth.currentUser!.email!);
       return;
     } catch (e) {
       print(e.toString());

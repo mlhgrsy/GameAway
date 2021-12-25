@@ -1,3 +1,4 @@
+import 'package:gameaway/services/auth.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
@@ -13,6 +14,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
+  AuthService auth = AuthService();
   String name = "";
   String sur = "";
   String mail = "";
@@ -226,6 +228,7 @@ class _SignUpState extends State<SignUp> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
+                            auth.signupWithMailAndPass(mail, pass, name, sur);
                           }
                         },
                         child: Padding(
