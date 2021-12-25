@@ -31,7 +31,9 @@ class _AccountButtonsState extends State<AccountButtons> {
                 Icon(Icons.arrow_forward)
               ],
             ),
-            onPressed: () {}, // burası sayfaya göre doldurulacak
+            onPressed: () {
+              Navigator.pushNamed(context, "/profile/account_settings");
+            }, // burası sayfaya göre doldurulacak
           ),
         )
     );

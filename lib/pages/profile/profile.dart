@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gameaway/services/auth.dart';
 import 'package:gameaway/services/bottom_nav.dart';
 import 'package:gameaway/utils/colors.dart';
-import 'package:gameaway/views/profile_body.dart';
+import 'package:gameaway/views/profile/profile_body.dart';
 import 'package:provider/provider.dart';
 
 

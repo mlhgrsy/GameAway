@@ -19,8 +19,9 @@ class AuthService {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: mail, password: pass);
+      //Şifre değiştirmeyi unutma
       User user = result.user!;
-      DBService.addUser(name + " " + surname, mail);
+      DBService.addUser(name + " " + surname, mail, false);
       return _userFromFirebase(user);
     } catch (e) {
       print(e.toString());
@@ -40,6 +41,18 @@ class AuthService {
     }
   }
 
+  Future updatePassword(String oldPass, String newPass) async {
+    AuthCredential cred = EmailAuthProvider.credential(
+        email: _auth.currentUser!.email!, password: oldPass);
+    try {
+      await _auth.currentUser!.reauthenticateWithCredential(cred);
+      await _auth.currentUser!.updatePassword(newPass);
+      return true;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -53,7 +66,7 @@ class AuthService {
       );
       await FirebaseAuth.instance.signInWithCredential(credential);
       DBService.addUser(
-          _auth.currentUser!.displayName!, _auth.currentUser!.email!);
+          _auth.currentUser!.displayName!, _auth.currentUser!.email!, true);
       return;
     } catch (e) {
       print(e.toString());

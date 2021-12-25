@@ -51,7 +51,7 @@ class _SignUpState extends State<SignUp> {
                             filled: true,
                             hintText: "Name",
                             hintStyle: kButtonLightTextStyle,
-                            border: OutlineInputBorder(
+                            border: const OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: AppColors.primary,
                               ),
