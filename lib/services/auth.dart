@@ -16,6 +16,7 @@ class AuthService {
   Future signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      //User user=googleUser.email as User;
 
       final GoogleSignInAuthentication googleAuth =
           await googleUser!.authentication;
@@ -23,6 +24,7 @@ class AuthService {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
+
       return await FirebaseAuth.instance.signInWithCredential(credential);
     } catch (e) {
       print(e.toString());
