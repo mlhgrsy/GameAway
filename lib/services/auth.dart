@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gameaway/services/db.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -24,8 +25,9 @@ class AuthService {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-
-      return await FirebaseAuth.instance.signInWithCredential(credential);
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      DBService.addUser(_auth.currentUser!.displayName!, _auth.currentUser!.email!);
+      return;
     } catch (e) {
       print(e.toString());
       return null;
