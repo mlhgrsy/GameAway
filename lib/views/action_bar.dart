@@ -1,6 +1,5 @@
 
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/pages/notifications.dart';
@@ -13,14 +12,12 @@ class ActionBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthService auth = AuthService();
     final user = Provider.of<User?>(context);
     return AppBar(
       actions: [
         IconButton(
             onPressed: () {
               if(user !=null) {
-                //final CollectionReference f= FirebaseFirestore.instance.collection("Users");
                 Navigator.push(context,MaterialPageRoute(builder: (context) =>notify()));
               }
               },

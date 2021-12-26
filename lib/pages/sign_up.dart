@@ -1,3 +1,4 @@
+import 'package:gameaway/services/auth.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
@@ -13,6 +14,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
+  AuthService auth = AuthService();
   String name = "";
   String sur = "";
   String mail = "";
@@ -49,7 +51,7 @@ class _SignUpState extends State<SignUp> {
                             filled: true,
                             hintText: "Name",
                             hintStyle: kButtonLightTextStyle,
-                            border: OutlineInputBorder(
+                            border: const OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: AppColors.primary,
                               ),
@@ -144,11 +146,11 @@ class _SignUpState extends State<SignUp> {
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
                             if (value == null) {
-                              return "password can not be empty";
+                              return "email can not be empty";
                             } else {
                               String trimmedValue = value.trim();
                               if (trimmedValue.isEmpty) {
-                                return "password can not be empty";
+                                return "email can not be empty";
                               }
                               if (!EmailValidator.validate(trimmedValue)) {
                                 return "email is not valid";
@@ -214,7 +216,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 35,
                 ),
                 Row(
@@ -223,9 +225,51 @@ class _SignUpState extends State<SignUp> {
                     Expanded(
                       flex: 1,
                       child: OutlinedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
+                            if (await auth.signupWithMailAndPass(
+                                    mail, pass, name, sur) ==
+                                null) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                        title: const Text(
+                                            "Account Creation Error"),
+                                        content: const Text(
+                                            "An error occurred. Someone else may already be using this email"),
+                                        actions: [
+                                          TextButton(
+                                            child: const Text("Close"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ]);
+                                  });
+                            } else {
+                              FocusScope.of(context).unfocus();
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                        title: const Text(
+                                            "Account Creation Successful"),
+                                        content: const Text(
+                                            "Your account has been created"),
+                                        actions: [
+                                          TextButton(
+                                            child: const Text("Okay"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ]);
+                                  });
+                            }
                           }
                         },
                         child: Padding(
