@@ -5,8 +5,6 @@ class DBService {
       FirebaseFirestore.instance.collection('Users');
 
   static Future addUser(String uid, bool hasProvider) async {
-    userCollection.doc(uid).set({
-      'has_provider': hasProvider
-    });
+    userCollection.doc(uid).set({'has_provider': hasProvider});
   }
 }

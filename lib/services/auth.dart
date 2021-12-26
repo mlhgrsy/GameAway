@@ -29,7 +29,7 @@ class AuthService {
       DBService.addUser(user.uid, false);
       await user.updateDisplayName(name + " " + surname);
       await user.updatePhotoURL(
-          "https://i.ytimg.com/vi/tZp8sY06Qoc/maxresdefault.jpg");
+          "https://ih1.redbubble.net/image.1046392278.3346/pp,840x830-pad,1000x1000,f8f8f8.jpg");
       return _userFromFirebase(user);
     } catch (e) {
       print(e.toString());
