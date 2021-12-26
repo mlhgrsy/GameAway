@@ -75,13 +75,14 @@ class _FeedState extends State<Feed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const ActionBar(),
+      appBar: ActionBar(),
       body: SingleChildScrollView(
         child: Column(
           children: [
             OutlinedButton.icon(
                 onPressed: () {
-                  Navigator.pushNamed(context, "homepage/explore");//homepage/explore
+                  Navigator.pushNamed(
+                      context, "homepage/explore"); //homepage/explore
                 },
                 icon: const Icon(Icons.search),
                 label: const Text("Explore Products")),

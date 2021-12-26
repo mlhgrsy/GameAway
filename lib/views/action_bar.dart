@@ -1,14 +1,12 @@
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/pages/notifications.dart';
 import 'package:gameaway/services/auth.dart';
 import 'package:provider/provider.dart';
+
 class ActionBar extends StatelessWidget with PreferredSizeWidget {
-  const ActionBar({Key? key}) : super(key: key);
-
-
+  ActionBar({Key? key, this.title = "GameAway"}) : super(key: key);
+  String title;
 
   @override
   Widget build(BuildContext context) {
@@ -17,18 +15,19 @@ class ActionBar extends StatelessWidget with PreferredSizeWidget {
       actions: [
         IconButton(
             onPressed: () {
-              if(user !=null) {
-                Navigator.push(context,MaterialPageRoute(builder: (context) =>notify()));
+              if (user != null) {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => notify()));
               }
-              },
+            },
             icon: const Icon(
               Icons.notifications,
               color: Colors.red,
               size: 40,
             ))
       ],
-      title: const Text(
-        'GameAway',
+      title: Text(
+        title,
       ),
       backgroundColor: Colors.green,
       centerTitle: true,
@@ -38,10 +37,4 @@ class ActionBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(56);
-
 }
-
-
-
-
-
