@@ -136,8 +136,17 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
                   });
                 },
               ),
-            )
+            ),
+            Row(
+              children: List.generate(
+                  _products.length,
+                      (index) => Row(children: [
+                    productPreview(_products[index]),
+                    const SizedBox(width: 8)
+                  ])),
+            ),
           ],
+
         );
     }
     );
@@ -170,11 +179,10 @@ class DataSearch extends SearchDelegate<String>{
 
   @override
   Widget buildResults(BuildContext context) {
+    final resultList = products.where((p) => p.productName.startsWith(query)).toList();
     return Container(
-      height: 100,
-      width: 100,
       child: Center(
-        child: productPreview(products[0]) // dUzeltme gerek dUzeltme gerek dUzeltme gerek dUzeltme gerek dUzeltme gerek
+        child: productPreview(resultList[0]) // dUzeltme gerek dUzeltme gerek dUzeltme gerek dUzeltme gerek dUzeltme gerek
       ),
     );
   }
