@@ -25,7 +25,7 @@ class _notifyState extends State<notify> {
   Widget build(BuildContext context) {
     CollectionReference users= _firestore.collection('Users');
     FirebaseAuth auth= FirebaseAuth.instance;
-    var email= auth.currentUser!.email;
+    var email= auth.currentUser!.uid;
     var loguser =users.doc(email);
     var response =  loguser.get();
     var notify =loguser.collection("notifications");
@@ -55,7 +55,7 @@ class _notifyState extends State<notify> {
            return Flexible(
              fit: FlexFit.loose,
              child: Container(
-               height: 300,
+               height: 400,
                color: AppColors.primary,
                child: ListView.builder(
                    scrollDirection: Axis.vertical,
@@ -118,7 +118,7 @@ class _notifyState extends State<notify> {
                ],
              ),
            ),
-           TextButton(onPressed:()=>db.addnotif("a notification has been send"),
+           OutlinedButton(onPressed:()=>db.addnotif("a notification has been send"),
             child: Text("send notification"))
 
 
