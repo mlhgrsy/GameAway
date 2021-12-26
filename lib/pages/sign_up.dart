@@ -216,7 +216,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 35,
                 ),
                 Row(
@@ -225,10 +225,51 @@ class _SignUpState extends State<SignUp> {
                     Expanded(
                       flex: 1,
                       child: OutlinedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
-                            auth.signupWithMailAndPass(mail, pass, name, sur);
+                            if (await auth.signupWithMailAndPass(
+                                    mail, pass, name, sur) ==
+                                null) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                        title: const Text(
+                                            "Account Creation Error"),
+                                        content: const Text(
+                                            "An error occurred. Someone else may already be using this email"),
+                                        actions: [
+                                          TextButton(
+                                            child: const Text("Close"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ]);
+                                  });
+                            } else {
+                              FocusScope.of(context).unfocus();
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                        title: const Text(
+                                            "Account Creation Successful"),
+                                        content: const Text(
+                                            "Your account has been created"),
+                                        actions: [
+                                          TextButton(
+                                            child: const Text("Okay"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ]);
+                                  });
+                            }
                           }
                         },
                         child: Padding(

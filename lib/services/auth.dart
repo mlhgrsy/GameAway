@@ -24,7 +24,6 @@ class AuthService {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: mail, password: pass);
-      //Şifre değiştirmeyi unutma
       User user = result.user!;
       DBService.addUser(user.uid, false);
       await user.updateDisplayName(name + " " + surname);
