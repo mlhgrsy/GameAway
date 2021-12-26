@@ -44,6 +44,7 @@ class _notifyState extends State<notify> {
           StreamBuilder<QuerySnapshot>(
               stream: notify.snapshots(),
               builder: (context, AsyncSnapshot asyncSnapshot) {
+                if (!asyncSnapshot.hasData) return const Text("Loading...");
                 print(asyncSnapshot.data.docs);
                 List<DocumentSnapshot> listofnotify = asyncSnapshot.data.docs;
                 return Flexible(
