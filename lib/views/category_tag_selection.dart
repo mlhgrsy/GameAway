@@ -85,18 +85,17 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
               .toList();
           return Column(
             children: [
-              Row(children: [
-                Expanded(child: TextFormField()),
-                IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: () {
-                    showSearch(
-                        context: context,
-                        delegate: DataSearch(
-                          products: _products,
-                        ));
-                  },
-                )
+              Column(children: [
+                OutlinedButton.icon(
+                    onPressed: () {
+                      showSearch(
+                          context: context,
+                          delegate: DataSearch(
+                            products: _products,
+                          ));
+                    },
+                    label: const Text("Search Anything"),
+                    icon: const Icon(Icons.search)),
               ]),
               SizedBox(
                 height: 60,
@@ -152,13 +151,18 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
                   },
                 ),
               ),
-              Row(
-                children: List.generate(
-                    _products.length,
-                    (index) => Row(children: [
-                          productPreview(_products[index]),
-                          const SizedBox(width: 8)
-                        ])),
+              SizedBox(
+                height: 400,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: GridView.count(
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20,
+                      childAspectRatio: .5,
+                      crossAxisCount: 2,
+                      children: List.generate(_products.length,
+                          (index) => productPreview(_products[index]))),
+                ),
               ),
             ],
           );
