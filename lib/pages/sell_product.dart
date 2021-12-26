@@ -16,8 +16,8 @@ class _SellProductState extends State<SellProduct> {
   String category = "";
   String name = "";
   String picture = "";
-  double price = 0;
-  double rating = 0;
+  num price = 0;
+  num rating = 0;
   dynamic seller = null;
   String tag = "";
 
@@ -54,14 +54,14 @@ class _SellProductState extends State<SellProduct> {
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(hintText: "price"),
                     onSaved: (value) {
-                      if (value != null) price = double.parse(value);
+                      if (value != null) price = num.parse(value);
                     },
                   ),
                   TextFormField(
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(hintText: "rating"),
                     onSaved: (value) {
-                      if (value != null) rating = double.parse(value);
+                      if (value != null) rating = num.parse(value);
                     },
                   ),
                   TextFormField(

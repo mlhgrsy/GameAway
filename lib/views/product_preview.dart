@@ -65,8 +65,8 @@ class Product {
   String url;
   String productName;
   String seller;
-  double rating;
-  double price;
+  num rating;
+  num price;
 
   Product(
       {required this.url,

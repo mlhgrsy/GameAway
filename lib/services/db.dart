@@ -27,7 +27,7 @@ class DBService {
   }
   final CollectionReference productCollection = FirebaseFirestore.instance.collection('product');
 
-  Future addProduct(String category, String name, String picture, double price, double rating, String seller,String tag) async{
+  Future addProduct(String category, String name, String picture, num price, num rating, String seller,String tag) async{
     productCollection.add({
       'category': category,
       'name': name,

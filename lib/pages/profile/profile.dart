@@ -22,7 +22,7 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.primaryBackground,
         centerTitle: true,
         elevation: 0.0,
         actions: [
