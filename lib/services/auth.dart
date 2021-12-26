@@ -1,4 +1,8 @@
+import 'dart:io';
+import 'package:path/path.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:gameaway/services/db.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
@@ -72,6 +76,21 @@ class AuthService {
     try {
       await _auth.currentUser!.reauthenticateWithCredential(cred);
       await _auth.currentUser!.updateEmail(newMail);
+      return true;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future updatePP(File file) async {
+    try {
+      var ref = FirebaseStorage.instance.ref();
+      String filepath =
+          "/profileImages/${_auth.currentUser!.uid}${extension(file.path)}";
+      await ref.child(filepath).putFile(file);
+      String ppURL = await ref.child(filepath).getDownloadURL();
+      await _auth.currentUser!.updatePhotoURL(ppURL);
       return true;
     } catch (e) {
       print(e);

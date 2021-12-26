@@ -26,9 +26,13 @@ class _AccountSettingsFormState extends State<AccountSettingsForm> {
       child: SingleChildScrollView(
         child: Column(
           children: const [
+            SizedBox(height: 20),
             AccountSettingsPP(),
+            SizedBox(height: 20),
             AccountSettingsName(),
+            SizedBox(height: 20),
             AccountSettingsMail(),
+            SizedBox(height: 20),
             AccountSettingsPassword()
           ],
         ),
