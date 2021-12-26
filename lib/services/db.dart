@@ -25,6 +25,21 @@ class DBService {
   static Future addUser(String uid, bool hasProvider) async {
     userCollection.doc(uid).set({'has_provider': hasProvider});
   }
+  final CollectionReference productCollection = FirebaseFirestore.instance.collection('product');
+
+  Future addProduct(String category, String name, String picture, double price, double rating, String seller,String tag) async{
+    productCollection.add({
+      'category': category,
+      'name': name,
+      'picture': picture,
+      'price': price,
+      'rating': rating,
+      'seller': seller,
+      'tag': tag,
+    })
+        .then((value)=> print('Product added'))
+        .catchError((error) => print ('Error: ${error.toString()}'));
+  }
 
   Future addnotif(String notif) async {
     notify
