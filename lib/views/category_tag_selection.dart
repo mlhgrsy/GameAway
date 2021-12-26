@@ -12,7 +12,8 @@ class CategoryTagSelection extends StatefulWidget {
 }
 
 class _CategoryTagSelectionState extends State<CategoryTagSelection> {
-  FirebaseFirestore _firestore= FirebaseFirestore.instance;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   //Categories
   static final _categories = [
     "Games",
@@ -30,7 +31,7 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
       'All',
       'Horror',
       'RPG',
-      'Shooters',
+      'Shooter',
       "Sandbox",
       "Open World",
       "Others"
@@ -66,103 +67,129 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
           }).toList())
       .toList();
   DBService db = DBService();
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: db.productCollection.get(),
-      builder: (BuildContext context, AsyncSnapshot snapshot){
-        var _products=snapshot.data.docs.map<Product>((doc) => Product(price:doc.data()['price'],productName: doc.data()['name'], //tag ve categori gelcek!!
-            seller: doc.data()['seller'], url: doc.data()['picture'],rating: doc.data()['rating'] )).toList();
-        return Column(
-          children: [
-            Row(children: [
-              Expanded(child: TextFormField()),
-              IconButton(icon: Icon(Icons.search), onPressed: () {
-                showSearch(context: context, delegate: DataSearch(
-                  products: _products,
-                ))
-                ;
-              },)
-            ]),
-            SizedBox(
-              height: 60,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: List.generate(_categories.length, (int index) {
-                  return OutlinedButton(
-                    style: ButtonStyle(backgroundColor:
-                    MaterialStateProperty.resolveWith<Color?>((states) {
-                      if (states.contains(MaterialState.pressed)) {
-                        return AppColors.background.withOpacity(.5);
-                      } else if (_currentCategory == index) {
-                        return AppColors.background;
-                      } else {
-                        return null;
-                      }
-                    }), foregroundColor:
-                    MaterialStateProperty.resolveWith<Color?>((states) {
-                      return (_currentCategory == index)
-                          ? AppColors.DarkTextColor
-                          : AppColors.LightTextColor;
-                    })),
+        future: db.productCollection.get(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) return const Text("Loading...");
+          var _products = snapshot.data.docs
+              .map<Product>((doc) => Product(
+                  price: doc.data()['price'],
+                  productName: doc.data()['name'],
+                  category: doc.data()['category'],
+                  tag: doc.data()['tag'],
+                  seller: doc.data()['seller'],
+                  url: doc.data()['picture'],
+                  rating: doc.data()['rating']))
+              .toList();
+          final resultList = _products
+              .where((p) =>
+                  p.category == _categories[_currentCategory] &&
+                  (_dropdownValue == "All" || p.tag == _dropdownValue))
+              .toList();
+          return Column(
+            children: [
+              Column(children: [
+                OutlinedButton.icon(
                     onPressed: () {
-                      setState(() {
-                        _currentCategory = index;
-                        _dropdownValue = _dropdownItemsString[_currentCategory][0];
-                      });
+                      showSearch(
+                          context: context,
+                          delegate: DataSearch(
+                            products: _products,
+                          ));
                     },
-                    child: Container(
-                      height: 50.0,
-                      child: Text(_categories[index]),
-                    ),
-                  );
-                }),
+                    label: const Text("Search Anything"),
+                    icon: const Icon(Icons.search)),
+              ]),
+              SizedBox(
+                height: 60,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: List.generate(_categories.length, (int index) {
+                    return OutlinedButton(
+                      style: ButtonStyle(backgroundColor:
+                          MaterialStateProperty.resolveWith<Color?>((states) {
+                        if (states.contains(MaterialState.pressed)) {
+                          return AppColors.background.withOpacity(.5);
+                        } else if (_currentCategory == index) {
+                          return AppColors.background;
+                        } else {
+                          return null;
+                        }
+                      }), foregroundColor:
+                          MaterialStateProperty.resolveWith<Color?>((states) {
+                        return (_currentCategory == index)
+                            ? AppColors.DarkTextColor
+                            : AppColors.LightTextColor;
+                      })),
+                      onPressed: () {
+                        setState(() {
+                          _currentCategory = index;
+                          _dropdownValue =
+                              _dropdownItemsString[_currentCategory][0];
+                        });
+                      },
+                      child: Container(
+                        height: 50.0,
+                        child: Text(_categories[index]),
+                      ),
+                    );
+                  }),
+                ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                color: AppColors.headingColor.withAlpha(50),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  color: AppColors.headingColor.withAlpha(50),
+                ),
+                width: 200,
+                child: DropdownButton(
+                  isExpanded: true,
+                  dropdownColor: AppColors.headingColor.withAlpha(250),
+                  items: _dropdownItems[_currentCategory],
+                  value: _dropdownValue,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _dropdownValue = newValue!;
+                    });
+                  },
+                ),
               ),
-              width: 200,
-              child: DropdownButton(
-                isExpanded: true,
-                dropdownColor: AppColors.headingColor.withAlpha(250),
-                items: _dropdownItems[_currentCategory],
-                value: _dropdownValue,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _dropdownValue = newValue!;
-                  });
-                },
+              SizedBox(
+                height: 400,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: GridView.count(
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20,
+                      childAspectRatio: .5,
+                      crossAxisCount: 2,
+                      children: List.generate(resultList.length,
+                          (index) => productPreview(resultList[index]))),
+                ),
               ),
-            ),
-            Row(
-              children: List.generate(
-                  _products.length,
-                      (index) => Row(children: [
-                    productPreview(_products[index]),
-                    const SizedBox(width: 8)
-                  ])),
-            ),
-          ],
-
-        );
-    }
-    );
+            ],
+          );
+        });
   }
 }
 
-class DataSearch extends SearchDelegate<String>{
-  final List <Product> products;
-  DataSearch({required this.products});
+class DataSearch extends SearchDelegate<String> {
+  final List<Product> products;
 
+  DataSearch({required this.products});
 
   @override
   List<Widget>? buildActions(BuildContext context) {
-    return [IconButton(icon: Icon(Icons.clear),onPressed: (){
-      query = "";
-    })];
+    return [
+      IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: () {
+            query = "";
+          })
+    ];
   }
 
   @override
@@ -172,42 +199,52 @@ class DataSearch extends SearchDelegate<String>{
           icon: AnimatedIcons.menu_arrow,
           progress: transitionAnimation,
         ),
-        onPressed: (){
-          close(context,'');
+        onPressed: () {
+          close(context, '');
         });
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    final resultList = products.where((p) => p.productName.startsWith(query)).toList();
-    return Container(
-      child: Center(
-        child: productPreview(resultList[0]) // dUzeltme gerek dUzeltme gerek dUzeltme gerek dUzeltme gerek dUzeltme gerek
-      ),
+    final resultList =
+        products.where((p) => p.productName.startsWith(query)).toList();
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: GridView.count(
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
+          childAspectRatio: .5,
+          crossAxisCount: 2,
+          children: List.generate(
+              resultList.length, (index) => productPreview(resultList[index]))),
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    final suggestionList =
+        products.where((p) => p.productName.startsWith(query)).toList();
 
-    final suggestionList = products.where((p) => p.productName.startsWith(query)).toList();
-
-    return ListView.builder(itemBuilder: (context,index)=>ListTile(
-      onTap: (){
-        showResults(context);
-      },
-      title:RichText(text:TextSpan(
-        text: suggestionList[index].productName.substring(0,query.length),
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        children: [TextSpan(
-          text:suggestionList[index].productName.substring(query.length),
-          style: TextStyle(color: Colors.grey)
-        )]
-      )),
-    ),
+    return ListView.builder(
+      itemBuilder: (context, index) => ListTile(
+        onTap: () {
+          showResults(context);
+        },
+        title: RichText(
+            text: TextSpan(
+                text: suggestionList[index]
+                    .productName
+                    .substring(0, query.length),
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                children: [
+              TextSpan(
+                  text:
+                      suggestionList[index].productName.substring(query.length),
+                  style: TextStyle(color: Colors.grey))
+            ])),
+      ),
       itemCount: suggestionList.length,
     );
   }
 }
-
-

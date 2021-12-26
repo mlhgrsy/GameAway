@@ -50,7 +50,10 @@ Widget productPreview(Product product) {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Icon(Icons.star,color: Colors.yellow), Text("${product.rating}",style: kImportantText)],
+                    children: [
+                      Icon(Icons.star, color: Colors.yellow),
+                      Text("${product.rating}", style: kImportantText)
+                    ],
                   ),
                   Text("\$ ${product.price}")
                 ],
@@ -65,13 +68,17 @@ class Product {
   String url;
   String productName;
   String seller;
-  double rating;
-  double price;
+  num rating;
+  num price;
+  String category;
+  String tag;
 
   Product(
       {required this.url,
       required this.productName,
       required this.rating,
       required this.price,
+      this.category = "Games",
+      this.tag = "All",
       this.seller = "Anonymous"});
 }

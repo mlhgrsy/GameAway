@@ -21,8 +21,8 @@ class _ProfileState extends State<Profile> {
     AuthService auth = AuthService();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile"),
-        backgroundColor: Colors.green,
+        title: const Text("Profile"),
+        backgroundColor: AppColors.primaryBackground,
         centerTitle: true,
         elevation: 0.0,
         actions: [

@@ -14,14 +14,12 @@ class _ExploreState extends State<Explore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const ActionBar(),
+      appBar: ActionBar(title: "Explore Products"),
       body: SingleChildScrollView(
         child: Column(
-          children:
-            const [CategoryTagSelection()],
+          children: const [CategoryTagSelection()],
         ),
       ),
     );
   }
 }
-

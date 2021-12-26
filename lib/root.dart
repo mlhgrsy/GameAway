@@ -8,6 +8,7 @@ import 'package:gameaway/pages/sell_product.dart';
 import 'package:gameaway/pages/sign_in.dart';
 import 'package:gameaway/pages/suggestions.dart';
 import 'package:gameaway/services/bottom_nav.dart';
+import 'package:gameaway/utils/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'pages/basket.dart';
@@ -88,27 +89,27 @@ class _RootState extends State<Root> {
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
-              backgroundColor: Colors.green),
+              backgroundColor: AppColors.primaryBackground),
           BottomNavigationBarItem(
               icon: Icon(Icons.shopping_basket),
               label: 'Basket',
-              backgroundColor: Colors.green),
+              backgroundColor: AppColors.primaryBackground),
           BottomNavigationBarItem(
               icon: Icon(Icons.star),
               label: 'Favorites',
-              backgroundColor: Colors.green),
+              backgroundColor: AppColors.primaryBackground),
           BottomNavigationBarItem(
               icon: Icon(Icons.favorite),
               label: 'Suggestions',
-              backgroundColor: Colors.green),
+              backgroundColor: AppColors.primaryBackground),
           BottomNavigationBarItem(
               icon: Icon(Icons.add_shopping_cart),
               label: 'Sell Product',
-              backgroundColor: Colors.green),
+              backgroundColor: AppColors.primaryBackground),
           BottomNavigationBarItem(
               icon: Icon(Icons.account_circle),
               label: 'Profile',
-              backgroundColor: Colors.green)
+              backgroundColor: AppColors.primaryBackground)
         ],
         currentIndex: currentNavIndex,
         selectedItemColor: Colors.amber[800],
