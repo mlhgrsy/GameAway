@@ -3,7 +3,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/pages/homepage/homepage.dart';
-import 'package:gameaway/pages/profile.dart';
+import 'package:gameaway/pages/profile/profile.dart';
 import 'package:gameaway/pages/sell_product.dart';
 import 'package:gameaway/pages/sign_in.dart';
 import 'package:gameaway/pages/suggestions.dart';

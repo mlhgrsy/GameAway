@@ -47,3 +47,17 @@ final kImportantText = GoogleFonts.montserrat(
   fontSize: 10.0,
   letterSpacing: -0.7,
 );
+
+final kProfileNameText = GoogleFonts.montserrat(
+  color: AppColors.LightTextColor,
+  fontSize: 15.0,
+  letterSpacing: -0.7,
+);
+
+final kProfileMailText = GoogleFonts.montserrat(
+  fontStyle: FontStyle.italic,
+  color: AppColors.LightTextColor,
+  fontSize: 15.0,
+  letterSpacing: -0.7,
+);
+

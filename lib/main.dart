@@ -1,9 +1,11 @@
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/pages/homepage/homepage.dart';
 import 'package:gameaway/pages/notifications.dart';
+import 'package:gameaway/pages/profile/account_settings.dart';
 import 'package:gameaway/pages/sign_in.dart';
 import 'package:gameaway/root.dart';
 import 'package:gameaway/pages/sign_up.dart';
@@ -89,6 +91,7 @@ class BaseApp extends StatelessWidget {
           '/signUp': (context) => const SignUp(),
           '/signIn': (context) => const SignIn(),
           '/Notify': (context) => const notify(),
+          '/profile/account_settings': (context) => const AccountSettings(),
         },
       ),
     );

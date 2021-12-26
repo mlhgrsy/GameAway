@@ -12,14 +12,12 @@ class ActionBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthService auth = AuthService();
     final user = Provider.of<User?>(context);
     return AppBar(
       actions: [
         IconButton(
             onPressed: () {
               if(user !=null) {
-                print(User);
                 Navigator.push(context,MaterialPageRoute(builder: (context) =>notify()));
               }
               },
