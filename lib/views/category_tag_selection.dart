@@ -31,7 +31,7 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
       'All',
       'Horror',
       'RPG',
-      'Shooters',
+      'Shooter',
       "Sandbox",
       "Open World",
       "Others"
@@ -78,10 +78,16 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
               .map<Product>((doc) => Product(
                   price: doc.data()['price'],
                   productName: doc.data()['name'],
-                  //tag ve categori gelcek!!
+                  category: doc.data()['category'],
+                  tag: doc.data()['tag'],
                   seller: doc.data()['seller'],
                   url: doc.data()['picture'],
                   rating: doc.data()['rating']))
+              .toList();
+          final resultList = _products
+              .where((p) =>
+                  p.category == _categories[_currentCategory] &&
+                  (_dropdownValue == "All" || p.tag == _dropdownValue))
               .toList();
           return Column(
             children: [
@@ -160,8 +166,8 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
                       mainAxisSpacing: 20,
                       childAspectRatio: .5,
                       crossAxisCount: 2,
-                      children: List.generate(_products.length,
-                          (index) => productPreview(_products[index]))),
+                      children: List.generate(resultList.length,
+                          (index) => productPreview(resultList[index]))),
                 ),
               ),
             ],
