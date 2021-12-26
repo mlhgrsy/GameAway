@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gameaway/services/db.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/views/product_preview.dart';
 
@@ -10,6 +12,7 @@ class CategoryTagSelection extends StatefulWidget {
 }
 
 class _CategoryTagSelectionState extends State<CategoryTagSelection> {
+  FirebaseFirestore _firestore= FirebaseFirestore.instance;
   //Categories
   static final _categories = [
     "Games",
@@ -62,160 +65,98 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
             );
           }).toList())
       .toList();
-
+  DBService db = DBService();
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(children: [
-          Expanded(child: TextFormField()),
-          IconButton(icon: Icon(Icons.search), onPressed: () {
-            showSearch(context: context, delegate: DataSearch());
-          },)
-        ]),
-        SizedBox(
-          height: 60,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: List.generate(_categories.length, (int index) {
-              return OutlinedButton(
-                style: ButtonStyle(backgroundColor:
+    return FutureBuilder(
+      future: db.productCollection.get(),
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        var _products=snapshot.data.docs.map<Product>((doc) => Product(price:doc.data()['price'],productName: doc.data()['name'], //tag ve categori gelcek!!
+            seller: doc.data()['seller'], url: doc.data()['picture'],rating: doc.data()['rating'] )).toList();
+        return Column(
+          children: [
+            Row(children: [
+              Expanded(child: TextFormField()),
+              IconButton(icon: Icon(Icons.search), onPressed: () {
+                showSearch(context: context, delegate: DataSearch(
+                  products: _products,
+                ))
+                ;
+              },)
+            ]),
+            SizedBox(
+              height: 60,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: List.generate(_categories.length, (int index) {
+                  return OutlinedButton(
+                    style: ButtonStyle(backgroundColor:
                     MaterialStateProperty.resolveWith<Color?>((states) {
-                  if (states.contains(MaterialState.pressed)) {
-                    return AppColors.background.withOpacity(.5);
-                  } else if (_currentCategory == index) {
-                    return AppColors.background;
-                  } else {
-                    return null;
-                  }
-                }), foregroundColor:
+                      if (states.contains(MaterialState.pressed)) {
+                        return AppColors.background.withOpacity(.5);
+                      } else if (_currentCategory == index) {
+                        return AppColors.background;
+                      } else {
+                        return null;
+                      }
+                    }), foregroundColor:
                     MaterialStateProperty.resolveWith<Color?>((states) {
-                  return (_currentCategory == index)
-                      ? AppColors.DarkTextColor
-                      : AppColors.LightTextColor;
-                })),
-                onPressed: () {
+                      return (_currentCategory == index)
+                          ? AppColors.DarkTextColor
+                          : AppColors.LightTextColor;
+                    })),
+                    onPressed: () {
+                      setState(() {
+                        _currentCategory = index;
+                        _dropdownValue = _dropdownItemsString[_currentCategory][0];
+                      });
+                    },
+                    child: Container(
+                      height: 50.0,
+                      child: Text(_categories[index]),
+                    ),
+                  );
+                }),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                color: AppColors.headingColor.withAlpha(50),
+              ),
+              width: 200,
+              child: DropdownButton(
+                isExpanded: true,
+                dropdownColor: AppColors.headingColor.withAlpha(250),
+                items: _dropdownItems[_currentCategory],
+                value: _dropdownValue,
+                onChanged: (String? newValue) {
                   setState(() {
-                    _currentCategory = index;
-                    _dropdownValue = _dropdownItemsString[_currentCategory][0];
+                    _dropdownValue = newValue!;
                   });
                 },
-                child: Container(
-                  height: 50.0,
-                  child: Text(_categories[index]),
-                ),
-              );
-            }),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            color: AppColors.headingColor.withAlpha(50),
-          ),
-          width: 200,
-          child: DropdownButton(
-            isExpanded: true,
-            dropdownColor: AppColors.headingColor.withAlpha(250),
-            items: _dropdownItems[_currentCategory],
-            value: _dropdownValue,
-            onChanged: (String? newValue) {
-              setState(() {
-                _dropdownValue = newValue!;
-              });
-            },
-          ),
-        )
-      ],
+              ),
+            ),
+            Row(
+              children: List.generate(
+                  _products.length,
+                      (index) => Row(children: [
+                    productPreview(_products[index]),
+                    const SizedBox(width: 8)
+                  ])),
+            ),
+          ],
+
+        );
+    }
     );
   }
 }
 
-
 class DataSearch extends SearchDelegate<String>{
+  final List <Product> products;
+  DataSearch({required this.products});
 
-  final Products = [
-    Product(
-        url:
-        "https://icons.iconarchive.com/icons/femfoyou/angry-birds/256/angry-bird-icon.png",
-        productName: "AngryBirds",
-        rating: 3.8,
-        price: 25.99,
-        seller: "Seller1"),
-    Product(
-        url:
-        "https://icons.iconarchive.com/icons/3xhumed/mega-games-pack-40/128/Mafia-2-3-icon.png",
-        productName: "Mafia2",
-        rating: 3.9,
-        price: 119.99,
-        seller: "Seller2"),
-    Product(
-        url:
-        "https://icons.iconarchive.com/icons/3xhumed/mega-games-pack-34/128/Max-Payne-3-2-icon.png",
-        productName: "Max Payne 3",
-        rating: 4.4,
-        price: 124.99,
-        seller: "Seller1"),
-    Product(
-        url:
-        "https://icons.iconarchive.com/icons/3xhumed/mega-games-pack-31/128/Left4Dead-2-2-icon.png",
-        productName: "Left 4 Dead 2",
-        rating: 4.5,
-        price: 12.99,
-        seller: "Seller2"),
-    Product(
-        url:
-        "https://icons.iconarchive.com/icons/3xhumed/mega-games-pack-34/128/GTA-IV-Lost-and-Damned-6-icon.png",
-        productName: "GTA IV",
-        rating: 4.7,
-        price: 179.99,
-        seller: "Seller1"),
-    Product(
-        url:
-        "https://icons.iconarchive.com/icons/zakafein/game-pack-1/128/Minecraft-2-icon.png",
-        productName: "Minecraft",
-        rating: 4.9,
-        price: 149.99,
-        seller: "Seller2"),
-    Product(
-        url:
-        "https://icons.iconarchive.com/icons/3xhumed/mega-games-pack-37/128/Crysis-2-3-icon.png",
-        productName: "Crysis 2",
-        rating: 3.7,
-        price: 24.99,
-        seller: "Seller1"),
-    Product(
-        url:
-        "https://icons.iconarchive.com/icons/3xhumed/mega-games-pack-34/128/PES-2010-2-icon.png",
-        productName: "PES 2010",
-        rating: 4.0,
-        price: 79.99,
-        seller: "Seller2"),
-  ];
-
-  final recentProducts= [
-    Product(
-        url:
-        "https://icons.iconarchive.com/icons/3xhumed/mega-games-pack-34/128/GTA-IV-Lost-and-Damned-6-icon.png",
-        productName: "GTA IV",
-        rating: 4.7,
-        price: 179.99,
-        seller: "Seller1"),
-    Product(
-        url:
-        "https://icons.iconarchive.com/icons/3xhumed/mega-games-pack-37/128/Crysis-2-3-icon.png",
-        productName: "Crysis 2",
-        rating: 3.7,
-        price: 24.99,
-        seller: "Seller1"),
-    Product(
-        url:
-        "https://icons.iconarchive.com/icons/3xhumed/mega-games-pack-34/128/PES-2010-2-icon.png",
-        productName: "PES 2010",
-        rating: 4.0,
-        price: 79.99,
-        seller: "Seller2"),
-  ];
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -238,19 +179,18 @@ class DataSearch extends SearchDelegate<String>{
 
   @override
   Widget buildResults(BuildContext context) {
+    final resultList = products.where((p) => p.productName.startsWith(query)).toList();
     return Container(
-      height: 100,
-      width: 100,
       child: Center(
-        child: productPreview(Products[0]) // dUzeltme gerek dUzeltme gerek dUzeltme gerek dUzeltme gerek dUzeltme gerek
+        child: productPreview(resultList[0]) // dUzeltme gerek dUzeltme gerek dUzeltme gerek dUzeltme gerek dUzeltme gerek
       ),
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final suggestionList = query.isEmpty?recentProducts
-        :Products.where((p) => p.productName.startsWith(query)).toList();
+
+    final suggestionList = products.where((p) => p.productName.startsWith(query)).toList();
 
     return ListView.builder(itemBuilder: (context,index)=>ListTile(
       onTap: (){
@@ -268,5 +208,6 @@ class DataSearch extends SearchDelegate<String>{
       itemCount: suggestionList.length,
     );
   }
-
 }
+
+

@@ -30,7 +30,7 @@ class _RootState extends State<Root> {
     const Basket(),
     const Favorites(),
     const Suggestions(),
-    const SellProduct(),
+    SellProduct(),
     const Profile()
   ];
 
