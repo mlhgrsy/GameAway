@@ -25,7 +25,7 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: mail, password: pass);
       User user = result.user!;
-      DBService.addUser(user.uid, false);
+      DBService.addUser(user.uid, false, name + " " + surname);
       await user.updateDisplayName(name + " " + surname);
       await user.updatePhotoURL(
           "https://ih1.redbubble.net/image.1046392278.3346/pp,840x830-pad,1000x1000,f8f8f8.jpg");
@@ -63,6 +63,7 @@ class AuthService {
   Future updateName(String newName) async {
     try {
       await _auth.currentUser!.updateDisplayName(newName);
+      await DBService.updateName(_auth.currentUser!.uid, newName);
       return true;
     } catch (e) {
       return null;
@@ -75,6 +76,7 @@ class AuthService {
     try {
       await _auth.currentUser!.reauthenticateWithCredential(cred);
       await _auth.currentUser!.updateEmail(newMail);
+      await DBService.updateMail(_auth.currentUser!.uid, newMail);
       return true;
     } catch (e) {
       print(e);
@@ -90,6 +92,7 @@ class AuthService {
       await ref.child(filepath).putFile(file);
       String ppURL = await ref.child(filepath).getDownloadURL();
       await _auth.currentUser!.updatePhotoURL(ppURL);
+      await DBService.updatePP(_auth.currentUser!.uid, ppURL);
       return true;
     } catch (e) {
       print(e);
@@ -107,7 +110,7 @@ class AuthService {
         idToken: googleAuth.idToken,
       );
       await FirebaseAuth.instance.signInWithCredential(credential);
-      DBService.addUser(_auth.currentUser!.uid, true);
+      DBService.addUser(_auth.currentUser!.uid, true, googleUser.displayName!);
       return;
     } catch (e) {
       print(e.toString());
