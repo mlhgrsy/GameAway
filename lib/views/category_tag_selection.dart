@@ -12,8 +12,6 @@ class CategoryTagSelection extends StatefulWidget {
 }
 
 class _CategoryTagSelectionState extends State<CategoryTagSelection> {
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   //Categories
   static final _categories = [
     "Games",
@@ -67,112 +65,126 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
           }).toList())
       .toList();
   DBService db = DBService();
+  List<Product>? _products;
+  List<Product>? _resultList;
+
+  Future<void> getProducts() async {
+    var r = await db.productCollection.get();
+    var _productsTemp = r.docs
+        .map<Product>((doc) => Product(
+            price: doc['price'],
+            productName: doc['name'],
+            category: doc['category'],
+            tag: doc['tag'],
+            seller: "Unknown Seller",
+            url: doc['picture'],
+            rating: doc['rating']))
+        .toList();
+    for (var i = 0; i < r.docs.length; i++) {
+      var r2 = await r.docs[i]["seller"].get();
+      if (r2.data() != null) _productsTemp[i].seller = r2.data()["name"];
+    }
+    setState(() {
+      _products = _productsTemp;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getProducts();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: db.productCollection.get(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (!snapshot.hasData) return const Text("Loading...");
-          var _products = snapshot.data.docs
-              .map<Product>((doc) => Product(
-                  price: doc.data()['price'],
-                  productName: doc.data()['name'],
-                  category: doc.data()['category'],
-                  tag: doc.data()['tag'],
-                  seller: doc.data()['seller'],
-                  url: doc.data()['picture'],
-                  rating: doc.data()['rating']))
-              .toList();
-          final resultList = _products
-              .where((p) =>
-                  p.category == _categories[_currentCategory] &&
-                  (_dropdownValue == "All" || p.tag == _dropdownValue))
-              .toList();
-          return Column(
-            children: [
-              Column(children: [
-                OutlinedButton.icon(
-                    onPressed: () {
-                      showSearch(
-                          context: context,
-                          delegate: DataSearch(
-                            products: _products,
-                          ));
-                    },
-                    label: const Text("Search Anything"),
-                    icon: const Icon(Icons.search)),
-              ]),
-              SizedBox(
-                height: 60,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: List.generate(_categories.length, (int index) {
-                    return OutlinedButton(
-                      style: ButtonStyle(backgroundColor:
-                          MaterialStateProperty.resolveWith<Color?>((states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return AppColors.background.withOpacity(.5);
-                        } else if (_currentCategory == index) {
-                          return AppColors.background;
-                        } else {
-                          return null;
-                        }
-                      }), foregroundColor:
-                          MaterialStateProperty.resolveWith<Color?>((states) {
-                        return (_currentCategory == index)
-                            ? AppColors.DarkTextColor
-                            : AppColors.LightTextColor;
-                      })),
-                      onPressed: () {
-                        setState(() {
-                          _currentCategory = index;
-                          _dropdownValue =
-                              _dropdownItemsString[_currentCategory][0];
-                        });
-                      },
-                      child: Container(
-                        height: 50.0,
-                        child: Text(_categories[index]),
-                      ),
-                    );
-                  }),
+    if (_products == null) return const Text("Loading...");
+    _resultList = _products
+        ?.where((p) =>
+            p.category == _categories[_currentCategory] &&
+            (_dropdownValue == "All" || p.tag == _dropdownValue))
+        .toList();
+    return Column(
+      children: [
+        Column(children: [
+          OutlinedButton.icon(
+              onPressed: () {
+                showSearch(
+                    context: context,
+                    delegate: DataSearch(
+                      products: _products!,
+                    ));
+              },
+              label: const Text("Search Anything"),
+              icon: const Icon(Icons.search)),
+        ]),
+        SizedBox(
+          height: 60,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: List.generate(_categories.length, (int index) {
+              return OutlinedButton(
+                style: ButtonStyle(backgroundColor:
+                    MaterialStateProperty.resolveWith<Color?>((states) {
+                  if (states.contains(MaterialState.pressed)) {
+                    return AppColors.background.withOpacity(.5);
+                  } else if (_currentCategory == index) {
+                    return AppColors.background;
+                  } else {
+                    return null;
+                  }
+                }), foregroundColor:
+                    MaterialStateProperty.resolveWith<Color?>((states) {
+                  return (_currentCategory == index)
+                      ? AppColors.DarkTextColor
+                      : AppColors.LightTextColor;
+                })),
+                onPressed: () {
+                  setState(() {
+                    _currentCategory = index;
+                    _dropdownValue = _dropdownItemsString[_currentCategory][0];
+                  });
+                },
+                child: Container(
+                  height: 50.0,
+                  child: Text(_categories[index]),
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: AppColors.headingColor.withAlpha(50),
-                ),
-                width: 200,
-                child: DropdownButton(
-                  isExpanded: true,
-                  dropdownColor: AppColors.headingColor.withAlpha(250),
-                  items: _dropdownItems[_currentCategory],
-                  value: _dropdownValue,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _dropdownValue = newValue!;
-                    });
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 400,
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: GridView.count(
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
-                      childAspectRatio: .5,
-                      crossAxisCount: 2,
-                      children: List.generate(resultList.length,
-                          (index) => productPreview(resultList[index]))),
-                ),
-              ),
-            ],
-          );
-        });
+              );
+            }),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+            color: AppColors.headingColor.withAlpha(50),
+          ),
+          width: 200,
+          child: DropdownButton(
+            isExpanded: true,
+            dropdownColor: AppColors.headingColor.withAlpha(250),
+            items: _dropdownItems[_currentCategory],
+            value: _dropdownValue,
+            onChanged: (String? newValue) {
+              setState(() {
+                _dropdownValue = newValue!;
+              });
+            },
+          ),
+        ),
+        SizedBox(
+          height: 400,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: GridView.count(
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
+                childAspectRatio: .5,
+                crossAxisCount: 2,
+                children: List.generate(_resultList!.length,
+                    (index) => productPreview(_resultList![index]))),
+          ),
+        ),
+      ],
+    );
   }
 }
 
