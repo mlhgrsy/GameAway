@@ -76,7 +76,7 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
             productName: doc['name'],
             category: doc['category'],
             tag: doc['tag'],
-            seller: "Unknown Seller",
+            seller: "Anonymous Seller",
             url: doc['picture'],
             rating: doc['rating']))
         .toList();

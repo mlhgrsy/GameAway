@@ -29,7 +29,7 @@ class _FeedState extends State<Feed> {
             productName: doc['name'],
             category: doc['category'],
             tag: doc['tag'],
-            seller: "Unknown Seller",
+            seller: "Anonymous Seller",
             url: doc['picture'],
             rating: doc['rating']))
         .toList();
