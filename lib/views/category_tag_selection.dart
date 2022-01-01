@@ -179,7 +179,7 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
             child: GridView.count(
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 20,
-                childAspectRatio: .5,
+                childAspectRatio: .6,
                 crossAxisCount: 2,
                 children: List.generate(_resultList!.length,
                     (index) => productPreview(_resultList![index]))),
@@ -227,7 +227,7 @@ class DataSearch extends SearchDelegate<String> {
       child: GridView.count(
           crossAxisSpacing: 20,
           mainAxisSpacing: 20,
-          childAspectRatio: .5,
+          childAspectRatio: .6,
           crossAxisCount: 2,
           children: List.generate(
               resultList.length, (index) => productPreview(resultList[index]))),
