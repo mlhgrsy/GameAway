@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gameaway/pages/seller_page.dart';
 import 'package:gameaway/services/db.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
@@ -60,8 +61,11 @@ class _FeedState extends State<Feed> {
                 children: [
                   OutlinedButton.icon(
                       onPressed: () {
-                        Navigator.pushNamed(
-                            context, "homepage/explore"); //homepage/explore
+                        // Navigator.pushNamed(
+                        //     context, "homepage/explore");
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const SellerPage(
+                                sellerID: "ZDgxpoysU8aFPC3y5doCdFXLBwS2")));
                       },
                       icon: const Icon(Icons.search),
                       label: const Text("Explore Products")),
