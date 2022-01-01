@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/pages/seller_page.dart';
 import 'package:gameaway/services/db.dart';
+import 'package:gameaway/services/util.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/action_bar.dart';
@@ -31,7 +32,7 @@ class _FeedState extends State<Feed> {
             tag: doc['tag'],
             seller: "Anonymous Seller",
             url: doc['picture'],
-            rating: doc['rating']))
+            rating: Util.avg(doc['rating'])))
         .toList();
     for (var i = 0; i < r.docs.length; i++) {
       var r2 = await r.docs[i]["seller"].get();

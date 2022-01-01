@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/db.dart';
+import 'package:gameaway/services/util.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/views/action_bar.dart';
 import 'package:gameaway/views/product_preview.dart';
@@ -29,16 +30,20 @@ class _SellerPageState extends State<SellerPage> {
     var r = await db.productCollection
         .where("seller", isEqualTo: sellerReference)
         .get();
-    var _onSaleProductsTemp = r.docs
-        .map<Product>((doc) => Product(
-            price: doc['price'],
-            productName: doc['name'],
-            category: doc['category'],
-            tag: doc['tag'],
-            seller: sellerName ?? "Anonymous Seller",
-            url: doc['picture'],
-            rating: doc['rating']))
-        .toList();
+    List<dynamic> sellerRatings = [];
+    var _onSaleProductsTemp = r.docs.map<Product>((doc) {
+      double productRating = Util.avg(doc['rating']);
+      sellerRatings.add(productRating);
+      return Product(
+          price: doc['price'],
+          productName: doc['name'],
+          category: doc['category'],
+          tag: doc['tag'],
+          seller: sellerName ?? "Anonymous Seller",
+          url: doc['picture'],
+          rating: productRating);
+    }).toList();
+    sellerRating = Util.avg(sellerRatings);
     setState(() {
       _onSaleProducts = _onSaleProductsTemp;
     });
@@ -52,8 +57,9 @@ class _SellerPageState extends State<SellerPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_onSaleProducts == null || sellerName == null)
+    if (_onSaleProducts == null || sellerName == null) {
       return const Text("Loading...");
+    }
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -83,7 +89,7 @@ class _SellerPageState extends State<SellerPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         RatingBarIndicator(
-                          rating: 3.6,
+                          rating: sellerRating,
                           itemBuilder: (context, index) => const Icon(
                             Icons.star,
                             color: Colors.amber,
@@ -94,8 +100,8 @@ class _SellerPageState extends State<SellerPage> {
                           direction: Axis.horizontal,
                         ),
                         Text(
-                          "(3.6)",
-                          style: TextStyle(color: Colors.amber),
+                          "$sellerRating",
+                          style: const TextStyle(color: Colors.amber),
                         ),
                       ],
                     ),
