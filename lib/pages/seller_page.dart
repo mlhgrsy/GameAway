@@ -126,7 +126,7 @@ class _SellerPageState extends State<SellerPage> {
               child: GridView.count(
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
-                  childAspectRatio: .5,
+                  childAspectRatio: 0.60,
                   crossAxisCount: 2,
                   children: List.generate(_onSaleProducts!.length,
                       (index) => productPreview(_onSaleProducts![index]))),

@@ -62,11 +62,11 @@ class _FeedState extends State<Feed> {
                 children: [
                   OutlinedButton.icon(
                       onPressed: () {
-                        // Navigator.pushNamed(
-                        //     context, "homepage/explore");
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const SellerPage(
-                                sellerID: "ZDgxpoysU8aFPC3y5doCdFXLBwS2")));
+                        Navigator.pushNamed(
+                            context, "homepage/explore");
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (context) => const SellerPage(
+                        //         sellerID: "ZDgxpoysU8aFPC3y5doCdFXLBwS2")));
                       },
                       icon: const Icon(Icons.search),
                       label: const Text("Explore Products")),

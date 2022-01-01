@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/db.dart';
+import 'package:gameaway/services/util.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/views/product_preview.dart';
 
@@ -70,16 +71,17 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
 
   Future<void> getProducts() async {
     var r = await db.productCollection.get();
-    var _productsTemp = r.docs
-        .map<Product>((doc) => Product(
-            price: doc['price'],
-            productName: doc['name'],
-            category: doc['category'],
-            tag: doc['tag'],
-            seller: "Anonymous Seller",
-            url: doc['picture'],
-            rating: doc['rating']))
-        .toList();
+    var _productsTemp = r.docs.map<Product>((doc) {
+      double productRating = Util.avg(doc['rating']);
+      return Product(
+          price: doc['price'],
+          productName: doc['name'],
+          category: doc['category'],
+          tag: doc['tag'],
+          seller: "Anonymous Seller",
+          url: doc['picture'],
+          rating: productRating);
+    }).toList();
     for (var i = 0; i < r.docs.length; i++) {
       var r2 = await r.docs[i]["seller"].get();
       if (r2.data() != null) _productsTemp[i].seller = r2.data()["name"];
