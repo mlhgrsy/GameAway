@@ -15,8 +15,8 @@ class SellerPage extends StatefulWidget {
 class _SellerPageState extends State<SellerPage> {
   DBService db = DBService();
   String? sellerName;
-  List<Product>? _resultList;
-  List<Product>? _products;
+  List<Product>? _onSaleProducts;
+  List<Product>? _soldProducts;
 
   Future<void> getProducts() async {
     var sellerReference = DBService.getSellerReference(widget.sellerID);
@@ -25,7 +25,7 @@ class _SellerPageState extends State<SellerPage> {
     var r = await db.productCollection
         .where("seller", isEqualTo: sellerReference)
         .get();
-    var _productsTemp = r.docs
+    var _onSaleProductsTemp = r.docs
         .map<Product>((doc) => Product(
             price: doc['price'],
             productName: doc['name'],
@@ -35,9 +35,8 @@ class _SellerPageState extends State<SellerPage> {
             url: doc['picture'],
             rating: doc['rating']))
         .toList();
-    print(_productsTemp);
     setState(() {
-      _resultList = _productsTemp;
+      _onSaleProducts = _onSaleProductsTemp;
     });
   }
 
@@ -49,7 +48,7 @@ class _SellerPageState extends State<SellerPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_resultList == null) return const Text("Loading...");
+    if (_onSaleProducts == null) return const Text("Loading...");
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -74,8 +73,8 @@ class _SellerPageState extends State<SellerPage> {
                   mainAxisSpacing: 20,
                   childAspectRatio: .5,
                   crossAxisCount: 2,
-                  children: List.generate(_resultList!.length,
-                      (index) => productPreview(_resultList![index]))),
+                  children: List.generate(_onSaleProducts!.length,
+                      (index) => productPreview(_onSaleProducts![index]))),
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),
@@ -84,8 +83,8 @@ class _SellerPageState extends State<SellerPage> {
                   mainAxisSpacing: 20,
                   childAspectRatio: .5,
                   crossAxisCount: 2,
-                  children: List.generate(_resultList!.length,
-                      (index) => productPreview(_resultList![index]))),
+                  children: List.generate(_onSaleProducts!.length,
+                      (index) => productPreview(_onSaleProducts![index]))),
             )
           ],
         ),
