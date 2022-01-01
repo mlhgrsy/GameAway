@@ -48,6 +48,14 @@ class DBService {
     await userCollection.doc(uid).update({'name': newName});
   }
 
+  static Future hasProvider(String uid) async {
+    return (await userCollection.doc(uid).get())["has_provider"];
+  }
+
+  static Future deleteAccount(String uid) async {
+    return (await userCollection.doc(uid).delete());
+  }
+
   final CollectionReference productCollection =
       FirebaseFirestore.instance.collection('product');
 

@@ -11,6 +11,8 @@ import 'package:gameaway/views/profile/account_settings_forms/account_settings_p
 import 'package:gameaway/views/profile/account_settings_forms/account_settings_pp.dart';
 import 'package:provider/provider.dart';
 
+import 'account_settings_forms/account_settings_delete.dart';
+
 class AccountSettingsForm extends StatefulWidget {
   const AccountSettingsForm({Key? key}) : super(key: key);
 
@@ -45,6 +47,8 @@ class _AccountSettingsFormState extends State<AccountSettingsForm> {
         AccountSettingsPP(),
         SizedBox(height: 20),
         AccountSettingsName(),
+        SizedBox(height: 20),
+        AccountSettingsDelete(),
         SizedBox(height: 20)
       ];
     } else {
@@ -57,6 +61,8 @@ class _AccountSettingsFormState extends State<AccountSettingsForm> {
         AccountSettingsMail(),
         SizedBox(height: 20),
         AccountSettingsPassword(),
+        SizedBox(height: 20),
+        AccountSettingsDelete(),
         SizedBox(height: 20)
       ];
     }
