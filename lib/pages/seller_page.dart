@@ -35,6 +35,7 @@ class _SellerPageState extends State<SellerPage> {
       double productRating = Util.avg(doc['rating']);
       sellerRatings.add(productRating);
       return Product(
+          pid: doc.id,
           price: doc['price'],
           productName: doc['name'],
           category: doc['category'],
@@ -128,8 +129,10 @@ class _SellerPageState extends State<SellerPage> {
                   mainAxisSpacing: 20,
                   childAspectRatio: 0.60,
                   crossAxisCount: 2,
-                  children: List.generate(_onSaleProducts!.length,
-                      (index) => productPreview(_onSaleProducts![index]))),
+                  children: List.generate(
+                      _onSaleProducts!.length,
+                      (index) =>
+                          ProductPreview(product: _onSaleProducts![index]))),
             ),
             const Text("daıodwapd") // Buy sell history'deki itemleri koyacaz
           ],

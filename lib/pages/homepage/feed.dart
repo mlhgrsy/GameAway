@@ -26,6 +26,7 @@ class _FeedState extends State<Feed> {
     var r = await db.productCollection.get();
     var _productsTemp = r.docs
         .map<Product>((doc) => Product(
+            pid: doc.id,
             price: doc['price'],
             productName: doc['name'],
             category: doc['category'],
@@ -62,8 +63,10 @@ class _FeedState extends State<Feed> {
                 children: [
                   OutlinedButton.icon(
                       onPressed: () {
-                        Navigator.pushNamed(
-                            context, "homepage/explore");
+                        Navigator.pushNamed(context, "homepage/explore")
+                            .then((value) {
+                          setState(() {});
+                        });
                         // Navigator.of(context).push(MaterialPageRoute(
                         //     builder: (context) => const SellerPage(
                         //         sellerID: "ZDgxpoysU8aFPC3y5doCdFXLBwS2")));
@@ -82,8 +85,15 @@ class _FeedState extends State<Feed> {
                         children: List.generate(
                             _promotions!.length,
                             (index) => Row(children: [
-                                  productPreview(_promotions![index]),
-                                  const SizedBox(width: 8)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: ProductPreview(
+                                        refreshFunc: () {
+                                          setState(() {});
+                                        },
+                                        product: _promotions![index]),
+                                  ),
                                 ])),
                       ),
                     ),
@@ -100,8 +110,15 @@ class _FeedState extends State<Feed> {
                         children: List.generate(
                             _recommendations!.length,
                             (index) => Row(children: [
-                                  productPreview(_recommendations![index]),
-                                  const SizedBox(width: 8)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: ProductPreview(
+                                        refreshFunc: () {
+                                          setState(() {});
+                                        },
+                                        product: _recommendations![index]),
+                                  ),
                                 ])),
                       ),
                     ),

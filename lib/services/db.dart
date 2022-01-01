@@ -60,14 +60,14 @@ class DBService {
       FirebaseFirestore.instance.collection('product');
 
   Future addProduct(String category, String name, String picture, num price,
-      num rating, String seller, String tag) async {
+      DocumentReference seller, String tag) async {
     productCollection
         .add({
           'category': category,
           'name': name,
           'picture': picture,
           'price': price,
-          'rating': rating,
+          'rating': [],
           'seller': seller,
           'tag': tag,
         })
