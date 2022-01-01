@@ -221,7 +221,7 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildResults(BuildContext context) {
     final resultList =
-        products.where((p) => p.productName.startsWith(query)).toList();
+        products.where((p) => p.productName.toLowerCase().contains(query.toLowerCase())).toList();
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: GridView.count(
@@ -237,7 +237,7 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     final suggestionList =
-        products.where((p) => p.productName.startsWith(query)).toList();
+        products.where((p) => p.productName.toLowerCase().contains(query.toLowerCase())).toList();
 
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(
