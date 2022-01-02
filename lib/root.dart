@@ -93,7 +93,7 @@ class _RootState extends State<Root> {
               label: 'Basket',
               backgroundColor: AppColors.primaryBackground),
           BottomNavigationBarItem(
-              icon: Icon(Icons.star),
+              icon: Icon(Icons.favorite),
               label: 'Favorites',
               backgroundColor: AppColors.primaryBackground),
           BottomNavigationBarItem(
