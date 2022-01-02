@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/util.dart';
@@ -24,12 +25,15 @@ class _FavoritesState extends State<Favorites> {
       for (var i = 0; i < favoritesList.length; i++) {
         var currentSnapshot =
             await db.productCollection.doc(favoritesList[i]).get();
+        DocumentReference sellerRef = currentSnapshot.get("seller");
+        String sellerName = (await sellerRef.get()).get("name");
         var currentProduct = Product(
             pid: favoritesList[i],
             url: currentSnapshot.get("picture"),
             productName: currentSnapshot.get("name"),
             rating: Util.avg(currentSnapshot.get("rating")),
-            price: currentSnapshot.get("price"));
+            price: currentSnapshot.get("price"),
+            seller: sellerName);
         favoriteProducts.add(currentProduct);
       }
       return favoriteProducts;
