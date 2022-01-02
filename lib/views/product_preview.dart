@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -7,13 +9,15 @@ import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/edit_product.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'delete_product.dart';
+
 class ProductPreview extends StatefulWidget {
-  const ProductPreview(
-      {Key? key,
-      required this.product,
-      this.refreshFunc,
-      this.editable = false})
-      : super(key: key);
+  const ProductPreview({
+    Key? key,
+    required this.product,
+    this.refreshFunc,
+    this.editable = false,
+  }) : super(key: key);
 
   final Product product;
   final Function? refreshFunc;
@@ -135,7 +139,8 @@ class _ProductPreviewState extends State<ProductPreview> {
                                         ? Icons.favorite_outline
                                         : Icons.favorite))
                           ]
-                        : editableButtons(context, widget.product)),
+                        : editableButtons(
+                            context, widget.product, widget.refreshFunc)),
                   ],
                 ),
                 Visibility(
@@ -151,7 +156,7 @@ class _ProductPreviewState extends State<ProductPreview> {
   }
 }
 
-List<Widget> editableButtons(context, product) {
+List<Widget> editableButtons(context, product, refreshFunc) {
   return <Widget>[
     Positioned(
       top: 0,
@@ -161,14 +166,22 @@ List<Widget> editableButtons(context, product) {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => EditProduct(product: product)));
+                    builder: (_) => EditProduct(
+                        product: product, refreshFunc: refreshFunc)));
           },
           icon: const Icon(Icons.edit)),
     ),
     Positioned(
         top: 0,
         right: 0,
-        child: IconButton(onPressed: () {}, icon: const Icon(Icons.delete))),
+        child: IconButton(
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) => DeleteProduct(
+                      pid: product.pid, refreshFunc: refreshFunc));
+            },
+            icon: const Icon(Icons.delete))),
   ];
 }
 

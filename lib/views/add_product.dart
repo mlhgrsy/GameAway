@@ -11,7 +11,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class AddProduct extends StatefulWidget {
-  const AddProduct({Key? key}) : super(key: key);
+  const AddProduct({Key? key, this.refreshFunc}) : super(key: key);
+
+  final Function? refreshFunc;
 
   @override
   _AddProductState createState() => _AddProductState();
@@ -47,7 +49,9 @@ class _AddProductState extends State<AddProduct> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ActionBar(title: "New Product",),
+      appBar: ActionBar(
+        title: "New Product",
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: Dimen.regularPadding,
@@ -68,7 +72,8 @@ class _AddProductState extends State<AddProduct> {
                       final XFile? image =
                           await _picker.pickImage(source: ImageSource.gallery);
                       setState(() {
-                        productPicture = image == null ? null : File(image.path);
+                        productPicture =
+                            image == null ? null : File(image.path);
                       });
                     },
                     label: const Text("Set Picture"),
@@ -162,12 +167,14 @@ class _AddProductState extends State<AddProduct> {
                         .doc(Provider.of<User?>(context, listen: false)!.uid);
                     await db.addProduct(_categories[_currentCategory!], name,
                         price, sellerRef, _currentTag, productPicture!, stocks);
+                    widget.refreshFunc!();
                     showDialog(
                         context: context,
                         builder: (BuildContext context2) {
                           return AlertDialog(
                               title: const Text("Success"),
-                              content: const Text("Your product has been added!"),
+                              content:
+                                  const Text("Your product has been added!"),
                               actions: [
                                 TextButton(
                                   child: const Text("Ok"),

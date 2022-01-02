@@ -16,8 +16,13 @@ class _SellProductState extends State<SellProduct>
     with TickerProviderStateMixin {
   int _currentTab = 0;
 
+  void refreshFunc() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("deneme");
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -40,8 +45,13 @@ class _SellProductState extends State<SellProduct>
               ],
             ),
           ),
-          body: const TabBarView(
-            children: [MyProducts(), MyStocks()],
+          body: TabBarView(
+            children: [
+              MyProducts(
+                refreshFunc: refreshFunc,
+              ),
+              const MyStocks()
+            ],
           ),
           floatingActionButton: Visibility(
             visible: _currentTab == 0,
@@ -51,8 +61,9 @@ class _SellProductState extends State<SellProduct>
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              const AddProduct()));
+                          builder: (_) => AddProduct(
+                                refreshFunc: refreshFunc,
+                              )));
                 },
                 label: const Text("New"),
                 icon: const Icon(Icons.add)),

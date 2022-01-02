@@ -12,9 +12,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class EditProduct extends StatefulWidget {
-  const EditProduct({Key? key, required this.product}) : super(key: key);
+  const EditProduct({Key? key, required this.product, this.refreshFunc})
+      : super(key: key);
 
   final Product product;
+  final Function? refreshFunc;
 
   @override
   _EditProductState createState() => _EditProductState();
@@ -196,6 +198,7 @@ class _EditProductState extends State<EditProduct> {
                         _currentTag,
                         productPicture,
                         stocks);
+                    widget.refreshFunc!();
                     showDialog(
                         context: context,
                         builder: (BuildContext context2) {

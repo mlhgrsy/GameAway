@@ -7,8 +7,9 @@ import 'package:gameaway/views/product_preview.dart';
 import 'package:provider/provider.dart';
 
 class MyProducts extends StatefulWidget {
-  const MyProducts({Key? key}) : super(key: key);
+  const MyProducts({Key? key,this.refreshFunc}) : super(key: key);
 
+  final Function? refreshFunc;
   @override
   _MyProductsState createState() => _MyProductsState();
 }
@@ -64,7 +65,12 @@ class _MyProductsState extends State<MyProducts> {
                 children: List.generate(
                     productsList.length,
                     (index) => ProductPreview(
-                        editable: true, product: productsList[index]))),
+                          editable: true,
+                          product: productsList[index],
+                          refreshFunc: () {
+                            setState(() {});
+                          },
+                        ))),
           );
         });
   }

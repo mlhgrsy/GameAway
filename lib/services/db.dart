@@ -112,6 +112,13 @@ class DBService {
     }
   }
 
+  Future deleteProduct(String pid) async {
+    var productRef = productCollection.doc(pid);
+    var pictureRef = FirebaseStorage.instance.refFromURL((await productRef.get()).get("picture"));
+    await pictureRef.delete();
+    await productRef.delete();
+  }
+
   Future addnotif(String notif) async {
     notify
         .add({
