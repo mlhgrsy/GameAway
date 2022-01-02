@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gameaway/pages/homepage/explore.dart';
 import 'package:gameaway/pages/homepage/feed.dart';
+import 'package:gameaway/pages/seller_page.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';

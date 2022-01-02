@@ -6,7 +6,6 @@ import 'package:gameaway/pages/homepage/homepage.dart';
 import 'package:gameaway/pages/profile/profile.dart';
 import 'package:gameaway/pages/sell_product.dart';
 import 'package:gameaway/pages/sign_in.dart';
-import 'package:gameaway/pages/suggestions.dart';
 import 'package:gameaway/services/bottom_nav.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +29,6 @@ class _RootState extends State<Root> {
     const HomePage(),
     const Basket(),
     const Favorites(),
-    const Suggestions(),
     SellProduct(),
     const Profile()
   ];
@@ -69,7 +67,7 @@ class _RootState extends State<Root> {
 
   void _onBottomTabPress(int index) {
     bool isSignedIn = null != Provider.of<User?>(context, listen: false);
-    if (!isSignedIn && index == 5) {
+    if (!isSignedIn && (index == 4 || index == 3)) {
       Navigator.pushNamed(context, "/signIn");
     } else {
       Provider.of<BottomNav>(context,listen: false).switchTo(index);
@@ -95,12 +93,8 @@ class _RootState extends State<Root> {
               label: 'Basket',
               backgroundColor: AppColors.primaryBackground),
           BottomNavigationBarItem(
-              icon: Icon(Icons.star),
-              label: 'Favorites',
-              backgroundColor: AppColors.primaryBackground),
-          BottomNavigationBarItem(
               icon: Icon(Icons.favorite),
-              label: 'Suggestions',
+              label: 'Favorites',
               backgroundColor: AppColors.primaryBackground),
           BottomNavigationBarItem(
               icon: Icon(Icons.add_shopping_cart),

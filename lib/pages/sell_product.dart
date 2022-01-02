@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/db.dart';
+import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/views/action_bar.dart';
+import 'package:provider/provider.dart';
 
 class SellProduct extends StatefulWidget {
   SellProduct({Key? key}) : super(key: key);
@@ -25,7 +28,7 @@ class _SellProductState extends State<SellProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: ActionBar(title: "Sell Product"),
-        body: Center(
+        body: SingleChildScrollView(
           child: Container(
             padding: Dimen.regularPadding,
             child: Form(
@@ -58,19 +61,6 @@ class _SellProductState extends State<SellProduct> {
                     },
                   ),
                   TextFormField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(hintText: "rating"),
-                    onSaved: (value) {
-                      if (value != null) rating = num.parse(value);
-                    },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(hintText: "seller"),
-                    onSaved: (value) {
-                      if (value != null) seller = value;
-                    },
-                  ),
-                  TextFormField(
                     decoration: InputDecoration(hintText: "tag"),
                     onSaved: (value) {
                       if (value != null) tag = value;
@@ -81,13 +71,15 @@ class _SellProductState extends State<SellProduct> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Text('Add'),
-          onPressed: () async {
-            _formProductKey.currentState!.save();
-            db.addProduct(category, name, picture, price, rating, "",
-                tag); //seller null yerine eklenecek !!!!
-          },
-        ));
+        floatingActionButton: FloatingActionButton.extended(
+            backgroundColor: AppColors.primaryBackground,
+            onPressed: () async {
+              var sellerRef = DBService.userCollection.doc(Provider.of<User?>(context,listen: false)!.uid);
+              _formProductKey.currentState!.save();
+              db.addProduct(category, name, picture, price, sellerRef,
+                  tag);
+            },
+            label: const Text("Add"),
+            icon: const Icon(Icons.add)));
   }
 }

@@ -22,6 +22,10 @@ class DBService {
   static final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('Users');
 
+  static DocumentReference getSellerReference(String id) {
+    return FirebaseFirestore.instance.collection("Users").doc(id);
+  }
+
   static Future addUser(String uid, bool hasProvider, String name) async {
     await userCollection.doc(uid).set({
       'has_provider': hasProvider,
@@ -44,18 +48,26 @@ class DBService {
     await userCollection.doc(uid).update({'name': newName});
   }
 
+  static Future hasProvider(String uid) async {
+    return (await userCollection.doc(uid).get())["has_provider"];
+  }
+
+  static Future deleteAccount(String uid) async {
+    return (await userCollection.doc(uid).delete());
+  }
+
   final CollectionReference productCollection =
       FirebaseFirestore.instance.collection('product');
 
   Future addProduct(String category, String name, String picture, num price,
-      num rating, String seller, String tag) async {
+      DocumentReference seller, String tag) async {
     productCollection
         .add({
           'category': category,
           'name': name,
           'picture': picture,
           'price': price,
-          'rating': rating,
+          'rating': [],
           'seller': seller,
           'tag': tag,
         })

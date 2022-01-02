@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/db.dart';
+import 'package:gameaway/services/util.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/views/product_preview.dart';
 
@@ -70,16 +71,18 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
 
   Future<void> getProducts() async {
     var r = await db.productCollection.get();
-    var _productsTemp = r.docs
-        .map<Product>((doc) => Product(
-            price: doc['price'],
-            productName: doc['name'],
-            category: doc['category'],
-            tag: doc['tag'],
-            seller: "Unknown Seller",
-            url: doc['picture'],
-            rating: doc['rating']))
-        .toList();
+    var _productsTemp = r.docs.map<Product>((doc) {
+      double productRating = Util.avg(doc['rating']);
+      return Product(
+          pid: doc.id,
+          price: doc['price'],
+          productName: doc['name'],
+          category: doc['category'],
+          tag: doc['tag'],
+          seller: "Anonymous Seller",
+          url: doc['picture'],
+          rating: productRating);
+    }).toList();
     for (var i = 0; i < r.docs.length; i++) {
       var r2 = await r.docs[i]["seller"].get();
       if (r2.data() != null) _productsTemp[i].seller = r2.data()["name"];
@@ -171,16 +174,16 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
           ),
         ),
         SizedBox(
-          height: 400,
+          height: MediaQuery.of(context).size.height + 30,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: GridView.count(
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 20,
-                childAspectRatio: .5,
+                childAspectRatio: .6,
                 crossAxisCount: 2,
                 children: List.generate(_resultList!.length,
-                    (index) => productPreview(_resultList![index]))),
+                    (index) => ProductPreview(product: _resultList![index]))),
           ),
         ),
       ],
@@ -197,7 +200,7 @@ class DataSearch extends SearchDelegate<String> {
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(
-          icon: Icon(Icons.clear),
+          icon: const Icon(Icons.clear),
           onPressed: () {
             query = "";
           })
@@ -218,24 +221,26 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    final resultList =
-        products.where((p) => p.productName.startsWith(query)).toList();
+    final resultList = products
+        .where((p) => p.productName.toLowerCase().contains(query.toLowerCase()))
+        .toList();
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: GridView.count(
           crossAxisSpacing: 20,
           mainAxisSpacing: 20,
-          childAspectRatio: .5,
+          childAspectRatio: .6,
           crossAxisCount: 2,
-          children: List.generate(
-              resultList.length, (index) => productPreview(resultList[index]))),
+          children: List.generate(resultList.length,
+              (index) => ProductPreview(product: resultList[index]))),
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final suggestionList =
-        products.where((p) => p.productName.startsWith(query)).toList();
+    final suggestionList = products
+        .where((p) => p.productName.toLowerCase().contains(query.toLowerCase()))
+        .toList();
 
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(

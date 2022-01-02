@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gameaway/pages/homepage/homepage.dart';
 import 'package:gameaway/pages/notifications.dart';
 import 'package:gameaway/pages/profile/account_settings.dart';
+import 'package:gameaway/pages/seller_page.dart';
 import 'package:gameaway/pages/sign_in.dart';
 import 'package:gameaway/root.dart';
 import 'package:gameaway/pages/sign_up.dart';
