@@ -29,8 +29,7 @@ class ProfileBody extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 50,
-                  backgroundImage:
-                      NetworkImage(pp), //burası pp widget fnc yazılacak
+                  backgroundImage: NetworkImage(pp),
                 ),
                 const SizedBox(height: 30),
                 Text(
@@ -43,9 +42,9 @@ class ProfileBody extends StatelessWidget {
                   style: kProfileMailText,
                 ),
                 const SizedBox(height: 15),
-                AccountButtons(),
-                HistoryButtons(),
-                NotificationButtons(),
+                const AccountButtons(),
+                const HistoryButtons(),
+                const NotificationButtons(),
               ],
             );
           }),

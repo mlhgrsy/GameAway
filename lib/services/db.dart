@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:path/path.dart';
 
 CollectionReference users = _firestore.collection('Users');
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -59,20 +63,60 @@ class DBService {
   final CollectionReference productCollection =
       FirebaseFirestore.instance.collection('product');
 
-  Future addProduct(String category, String name, String picture, num price,
-      DocumentReference seller, String tag) async {
-    productCollection
-        .add({
-          'category': category,
-          'name': name,
-          'picture': picture,
-          'price': price,
-          'rating': [],
-          'seller': seller,
-          'tag': tag,
-        })
-        .then((value) => print('Product added'))
-        .catchError((error) => print('Error: ${error.toString()}'));
+  Future addProduct(String category, String name, num price,
+      DocumentReference seller, String tag, File picture, num stocks) async {
+    var productRef = await productCollection.add({
+      'category': category,
+      'name': name,
+      'picture': "",
+      'price': price,
+      'rating': [],
+      'seller': seller,
+      'tag': tag,
+      'stocks': stocks,
+    });
+
+    var ref = FirebaseStorage.instance.ref();
+    String filepath =
+        "/productImages/${productRef.id}${extension(picture.path)}";
+    await ref.child(filepath).putFile(picture);
+    String productPictureURL = await ref.child(filepath).getDownloadURL();
+    await productRef.update({"picture": productPictureURL});
+  }
+
+  Future editProduct(String id, String category, String name, num price,
+      String tag, File? picture, num stocks) async {
+    var productRef = productCollection.doc(id);
+    if (picture == null) {
+      productRef.update({
+        'category': category,
+        'name': name,
+        'price': price,
+        'tag': tag,
+        'stocks': stocks,
+      });
+    } else {
+      String oldURL = (await productRef.get()).get("picture");
+      var ref = FirebaseStorage.instance.refFromURL(oldURL);
+      await ref.delete();
+      await ref.putFile(picture);
+      String productPictureURL = await ref.getDownloadURL();
+      await productRef.update({
+        'category': category,
+        'name': name,
+        'price': price,
+        'tag': tag,
+        'stocks': stocks,
+        "picture": productPictureURL,
+      });
+    }
+  }
+
+  Future deleteProduct(String pid) async {
+    var productRef = productCollection.doc(pid);
+    var pictureRef = FirebaseStorage.instance.refFromURL((await productRef.get()).get("picture"));
+    await pictureRef.delete();
+    await productRef.delete();
   }
 
   Future addnotif(String notif) async {

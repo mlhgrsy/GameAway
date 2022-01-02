@@ -35,6 +35,7 @@ class _SellerPageState extends State<SellerPage> {
       double productRating = Util.avg(doc['rating']);
       sellerRatings.add(productRating);
       return Product(
+          stocks: doc['stocks'],
           pid: doc.id,
           price: doc['price'],
           productName: doc['name'],
