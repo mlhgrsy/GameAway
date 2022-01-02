@@ -7,6 +7,7 @@ import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/util.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
+import 'package:gameaway/views/my_products.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -154,7 +155,7 @@ class _SellProductState extends State<SellProduct> {
                   ),
                 ),
               ),
-              const Text("dkwal")
+              const MyProducts()
             ],
           ),
           floatingActionButton: FloatingActionButton.extended(
