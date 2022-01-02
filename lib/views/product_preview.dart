@@ -4,6 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
+import 'package:gameaway/views/edit_product.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductPreview extends StatefulWidget {
@@ -134,7 +135,7 @@ class _ProductPreviewState extends State<ProductPreview> {
                                         ? Icons.favorite_outline
                                         : Icons.favorite))
                           ]
-                        : editableButtons()),
+                        : editableButtons(context, widget.product)),
                   ],
                 ),
                 Visibility(
@@ -150,12 +151,19 @@ class _ProductPreviewState extends State<ProductPreview> {
   }
 }
 
-List<Widget> editableButtons() {
+List<Widget> editableButtons(context, product) {
   return <Widget>[
     Positioned(
       top: 0,
       left: 0,
-      child: IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
+      child: IconButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => EditProduct(product: product)));
+          },
+          icon: const Icon(Icons.edit)),
     ),
     Positioned(
         top: 0,

@@ -5,9 +5,6 @@ import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/util.dart';
 import 'package:gameaway/views/product_preview.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'action_bar.dart';
 
 class MyProducts extends StatefulWidget {
   const MyProducts({Key? key}) : super(key: key);
@@ -36,7 +33,9 @@ class _MyProductsState extends State<MyProducts> {
           productName: currentProductDoc.get("name"),
           rating: Util.avg(currentProductDoc.get("rating")),
           price: currentProductDoc.get("price"),
-          seller: sellerName);
+          seller: sellerName,
+          category: currentProductDoc.get("category"),
+          tag: currentProductDoc.get("tag"));
       productsList.add(currentProduct);
     }
     return productsList;
@@ -54,7 +53,7 @@ class _MyProductsState extends State<MyProducts> {
                 child:
                     Text("You are not selling any products. Try adding some!"));
           }
-          List<Product> favoritesList = snapshot.data;
+          List<Product> productsList = snapshot.data;
           return Padding(
             padding: const EdgeInsets.all(20.0),
             child: GridView.count(
@@ -63,9 +62,9 @@ class _MyProductsState extends State<MyProducts> {
                 childAspectRatio: .6,
                 crossAxisCount: 2,
                 children: List.generate(
-                    favoritesList.length,
+                    productsList.length,
                     (index) => ProductPreview(
-                        editable: true, product: favoritesList[index]))),
+                        editable: true, product: productsList[index]))),
           );
         });
   }

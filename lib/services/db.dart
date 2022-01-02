@@ -64,7 +64,7 @@ class DBService {
       FirebaseFirestore.instance.collection('product');
 
   Future addProduct(String category, String name, num price,
-      DocumentReference seller, String tag, File picture,num stocks) async {
+      DocumentReference seller, String tag, File picture, num stocks) async {
     var productRef = await productCollection.add({
       'category': category,
       'name': name,
@@ -82,6 +82,34 @@ class DBService {
     await ref.child(filepath).putFile(picture);
     String productPictureURL = await ref.child(filepath).getDownloadURL();
     await productRef.update({"picture": productPictureURL});
+  }
+
+  Future editProduct(String id, String category, String name, num price,
+      String tag, File? picture, num stocks) async {
+    var productRef = productCollection.doc(id);
+    if (picture == null) {
+      productRef.update({
+        'category': category,
+        'name': name,
+        'price': price,
+        'tag': tag,
+        'stocks': stocks,
+      });
+    } else {
+      String oldURL = (await productRef.get()).get("picture");
+      var ref = FirebaseStorage.instance.refFromURL(oldURL);
+      await ref.delete();
+      await ref.putFile(picture);
+      String productPictureURL = await ref.getDownloadURL();
+      await productRef.update({
+        'category': category,
+        'name': name,
+        'price': price,
+        'tag': tag,
+        'stocks': stocks,
+        "picture": productPictureURL,
+      });
+    }
   }
 
   Future addnotif(String notif) async {
