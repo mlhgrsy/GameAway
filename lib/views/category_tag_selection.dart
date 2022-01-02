@@ -14,49 +14,12 @@ class CategoryTagSelection extends StatefulWidget {
 
 class _CategoryTagSelectionState extends State<CategoryTagSelection> {
   //Categories
-  static final _categories = [
-    "Games",
-    "Board Games",
-    "Hardware",
-    "Accounts",
-    "Boost"
-  ];
+  static final _categories = Util.categories;
   static int _currentCategory = 0;
 
   //DropDown
   static String _dropdownValue = 'All';
-  static final _dropdownItemsString = [
-    <String>[
-      'All',
-      'Horror',
-      'RPG',
-      'Shooter',
-      "Sandbox",
-      "Open World",
-      "Others"
-    ],
-    <String>[
-      'All',
-      'Abstract',
-      'Area Control',
-      'Campaign',
-      "Deckbuilder",
-      "Drafting",
-      "Dungeon-crawler",
-      "Others"
-    ],
-    <String>['All', "PC", "XBOX", "PlayStation", "Nintendo", "Atari", "Others"],
-    <String>[
-      'All',
-      'Steam',
-      'Epic Games',
-      'Uplay',
-      "Battle.net",
-      "Origin",
-      "Others"
-    ],
-    <String>['All', 'Ranking', 'Achievement', 'Level', "Others"]
-  ];
+  static final _dropdownItemsString = Util.tags;
   static final _dropdownItems = _dropdownItemsString
       .map((e) => e.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(

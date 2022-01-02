@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:path/path.dart';
 
 CollectionReference users = _firestore.collection('Users');
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -59,20 +63,24 @@ class DBService {
   final CollectionReference productCollection =
       FirebaseFirestore.instance.collection('product');
 
-  Future addProduct(String category, String name, String picture, num price,
-      DocumentReference seller, String tag) async {
-    productCollection
-        .add({
-          'category': category,
-          'name': name,
-          'picture': picture,
-          'price': price,
-          'rating': [],
-          'seller': seller,
-          'tag': tag,
-        })
-        .then((value) => print('Product added'))
-        .catchError((error) => print('Error: ${error.toString()}'));
+  Future addProduct(String category, String name, num price,
+      DocumentReference seller, String tag, File picture) async {
+    var productRef = await productCollection.add({
+      'category': category,
+      'name': name,
+      'picture': "",
+      'price': price,
+      'rating': [],
+      'seller': seller,
+      'tag': tag,
+    });
+
+    var ref = FirebaseStorage.instance.ref();
+    String filepath =
+        "/productImages/${productRef.id}${extension(picture.path)}";
+    await ref.child(filepath).putFile(picture);
+    String productPictureURL = await ref.child(filepath).getDownloadURL();
+    await productRef.update({"picture": productPictureURL});
   }
 
   Future addnotif(String notif) async {
