@@ -64,7 +64,7 @@ class DBService {
       FirebaseFirestore.instance.collection('product');
 
   Future addProduct(String category, String name, num price,
-      DocumentReference seller, String tag, File picture) async {
+      DocumentReference seller, String tag, File picture,num stocks) async {
     var productRef = await productCollection.add({
       'category': category,
       'name': name,
@@ -73,6 +73,7 @@ class DBService {
       'rating': [],
       'seller': seller,
       'tag': tag,
+      'stocks': stocks,
     });
 
     var ref = FirebaseStorage.instance.ref();

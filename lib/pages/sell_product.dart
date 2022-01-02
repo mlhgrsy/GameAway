@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gameaway/services/bottom_nav.dart';
 import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/util.dart';
 import 'package:gameaway/utils/colors.dart';
@@ -17,10 +18,8 @@ class SellProduct extends StatefulWidget {
 }
 
 class _SellProductState extends State<SellProduct> {
-  final _formProductKey = GlobalKey<FormState>();
   DBService db = DBService();
   String name = "";
-  String picture = "";
   num price = 0;
   num stocks = 0;
   File? productPicture;
@@ -67,86 +66,91 @@ class _SellProductState extends State<SellProduct> {
               SingleChildScrollView(
                 child: Container(
                   padding: Dimen.regularPadding,
-                  child: Form(
-                    key: _formProductKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          decoration: const InputDecoration(hintText: "name"),
-                          onSaved: (value) {
-                            if (value != null) name = value;
-                          },
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            OutlinedButton.icon(
-                              onPressed: () async {
-                                final ImagePicker _picker = ImagePicker();
-                                final XFile? image = await _picker.pickImage(
-                                    source: ImageSource.gallery);
-                                setState(() {
-                                  productPicture =
-                                      image == null ? null : File(image.path);
-                                });
-                              },
-                              label: const Text("Set Picture"),
-                              icon: const Icon(Icons.photo_camera),
+                  child: Column(
+                    children: [
+                      TextField(
+                        decoration: const InputDecoration(hintText: "name"),
+                        onChanged: (value) {
+                          name = value;
+                        },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          OutlinedButton.icon(
+                            onPressed: () async {
+                              final ImagePicker _picker = ImagePicker();
+                              final XFile? image = await _picker.pickImage(
+                                  source: ImageSource.gallery);
+                              setState(() {
+                                productPicture =
+                                    image == null ? null : File(image.path);
+                              });
+                            },
+                            label: const Text("Set Picture"),
+                            icon: const Icon(Icons.photo_camera),
+                          ),
+                          Visibility(
+                            visible: productPicture != null,
+                            child: const Text(
+                              "Product Image Set!",
+                              style: TextStyle(color: Colors.green),
                             ),
-                            Visibility(
-                              visible: productPicture != null,
-                              child: const Text(
-                                "Product Image Set!",
-                                style: TextStyle(color: Colors.green),
-                              ),
-                            ),
-                            Container()
-                          ],
-                        ),
-                        TextFormField(
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(hintText: "price"),
-                          onSaved: (value) {
-                            if (value != null) price = num.parse(value);
-                          },
-                        ),
-                        // TextFormField(
-                        //   keyboardType: TextInputType.number,
-                        //   decoration: const InputDecoration(hintText: "stocks"),
-                        //   onSaved: (value) {
-                        //     if (value != null) stocks = num.parse(value);
-                        //   },
-                        // ),
-                        DropdownButton(
-                          hint: const Text("Choose Category"),
+                          ),
+                          Container()
+                        ],
+                      ),
+                      TextField(
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(hintText: "price"),
+                        onChanged: (value) {
+                          try {
+                            price = num.parse(value);
+                          } catch (e) {
+                            price = 0;
+                          }
+                        },
+                      ),
+                      TextField(
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(hintText: "stocks"),
+                        onChanged: (value) {
+                          try {
+                            stocks = num.parse(value);
+                          } catch (e) {
+                            stocks = 0;
+                          }
+                        },
+                      ),
+                      DropdownButton(
+                        hint: const Text("Choose Category"),
+                        isExpanded: true,
+                        items: _categoryItems,
+                        value: _currentCategory,
+                        onChanged: (int? newValue) {
+                          setState(() {
+                            _currentCategory = newValue!;
+                            _currentTag = _tags[_currentCategory!][0];
+                          });
+                        },
+                      ),
+                      Visibility(
+                        visible: _currentCategory != null,
+                        child: DropdownButton(
+                          hint: const Text("Choose Tag"),
                           isExpanded: true,
-                          items: _categoryItems,
-                          value: _currentCategory,
-                          onChanged: (int? newValue) {
+                          items: _currentCategory == null
+                              ? _tagItems[0]
+                              : _tagItems[_currentCategory!],
+                          value: _currentTag,
+                          onChanged: (String? newValue) {
                             setState(() {
-                              _currentCategory = newValue!;
-                              _currentTag = _tags[_currentCategory!][0];
+                              _currentTag = newValue!;
                             });
                           },
                         ),
-                        Visibility(
-                          visible: _currentCategory != null,
-                          child: DropdownButton(
-                            hint: const Text("Choose Tag"),
-                            isExpanded: true,
-                            items: _currentCategory == null
-                                ? _tagItems[0]
-                                : _tagItems[_currentCategory!],
-                            value: _currentTag,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                _currentTag = newValue!;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -156,11 +160,50 @@ class _SellProductState extends State<SellProduct> {
           floatingActionButton: FloatingActionButton.extended(
               backgroundColor: AppColors.primaryBackground,
               onPressed: () async {
-                var sellerRef = DBService.userCollection
-                    .doc(Provider.of<User?>(context, listen: false)!.uid);
-                _formProductKey.currentState!.save();
-                db.addProduct(_categories[_currentCategory!], name, price,
-                    sellerRef, _currentTag, productPicture!);
+                if (name == "" ||
+                    productPicture == null ||
+                    price == 0 ||
+                    stocks == 0 ||
+                    _currentCategory == null) {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                            title: const Text("Missing Information"),
+                            content: const Text(
+                                "Please make sure to fill all the information about your product!"),
+                            actions: [
+                              TextButton(
+                                child: const Text("Ok"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              )
+                            ]);
+                      });
+                } else {
+                  var sellerRef = DBService.userCollection
+                      .doc(Provider.of<User?>(context, listen: false)!.uid);
+                  await db.addProduct(_categories[_currentCategory!], name,
+                      price, sellerRef, _currentTag, productPicture!, stocks);
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context2) {
+                        return AlertDialog(
+                            title: const Text("Success"),
+                            content: const Text("Your product has been added!"),
+                            actions: [
+                              TextButton(
+                                child: const Text("Ok"),
+                                onPressed: () {
+                                  Navigator.of(context2).pop();
+                                  Provider.of<BottomNav>(context, listen: false)
+                                      .switchTo(0);
+                                },
+                              )
+                            ]);
+                      });
+                }
               },
               label: const Text("Add"),
               icon: const Icon(Icons.add))),
