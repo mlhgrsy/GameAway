@@ -35,85 +35,97 @@ class _ProductPreviewState extends State<ProductPreview> {
                     (states) => EdgeInsets.zero)),
             onPressed: () {},
             child: Stack(
-              alignment: Alignment.topRight,
+              alignment: Alignment.center,
               children: [
-                Column(
+                Stack(
+                  alignment: Alignment.topRight,
                   children: [
-                    Container(
-                      width: 150,
-                      padding: Dimen.smallPadding,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Image.network(
-                            widget.product.url,
-                            height: 150,
-                            width: 75,
+                    Column(
+                      children: [
+                        Container(
+                          width: 150,
+                          padding: Dimen.smallPadding,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Image.network(
+                                widget.product.url,
+                                height: 150,
+                                width: 75,
+                              ),
+                              SizedBox(
+                                height: 30,
+                                child: Text(
+                                  widget.product.productName,
+                                  style: kSmallTitle,
+                                ),
+                              ),
+                              Text(
+                                widget.product.seller,
+                                style: kSmallText,
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              RatingBarIndicator(
+                                rating: widget.product.rating as double,
+                                itemBuilder: (context, index) => const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                                itemCount: 5,
+                                itemSize: 18.0,
+                                unratedColor: Colors.amber.withAlpha(80),
+                                direction: Axis.horizontal,
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Text("\$ ${widget.product.price}")
+                            ],
                           ),
-                          SizedBox(
-                            height: 30,
-                            child: Text(
-                              widget.product.productName,
-                              style: kSmallTitle,
-                            ),
-                          ),
-                          Text(
-                            widget.product.seller,
-                            style: kSmallText,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          RatingBarIndicator(
-                            rating: widget.product.rating as double,
-                            itemBuilder: (context, index) => const Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                            ),
-                            itemCount: 5,
-                            itemSize: 18.0,
-                            unratedColor: Colors.amber.withAlpha(80),
-                            direction: Axis.horizontal,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Text("\$ ${widget.product.price}")
-                        ],
-                      ),
-                    )
+                        )
+                      ],
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          if (prefs.data!.getStringList("favorites") == null) {
+                            setState(() {
+                              prefs.data!.setStringList(
+                                  "favorites", [widget.product.pid]);
+                            });
+                          } else if (prefs.data!
+                              .getStringList("favorites")!
+                              .contains(widget.product.pid)) {
+                            var temp = prefs.data!.getStringList("favorites")!;
+                            temp.remove(widget.product.pid);
+                            setState(() {
+                              prefs.data!.setStringList("favorites", temp);
+                            });
+                          } else {
+                            var temp = prefs.data!.getStringList("favorites")!;
+                            temp.add(widget.product.pid);
+                            setState(() {
+                              prefs.data!.setStringList("favorites", temp);
+                            });
+                          }
+                          if (widget.refreshFunc != null) widget.refreshFunc!();
+                        },
+                        icon: Icon(
+                            prefs.data!.getStringList("favorites") == null ||
+                                    !prefs.data!
+                                        .getStringList("favorites")
+                                        .contains(widget.product.pid)
+                                ? Icons.favorite_outline
+                                : Icons.favorite))
                   ],
                 ),
-                IconButton(
-                    onPressed: () {
-                      if (prefs.data!.getStringList("favorites") == null) {
-                        setState(() {
-                          prefs.data!
-                              .setStringList("favorites", [widget.product.pid]);
-                        });
-                      } else if (prefs.data!
-                          .getStringList("favorites")!
-                          .contains(widget.product.pid)) {
-                        var temp = prefs.data!.getStringList("favorites")!;
-                        temp.remove(widget.product.pid);
-                        setState(() {
-                          prefs.data!.setStringList("favorites", temp);
-                        });
-                      } else {
-                        var temp = prefs.data!.getStringList("favorites")!;
-                        temp.add(widget.product.pid);
-                        setState(() {
-                          prefs.data!.setStringList("favorites", temp);
-                        });
-                      }
-                      if (widget.refreshFunc != null) widget.refreshFunc!();
-                    },
-                    icon: Icon(prefs.data!.getStringList("favorites") == null ||
-                            !prefs.data!
-                                .getStringList("favorites")
-                                .contains(widget.product.pid)
-                        ? Icons.favorite_outline
-                        : Icons.favorite))
+                Visibility(
+                    visible: widget.product.stocks <= 0,
+                    child: const Text(
+                      "Out of Stock",
+                      style: TextStyle(color: AppColors.notification),
+                    ))
               ],
             ),
           );
@@ -128,6 +140,7 @@ class Product {
   String seller;
   num rating;
   num price;
+  num stocks;
   String category;
   String tag;
 
@@ -137,6 +150,7 @@ class Product {
       required this.productName,
       required this.rating,
       required this.price,
+      required this.stocks,
       this.category = "Games",
       this.tag = "All",
       this.seller = "Anonymous"});

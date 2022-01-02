@@ -28,6 +28,7 @@ class _FeedState extends State<Feed> {
         .map<Product>((doc) => Product(
             pid: doc.id,
             price: doc['price'],
+            stocks: doc['stocks'],
             productName: doc['name'],
             category: doc['category'],
             tag: doc['tag'],

@@ -37,6 +37,7 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
     var _productsTemp = r.docs.map<Product>((doc) {
       double productRating = Util.avg(doc['rating']);
       return Product(
+          stocks: doc['stocks'],
           pid: doc.id,
           price: doc['price'],
           productName: doc['name'],
