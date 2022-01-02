@@ -7,11 +7,16 @@ import 'package:gameaway/utils/styles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductPreview extends StatefulWidget {
-  const ProductPreview({Key? key, required this.product, this.refreshFunc})
+  const ProductPreview(
+      {Key? key,
+      required this.product,
+      this.refreshFunc,
+      this.editable = false})
       : super(key: key);
 
   final Product product;
   final Function? refreshFunc;
+  final bool editable;
 
   @override
   State<ProductPreview> createState() => _ProductPreviewState();
@@ -39,7 +44,7 @@ class _ProductPreviewState extends State<ProductPreview> {
               children: [
                 Stack(
                   alignment: Alignment.topRight,
-                  children: [
+                  children: <Widget>[
                     Column(
                       children: [
                         Container(
@@ -87,37 +92,49 @@ class _ProductPreviewState extends State<ProductPreview> {
                         )
                       ],
                     ),
-                    IconButton(
-                        onPressed: () {
-                          if (prefs.data!.getStringList("favorites") == null) {
-                            setState(() {
-                              prefs.data!.setStringList(
-                                  "favorites", [widget.product.pid]);
-                            });
-                          } else if (prefs.data!
-                              .getStringList("favorites")!
-                              .contains(widget.product.pid)) {
-                            var temp = prefs.data!.getStringList("favorites")!;
-                            temp.remove(widget.product.pid);
-                            setState(() {
-                              prefs.data!.setStringList("favorites", temp);
-                            });
-                          } else {
-                            var temp = prefs.data!.getStringList("favorites")!;
-                            temp.add(widget.product.pid);
-                            setState(() {
-                              prefs.data!.setStringList("favorites", temp);
-                            });
-                          }
-                          if (widget.refreshFunc != null) widget.refreshFunc!();
-                        },
-                        icon: Icon(
-                            prefs.data!.getStringList("favorites") == null ||
-                                    !prefs.data!
-                                        .getStringList("favorites")
-                                        .contains(widget.product.pid)
-                                ? Icons.favorite_outline
-                                : Icons.favorite))
+                    ...(!widget.editable
+                        ? [
+                            IconButton(
+                                onPressed: () {
+                                  if (prefs.data!.getStringList("favorites") ==
+                                      null) {
+                                    setState(() {
+                                      prefs.data!.setStringList(
+                                          "favorites", [widget.product.pid]);
+                                    });
+                                  } else if (prefs.data!
+                                      .getStringList("favorites")!
+                                      .contains(widget.product.pid)) {
+                                    var temp =
+                                        prefs.data!.getStringList("favorites")!;
+                                    temp.remove(widget.product.pid);
+                                    setState(() {
+                                      prefs.data!
+                                          .setStringList("favorites", temp);
+                                    });
+                                  } else {
+                                    var temp =
+                                        prefs.data!.getStringList("favorites")!;
+                                    temp.add(widget.product.pid);
+                                    setState(() {
+                                      prefs.data!
+                                          .setStringList("favorites", temp);
+                                    });
+                                  }
+                                  if (widget.refreshFunc != null) {
+                                    widget.refreshFunc!();
+                                  }
+                                },
+                                icon: Icon(
+                                    prefs.data!.getStringList("favorites") ==
+                                                null ||
+                                            !prefs.data!
+                                                .getStringList("favorites")
+                                                .contains(widget.product.pid)
+                                        ? Icons.favorite_outline
+                                        : Icons.favorite))
+                          ]
+                        : editableButtons()),
                   ],
                 ),
                 Visibility(
@@ -131,6 +148,20 @@ class _ProductPreviewState extends State<ProductPreview> {
           );
         });
   }
+}
+
+List<Widget> editableButtons() {
+  return <Widget>[
+    Positioned(
+      top: 0,
+      left: 0,
+      child: IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
+    ),
+    Positioned(
+        top: 0,
+        right: 0,
+        child: IconButton(onPressed: () {}, icon: const Icon(Icons.delete))),
+  ];
 }
 
 class Product {

@@ -90,6 +90,7 @@ class _FeedState extends State<Feed> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8.0),
                                     child: ProductPreview(
+                                        editable: false,
                                         refreshFunc: () {
                                           setState(() {});
                                         },
