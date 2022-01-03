@@ -32,6 +32,7 @@ class _FeedState extends State<Feed> {
             url: doc['picture'],
             rating: doc['rating']))
         .toList();
+
     for (var i = 0; i < r.docs.length; i++) {
       var r2 = await r.docs[i]["seller"].get();
       if (r2.data() != null) _productsTemp[i].seller = r2.data()["name"];

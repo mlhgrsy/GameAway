@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gameaway/pages/mock_payment.dart';
 import 'package:gameaway/pages/notifications.dart';
 import 'package:gameaway/services/auth.dart';
 import 'package:gameaway/utils/colors.dart';
@@ -18,7 +19,7 @@ class ActionBar extends StatelessWidget with PreferredSizeWidget {
             onPressed: () {
               if (user != null) {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => notify()));
+                    context, MaterialPageRoute(builder: (context) => Paymentscreen()));
               }
             },
             icon: const Icon(
