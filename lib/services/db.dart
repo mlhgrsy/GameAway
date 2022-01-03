@@ -30,6 +30,9 @@ class DBService {
     return FirebaseFirestore.instance.collection("Users").doc(id);
   }
 
+  static DocumentReference getProductReference(String id) {
+    return FirebaseFirestore.instance.collection("product").doc(id);
+  }
   static Future addUser(String uid, bool hasProvider, String name) async {
     await userCollection.doc(uid).set({
       'has_provider': hasProvider,

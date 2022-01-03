@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:gameaway/pages/product_page.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
@@ -43,7 +44,11 @@ class _ProductPreviewState extends State<ProductPreview> {
                         borderRadius: BorderRadius.circular(20))),
                 padding: MaterialStateProperty.resolveWith(
                     (states) => EdgeInsets.zero)),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const ProductPage(
+                      productID: "Kr53f4fjL2ASAIh4cluX")));
+            },
             child: Stack(
               alignment: Alignment.center,
               children: [
