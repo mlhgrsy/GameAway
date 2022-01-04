@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gameaway/pages/notifications.dart';
 import 'package:gameaway/services/auth.dart';
 import 'package:gameaway/utils/colors.dart';
+import 'package:gameaway/utils/styles.dart';
 import 'package:provider/provider.dart';
 
 class ActionBar extends StatelessWidget with PreferredSizeWidget {
@@ -33,6 +34,7 @@ class ActionBar extends StatelessWidget with PreferredSizeWidget {
       backgroundColor: AppColors.primaryBackground,
       centerTitle: true,
       elevation: 0.0,
+      titleTextStyle: kAppBarTitleTextStyle,
     );
   }
 

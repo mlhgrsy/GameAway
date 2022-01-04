@@ -28,6 +28,7 @@ class _FeedState extends State<Feed> {
         .map<Product>((doc) => Product(
             pid: doc.id,
             price: doc['price'],
+            stocks: doc['stocks'],
             productName: doc['name'],
             category: doc['category'],
             tag: doc['tag'],
@@ -89,6 +90,7 @@ class _FeedState extends State<Feed> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8.0),
                                     child: ProductPreview(
+                                        editable: false,
                                         refreshFunc: () {
                                           setState(() {});
                                         },

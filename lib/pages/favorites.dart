@@ -29,6 +29,7 @@ class _FavoritesState extends State<Favorites> {
         String sellerName = (await sellerRef.get()).get("name");
         var currentProduct = Product(
             pid: favoritesList[i],
+            stocks: currentSnapshot.get("stocks"),
             url: currentSnapshot.get("picture"),
             productName: currentSnapshot.get("name"),
             rating: Util.avg(currentSnapshot.get("rating")),
