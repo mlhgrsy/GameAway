@@ -10,7 +10,7 @@ import 'package:gameaway/services/bottom_nav.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'pages/basket.dart';
+import 'pages/basket_page.dart';
 import 'pages/favorites.dart';
 
 class Root extends StatefulWidget {
@@ -27,7 +27,7 @@ class Root extends StatefulWidget {
 class _RootState extends State<Root> {
   var routes = [
     const HomePage(),
-    const basket(),
+    const BasketPage(),
     const Favorites(),
     SellProduct(),
     const Profile()

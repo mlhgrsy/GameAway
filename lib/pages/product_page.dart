@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/pages/seller_page.dart';
+import 'package:gameaway/services/basket.dart';
 import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/util.dart';
 import 'package:gameaway/utils/colors.dart';
@@ -9,6 +10,7 @@ import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/action_bar.dart';
 import 'package:gameaway/views/product_preview.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({Key? key, required this.productID}) : super(key: key);
@@ -21,6 +23,7 @@ class ProductPage extends StatefulWidget {
 class _ProductPage extends State<ProductPage> {
   DBService db = DBService();
   String? _sellerID;
+  String productName = "";
 
   Future<Product> getProduct() async {
     var docSnap = await db.productCollection.doc(widget.productID).get();
@@ -40,21 +43,24 @@ class _ProductPage extends State<ProductPage> {
     String sellerName = (await sellerRef.get()).get("name");
     product.seller = sellerName;
     _sellerID = (await sellerRef.get()).id;
+    setState(() {
+      productName = product.productName;
+    });
     return product;
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: getProduct(),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (!snapshot.hasData) return const Text("Loading...");
-          Product _product = snapshot.data;
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(_product.productName),
-            ),
-            body: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(productName),
+      ),
+      body: FutureBuilder(
+          future: getProduct(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) return const Text("Loading...");
+            Product _product = snapshot.data;
+            return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -157,15 +163,48 @@ class _ProductPage extends State<ProductPage> {
                       ),
                       Column(
                         children: [
-                          OutlinedButton.icon(
-                              onPressed: () {
-                                Navigator.pushNamed(context, "homepage/explore")
-                                    .then((value) {
-                                  setState(() {});
-                                });
-                              },
-                              icon: const Icon(Icons.shopping_cart),
-                              label: const Text("Add to Cart")),
+                          Visibility(
+                            visible: _product.stocks > 0,
+                            child: OutlinedButton.icon(
+                                onPressed: () async {
+                                  if (await Basket.isInBasket(
+                                      widget.productID)) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                              title:
+                                                  const Text("Already Added"),
+                                              content: const Text(
+                                                  "This product is already in your basket"),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(_);
+                                                    },
+                                                    child: const Text("Ok"))
+                                              ],
+                                            ));
+                                  } else {
+                                    Basket.addItem(widget.productID);
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                              title: const Text("Success"),
+                                              content: const Text(
+                                                  "The product has been added to your basket!"),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(_);
+                                                    },
+                                                    child: const Text("Ok"))
+                                              ],
+                                            ));
+                                  }
+                                },
+                                icon: const Icon(Icons.shopping_cart),
+                                label: const Text("Add to Basket")),
+                          ),
                           OutlinedButton.icon(
                               onPressed: () {
                                 Navigator.pushNamed(context, "homepage/explore")
@@ -204,9 +243,9 @@ class _ProductPage extends State<ProductPage> {
                   )
                 ],
               ),
-            ),
-            backgroundColor: AppColors.primary.withOpacity(0.1),
-          );
-        });
+            );
+          }),
+      backgroundColor: const Color.fromRGBO(200, 200, 200, 1.0),
+    );
   }
 }
