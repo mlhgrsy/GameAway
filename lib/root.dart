@@ -27,7 +27,7 @@ class Root extends StatefulWidget {
 class _RootState extends State<Root> {
   var routes = [
     const HomePage(),
-    const Basket(),
+    const basket(),
     const Favorites(),
     SellProduct(),
     const Profile()

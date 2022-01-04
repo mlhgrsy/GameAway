@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gameaway/pages/oldpurchase.dart';
 import 'package:gameaway/utils/colors.dart';
 
 class HistoryButtons extends StatefulWidget {
@@ -28,7 +29,8 @@ class _HistoryButtonsState extends State<HistoryButtons> {
                 Icon(Icons.arrow_forward)
               ],
             ),
-            onPressed: () {}, // burası sayfaya göre doldurulacak
+            onPressed: () { Navigator.push(
+                context, MaterialPageRoute(builder: (context) => oldpurchase()));}, // burası sayfaya göre doldurulacak
           ),
         )
     );
