@@ -4,6 +4,8 @@ import 'package:gameaway/services/db.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/views/action_bar.dart';
+
+import 'mock_payment.dart';
 num sum=0;
 class basket extends StatefulWidget {
   const basket({Key? key}) : super(key: key);
@@ -60,15 +62,17 @@ class _basketState extends State<basket> {
                                         Text(
                                           '${listofnotify[index]["name"]}',
                                           style: TextStyle(
-                                              color: AppColors.notification,
+                                              color: AppColors.secondary,
                                               fontWeight: FontWeight.bold),
                                         ),
                                       ],
                                     ),
                                     leading: Image.network(listofnotify[index]["picture"]),
                                     subtitle: Text(
-                                        '\$ ${listofnotify[index]["price"]}'),
-                                    trailing: Icon(Icons.delete) ,
+                                        '\$ ${listofnotify[index]["price"]}',style: TextStyle(fontWeight: FontWeight.bold),),
+                                    trailing: TextButton(onPressed: (){},child: Text("X",style:
+                                    TextStyle(color: Colors.red,fontSize: 30),),)
+                                    //Icon(Icons.delete,color: Colors.red,) ,
                                   ),
                                 ),
                               );
@@ -82,7 +86,20 @@ class _basketState extends State<basket> {
                     
                   );
                 }),
-          Text("$sum")]),
+          Column(
+            children: [
+              SizedBox(height: 40,),
+              Divider(height: 2,),
+              Text("The sum is \$ $sum")]),
+            Divider(height: 2,thickness: 3,),
+            SizedBox(height: 15,),
+            TextButton(onPressed: (){
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Paymentscreen(sum: sum)));
+            }, child: Text("purchase"))
+            ],
+          ),
+
 
     );
   }

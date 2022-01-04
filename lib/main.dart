@@ -94,7 +94,6 @@ class BaseApp extends StatelessWidget {
           '/signIn': (context) => const SignIn(),
           '/Notify': (context) => const notify(),
           '/profile/account_settings': (context) => const AccountSettings(),
-          '/mock_payment': (context) => const Paymentscreen(),
           '/old_purchase': (context) => const oldpurchase(),
         },
       ),

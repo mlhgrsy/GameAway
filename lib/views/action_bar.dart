@@ -19,7 +19,7 @@ class ActionBar extends StatelessWidget with PreferredSizeWidget {
             onPressed: () {
               if (user != null) {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Paymentscreen()));
+                    context, MaterialPageRoute(builder: (context) => notify()));
               }
             },
             icon: const Icon(

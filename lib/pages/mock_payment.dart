@@ -8,14 +8,17 @@ import 'package:gameaway/views/action_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:gameaway/services/auth.dart';
 class Paymentscreen extends StatefulWidget {
-  const Paymentscreen({Key? key}) : super(key: key);
+  num sum;
+  Paymentscreen({Key? key,required this.sum}) : super(key: key);
 
   @override
-  _PaymentscreenState createState() => _PaymentscreenState();
+  _PaymentscreenState createState() => _PaymentscreenState(sum);
 
 }
 
 class _PaymentscreenState extends State<Paymentscreen> {
+  num sum;
+  _PaymentscreenState(this.sum);
   final _formKey = GlobalKey<FormState>();
   List month =["1","2","3","4","5","6","7","8","9","10","11","12"];
   var  dropdownValue;
@@ -37,7 +40,7 @@ class _PaymentscreenState extends State<Paymentscreen> {
         key: _formKey,
       child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [Text("Price is $price",style:kHeadingTextStyle ,),
+      children: [Text("Price is $sum",style:kHeadingTextStyle ,),
       SizedBox(height: Dimen.textFieldHeight,),
       Row(
       crossAxisAlignment: CrossAxisAlignment.start,
