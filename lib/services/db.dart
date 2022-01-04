@@ -33,6 +33,10 @@ class DBService {
   static DocumentReference getProductReference(String id) {
     return FirebaseFirestore.instance.collection("product").doc(id);
   }
+
+  static final CollectionReference ordersCollection =
+      FirebaseFirestore.instance.collection("order");
+
   static Future addUser(String uid, bool hasProvider, String name) async {
     await userCollection.doc(uid).set({
       'has_provider': hasProvider,
@@ -117,7 +121,8 @@ class DBService {
 
   Future deleteProduct(String pid) async {
     var productRef = productCollection.doc(pid);
-    var pictureRef = FirebaseStorage.instance.refFromURL((await productRef.get()).get("picture"));
+    var pictureRef = FirebaseStorage.instance
+        .refFromURL((await productRef.get()).get("picture"));
     await pictureRef.delete();
     await productRef.delete();
   }

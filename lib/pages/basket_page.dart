@@ -19,8 +19,10 @@ class BasketPage extends StatefulWidget {
 
 class _BasketPageState extends State<BasketPage> {
   num sum = 0;
+  List<Map<String, String>> orderInfo = <Map<String, String>>[];
 
   Future<List<Product>> getProducts() async {
+    orderInfo = <Map<String, String>>[];
     DBService db = DBService();
     var pids = await Basket.getItems();
     if (pids!.isEmpty) {
@@ -28,7 +30,8 @@ class _BasketPageState extends State<BasketPage> {
     } else {
       List<Product> productsInBasket = <Product>[];
       for (var i = 0; i < pids.length; i++) {
-        var currentSnapshot = await db.productCollection.doc(pids[i]).get();
+        DocumentReference productReference = db.productCollection.doc(pids[i]);
+        var currentSnapshot = await productReference.get();
         DocumentReference sellerRef = currentSnapshot.get("seller");
         String sellerName = (await sellerRef.get()).get("name");
         var currentProduct = Product(
@@ -40,6 +43,7 @@ class _BasketPageState extends State<BasketPage> {
             price: currentSnapshot.get("price"),
             seller: sellerName);
         productsInBasket.add(currentProduct);
+        orderInfo.add({"seller": sellerRef.id, "product": pids[i]});
       }
       num sum_price = 0;
       int i = 0;
@@ -47,9 +51,7 @@ class _BasketPageState extends State<BasketPage> {
         sum_price = sum_price + productsInBasket[i].price;
         i = i + 1;
       }
-      setState(() {
-        sum = sum_price;
-      });
+      sum = sum_price;
       return productsInBasket;
     }
   }
@@ -83,8 +85,8 @@ class _BasketPageState extends State<BasketPage> {
                                   title: Column(
                                     children: [
                                       Text(
-                                        '${products[index].productName}',
-                                        style: TextStyle(
+                                        products[index].productName,
+                                        style: const TextStyle(
                                             color: AppColors.secondary,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -93,8 +95,8 @@ class _BasketPageState extends State<BasketPage> {
                                   leading: Image.network(products[index].url),
                                   subtitle: Text(
                                     '\$ ${products[index].price}',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
                                   ),
                                   trailing: TextButton(
                                     onPressed: () async {
@@ -150,7 +152,10 @@ class _BasketPageState extends State<BasketPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Paymentscreen(sum: sum)));
+                              builder: (context) => PaymentScreen(
+                                    sum: sum,
+                                    orderInfo: orderInfo,
+                                  )));
                     },
                     child: Text("purchase"))
               ],

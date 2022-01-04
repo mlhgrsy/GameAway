@@ -13,8 +13,10 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductPage extends StatefulWidget {
-  const ProductPage({Key? key, required this.productID}) : super(key: key);
+  const ProductPage({Key? key, required this.productID, this.refreshFunc})
+      : super(key: key);
   final String productID;
+  final Function? refreshFunc;
 
   @override
   State<ProductPage> createState() => _ProductPage();
@@ -54,6 +56,46 @@ class _ProductPage extends State<ProductPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(productName),
+        actions: [
+          FutureBuilder(
+              future: SharedPreferences.getInstance(),
+              builder: (context, AsyncSnapshot<SharedPreferences> snapshot) {
+                print(snapshot);
+                if (!snapshot.hasData) return const Icon(Icons.hourglass_full);
+                var prefs = snapshot.data;
+                return IconButton(
+                    onPressed: () {
+                      if (prefs!.getStringList("favorites") == null) {
+                        setState(() {
+                          prefs.setStringList("favorites", [widget.productID]);
+                        });
+                      } else if (prefs
+                          .getStringList("favorites")!
+                          .contains(widget.productID)) {
+                        var temp = prefs.getStringList("favorites")!;
+                        temp.remove(widget.productID);
+                        setState(() {
+                          prefs.setStringList("favorites", temp);
+                        });
+                      } else {
+                        var temp = prefs.getStringList("favorites")!;
+                        temp.add(widget.productID);
+                        setState(() {
+                          prefs.setStringList("favorites", temp);
+                        });
+                      }
+                      if (widget.refreshFunc != null) {
+                        widget.refreshFunc!();
+                      }
+                    },
+                    icon: Icon(prefs!.getStringList("favorites") == null ||
+                            !prefs
+                                .getStringList("favorites")!
+                                .contains(widget.productID)
+                        ? Icons.favorite_outline
+                        : Icons.favorite));
+              })
+        ],
       ),
       body: FutureBuilder(
           future: getProduct(),
@@ -161,60 +203,45 @@ class _ProductPage extends State<ProductPage> {
                           ],
                         ),
                       ),
-                      Column(
-                        children: [
-                          Visibility(
-                            visible: _product.stocks > 0,
-                            child: OutlinedButton.icon(
-                                onPressed: () async {
-                                  if (await Basket.isInBasket(
-                                      widget.productID)) {
-                                    showDialog(
-                                        context: context,
-                                        builder: (_) => AlertDialog(
-                                              title:
-                                                  const Text("Already Added"),
-                                              content: const Text(
-                                                  "This product is already in your basket"),
-                                              actions: [
-                                                TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(_);
-                                                    },
-                                                    child: const Text("Ok"))
-                                              ],
-                                            ));
-                                  } else {
-                                    Basket.addItem(widget.productID);
-                                    showDialog(
-                                        context: context,
-                                        builder: (_) => AlertDialog(
-                                              title: const Text("Success"),
-                                              content: const Text(
-                                                  "The product has been added to your basket!"),
-                                              actions: [
-                                                TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(_);
-                                                    },
-                                                    child: const Text("Ok"))
-                                              ],
-                                            ));
-                                  }
-                                },
-                                icon: const Icon(Icons.shopping_cart),
-                                label: const Text("Add to Basket")),
-                          ),
-                          OutlinedButton.icon(
-                              onPressed: () {
-                                Navigator.pushNamed(context, "homepage/explore")
-                                    .then((value) {
-                                  setState(() {});
-                                });
-                              },
-                              icon: const Icon(Icons.favorite),
-                              label: const Text("Add to Favorites"))
-                        ],
+                      Visibility(
+                        visible: _product.stocks > 0,
+                        child: OutlinedButton.icon(
+                            onPressed: () async {
+                              if (await Basket.isInBasket(widget.productID)) {
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                          title: const Text("Already Added"),
+                                          content: const Text(
+                                              "This product is already in your basket"),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(_);
+                                                },
+                                                child: const Text("Ok"))
+                                          ],
+                                        ));
+                              } else {
+                                Basket.addItem(widget.productID);
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                          title: const Text("Success"),
+                                          content: const Text(
+                                              "The product has been added to your basket!"),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(_);
+                                                },
+                                                child: const Text("Ok"))
+                                          ],
+                                        ));
+                              }
+                            },
+                            icon: const Icon(Icons.shopping_cart),
+                            label: const Text("Add to Basket")),
                       ),
                     ],
                   ),

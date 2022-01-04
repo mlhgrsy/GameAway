@@ -40,7 +40,7 @@ class _ProfileState extends State<Profile> {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(AppColors.notification),
                 ),
-              icon: Icon(Icons.logout),
+              icon: const Icon(Icons.logout),
               ),
           ),
           ],

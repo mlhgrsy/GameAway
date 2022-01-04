@@ -29,6 +29,10 @@ class ProductPreview extends StatefulWidget {
 }
 
 class _ProductPreviewState extends State<ProductPreview> {
+  void childRefreshFunc() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -46,8 +50,10 @@ class _ProductPreviewState extends State<ProductPreview> {
                     (states) => EdgeInsets.zero)),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) =>
-                      ProductPage(productID: widget.product.pid)));
+                  builder: (context) => ProductPage(
+                        productID: widget.product.pid,
+                        refreshFunc: childRefreshFunc,
+                      )));
             },
             child: Stack(
               alignment: Alignment.center,

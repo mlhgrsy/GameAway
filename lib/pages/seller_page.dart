@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gameaway/pages/sold_products.dart';
 import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/util.dart';
 import 'package:gameaway/utils/colors.dart';
@@ -135,7 +136,7 @@ class _SellerPageState extends State<SellerPage> {
                       (index) =>
                           ProductPreview(product: _onSaleProducts![index]))),
             ),
-            const Text("daıodwapd") // Buy sell history'deki itemleri koyacaz
+            SoldProducts(sellerID: widget.sellerID)
           ],
         ),
       ),
