@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gameaway/pages/homepage/homepage.dart';
 import 'package:gameaway/pages/mock_payment.dart';
 import 'package:gameaway/pages/notifications.dart';
-import 'package:gameaway/pages/old_purchase.dart';
+import 'package:gameaway/pages/buy_sell_history.dart';
 import 'package:gameaway/pages/profile/account_settings.dart';
 import 'package:gameaway/pages/seller_page.dart';
 import 'package:gameaway/pages/sign_in.dart';

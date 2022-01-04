@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gameaway/pages/old_purchase.dart';
+import 'package:gameaway/pages/buy_sell_history.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +35,7 @@ class _HistoryButtonsState extends State<HistoryButtons> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => OldPurchase(
+                      builder: (context) => BuySellHistory(
                             uid: Provider.of<User?>(context)!.uid,
                           )));
             }, // burası sayfaya göre doldurulacak

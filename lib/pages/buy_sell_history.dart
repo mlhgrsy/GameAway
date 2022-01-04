@@ -12,15 +12,15 @@ import 'package:gameaway/views/action_bar.dart';
 import 'package:gameaway/views/action_bar.dart';
 import 'package:gameaway/views/product_preview.dart';
 
-class OldPurchase extends StatefulWidget {
-  const OldPurchase({Key? key, required this.uid}) : super(key: key);
+class BuySellHistory extends StatefulWidget {
+  const BuySellHistory({Key? key, required this.uid}) : super(key: key);
   final String uid;
 
   @override
-  _OldPurchaseState createState() => _OldPurchaseState();
+  _BuySellHistoryState createState() => _BuySellHistoryState();
 }
 
-class _OldPurchaseState extends State<OldPurchase> {
+class _BuySellHistoryState extends State<BuySellHistory> {
   Future<List<Order>> getOrders() async {
     List<Order> orders = <Order>[];
     var buyerRef = DBService.userCollection.doc(widget.uid);
