@@ -46,8 +46,8 @@ class _ProductPreviewState extends State<ProductPreview> {
                     (states) => EdgeInsets.zero)),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const ProductPage(
-                      productID: "Kr53f4fjL2ASAIh4cluX")));
+                  builder: (context) =>
+                      ProductPage(productID: widget.product.pid)));
             },
             child: Stack(
               alignment: Alignment.center,
@@ -200,6 +200,7 @@ class Product {
   num stocks;
   String category;
   String tag;
+  String desc;
 
   Product(
       {required this.pid,
@@ -208,6 +209,7 @@ class Product {
       required this.rating,
       required this.price,
       required this.stocks,
+      this.desc = "No Description",
       this.category = "Games",
       this.tag = "All",
       this.seller = "Anonymous"});

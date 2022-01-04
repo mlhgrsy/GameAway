@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/pages/seller_page.dart';
 import 'package:gameaway/services/db.dart';
@@ -19,180 +20,193 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPage extends State<ProductPage> {
   DBService db = DBService();
-  String? productCategory;
-  String? productName;
-  String? productPicture;
-  String? productSeller;
-  double productRating = 0;
-  num productPrice = 0;
-  num productStocks = 0;
-  String? productTag;
+  String? _sellerID;
 
-  Product _product = Product(
-      pid: "1231232312",
-      productName: "Left 4 Dead 2",
-      rating: 4.5,
-      price: 12.99,
-      seller: "Seller2",
-      url:
-          "https://icons.iconarchive.com/icons/3xhumed/mega-games-pack-34/128/GTA-IV-Lost-and-Damned-6-icon.png",
-      category: "Games",
-      stocks: 1,
-      tag: "All");
+  Future<Product> getProduct() async {
+    var docSnap = await db.productCollection.doc(widget.productID).get();
+    var product = Product(
+        pid: widget.productID,
+        productName: docSnap.get("name"),
+        rating: Util.avg(docSnap.get("rating")),
+        price: docSnap.get("price"),
+        seller: "Anonymous Seller",
+        url: docSnap.get("picture"),
+        category: docSnap.get("category"),
+        stocks: docSnap.get("stocks"),
+        tag: docSnap.get("tag"),
+        desc: docSnap.get("desc"));
 
-  @override
-  void initState() {
-    super.initState();
+    DocumentReference sellerRef = await docSnap.get("seller");
+    String sellerName = (await sellerRef.get()).get("name");
+    product.seller = sellerName;
+    _sellerID = (await sellerRef.get()).id;
+    return product;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("${_product.productName}"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: Dimen.regularPadding,
-                  child: CircleAvatar(
-                    radius: 35,
-                    backgroundImage: NetworkImage(
-                        _product.url), //burası pp widget fnc yazılacak
-                  ),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                SizedBox(
-                  width: 200,
-                  height: 55,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return FutureBuilder(
+        future: getProduct(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) return const Text("Loading...");
+          Product _product = snapshot.data;
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(_product.productName),
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      Text(
-                        "Price: ${_product.price}\$",
-                        style: kButtonDarkTextStyle,
-                        overflow: TextOverflow.ellipsis,
+                      Container(
+                        padding: Dimen.regularPadding,
+                        child: CircleAvatar(
+                          radius: 35,
+                          backgroundImage: NetworkImage(
+                              _product.url), //burası pp widget fnc yazılacak
+                        ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RatingBarIndicator(
-                            rating: _product.rating as double,
-                            itemBuilder: (context, index) => const Icon(
-                              Icons.star,
-                              color: Colors.amber,
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      SizedBox(
+                        width: 200,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Price: ${_product.price}\$",
+                              style: kButtonLightTextStyle,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            itemCount: 5,
-                            itemSize: 25.0,
-                            unratedColor: Colors.amber.withAlpha(50),
-                            direction: Axis.horizontal,
-                          ),
-                          Text(
-                            "${_product.rating}",
-                            style: const TextStyle(color: Colors.amber),
-                          ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                RatingBarIndicator(
+                                  rating: _product.rating as double,
+                                  itemBuilder: (context, index) => const Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                  ),
+                                  itemCount: 5,
+                                  itemSize: 25.0,
+                                  unratedColor: Colors.amber.withAlpha(50),
+                                  direction: Axis.horizontal,
+                                ),
+                                Text(
+                                  "${_product.rating}",
+                                  style: const TextStyle(color: Colors.amber),
+                                ),
+                              ],
+                            ),
+                            Visibility(
+                              visible: _product.stocks <= 0,
+                              child: const Text(
+                                "Out of stock",
+                                style: TextStyle(color: AppColors.notification),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: Dimen.regularPadding,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        SellerPage(sellerID: _sellerID!)));
+                              },
+                              child: Text(
+                                "Seller: ${_product.seller}",
+                                style: kButtonLightTextStyle,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Text(
+                              "Category: ${_product.category}",
+                              style: kButtonLightTextStyle,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              "Tag: ${_product.tag}",
+                              style: kButtonLightTextStyle,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              "Stock: ${_product.stocks}",
+                              style: kButtonLightTextStyle,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              "Description:",
+                              style: kButtonLightTextStyle,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          OutlinedButton.icon(
+                              onPressed: () {
+                                Navigator.pushNamed(context, "homepage/explore")
+                                    .then((value) {
+                                  setState(() {});
+                                });
+                              },
+                              icon: const Icon(Icons.shopping_cart),
+                              label: const Text("Add to Cart")),
+                          OutlinedButton.icon(
+                              onPressed: () {
+                                Navigator.pushNamed(context, "homepage/explore")
+                                    .then((value) {
+                                  setState(() {});
+                                });
+                              },
+                              icon: const Icon(Icons.favorite),
+                              label: const Text("Add to Favorites"))
                         ],
                       ),
                     ],
                   ),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: Dimen.regularPadding,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => SellerPage(
-                                  sellerID: "ZDgxpoysU8aFPC3y5doCdFXLBwS2")));
-                        },
-                        child: Text(
-                          "Seller: ${_product.seller}",
-                          style: kButtonDarkTextStyle,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Text(
-                        "Seller Rating: ${_product.seller}",
-                        style: kButtonDarkTextStyle,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        "Category: ${_product.category}",
-                        style: kButtonDarkTextStyle,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        "Tag: ${_product.tag}",
-                        style: kButtonDarkTextStyle,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        "Stock: ${_product.stocks}",
-                        style: kButtonDarkTextStyle,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        "Description:",
-                        style: kButtonDarkTextStyle,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                  Container(
+                    padding: Dimen.regularPadding,
+                    child: Text(
+                      _product.desc,
+                      style: const TextStyle(color: Colors.black),
+                      textAlign: TextAlign.left,
+                      //details
+                    ),
                   ),
-                ),
-                Column(
-                  children: [
-                    OutlinedButton.icon(
-                        onPressed: () {
-                          Navigator.pushNamed(context, "homepage/explore")
-                              .then((value) {
-                            setState(() {});
-                          });
-                        },
-                        icon: const Icon(Icons.shopping_cart),
-                        label: const Text("Add to Cart")),
-                    OutlinedButton.icon(
-                        onPressed: () {
-                          Navigator.pushNamed(context, "homepage/explore")
-                              .then((value) {
-                            setState(() {});
-                          });
-                        },
-                        icon: const Icon(Icons.favorite),
-                        label: const Text("Add to Favorites"))
-                  ],
-                ),
-              ],
-            ),
-            Container(
-              padding: Dimen.regularPadding,
-              child: Text(
-                "Lorem ipsum",
-                style: kButtonDarkTextStyle,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.left,
-                //details
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      OutlinedButton.icon(
+                          onPressed: () {
+                            Navigator.pushNamed(context, "homepage/explore")
+                                .then((value) {
+                              setState(() {});
+                            });
+                          },
+                          icon: const Icon(Icons.comment),
+                          label: const Text("See Reviews")),
+                    ],
+                  )
+                ],
               ),
             ),
-            Container(
-
-            )
-
-          ],
-        ),
-      ),
-      backgroundColor: AppColors.primary,
-    );
+            backgroundColor: AppColors.primary.withOpacity(0.1),
+          );
+        });
   }
 }
