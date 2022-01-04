@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gameaway/pages/homepage/homepage.dart';
 import 'package:gameaway/pages/mock_payment.dart';
 import 'package:gameaway/pages/notifications.dart';
-import 'package:gameaway/pages/oldpurchase.dart';
+import 'package:gameaway/pages/old_purchase.dart';
 import 'package:gameaway/pages/profile/account_settings.dart';
 import 'package:gameaway/pages/seller_page.dart';
 import 'package:gameaway/pages/sign_in.dart';
@@ -95,7 +95,6 @@ class BaseApp extends StatelessWidget {
           '/signIn': (context) => const SignIn(),
           '/Notify': (context) => const notify(),
           '/profile/account_settings': (context) => const AccountSettings(),
-          '/old_purchase': (context) => const oldpurchase(),
         },
       ),
     );
