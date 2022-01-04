@@ -239,6 +239,25 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           _formKey.currentState!.save();
                           if (name != null && card != null && CVV != null) {
                             if (user == null) {
+                              for (var i = 0;i<widget.orderInfo.length; i++) {
+                                await DBService.ordersCollection.add({
+                                  "buyer":
+                                  DBService.userCollection.doc("anonymous"),
+                                  "seller": DBService.userCollection
+                                      .doc(widget.orderInfo[i]["seller"]),
+                                  "product": DBService.getProductReference(
+                                      widget.orderInfo[i]["product"]!),
+                                  "purchaseDate": Timestamp.now()
+                                });
+                                final productRef =
+                                DBService.getProductReference(
+                                    widget.orderInfo[i]["product"]!);
+                                final num currentStocks =
+                                (await productRef.get()).get("stocks");
+                                await DBService.getProductReference(
+                                    widget.orderInfo[i]["product"]!)
+                                    .update({"stocks": currentStocks - 1});
+                              }
                             } else {
                               for (var i = 0;i<widget.orderInfo.length; i++) {
                                 await DBService.ordersCollection.add({
