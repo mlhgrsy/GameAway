@@ -208,15 +208,16 @@ class Product {
   String tag;
   String desc;
 
-  Product(
-      {required this.pid,
-      required this.url,
-      required this.productName,
-      required this.rating,
-      required this.price,
-      required this.stocks,
-      this.desc = "No Description",
-      this.category = "Games",
-      this.tag = "All",
-      this.seller = "Anonymous"});
+
+  Product({required this.pid,
+    required this.url,
+    required this.productName,
+    required this.rating,
+    required this.price,
+    required this.stocks,
+    this.desc = "No Description",
+    this.category = "Games",
+    this.tag = "All",
+    this.seller = "Anonymous",
+  });
 }

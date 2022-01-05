@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gameaway/pages/reviews.dart';
 import 'package:gameaway/pages/seller_page.dart';
 import 'package:gameaway/services/basket.dart';
 import 'package:gameaway/services/db.dart';
@@ -259,11 +260,9 @@ class _ProductPage extends State<ProductPage> {
                     children: [
                       OutlinedButton.icon(
                           onPressed: () {
-                            Navigator.pushNamed(context, "homepage/explore")
-                                .then((value) {
-                              setState(() {});
-                            });
-                          },
+            Navigator.push(
+            context, MaterialPageRoute(builder: (context) => review(productID: widget.productID)));},
+
                           icon: const Icon(Icons.comment),
                           label: const Text("See Reviews")),
                     ],
