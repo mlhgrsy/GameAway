@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gameaway/services/db.dart';
 import 'package:gameaway/views/action_bar.dart';
 import 'package:gameaway/views/action_bar.dart';
+import 'package:gameaway/views/history_card.dart';
 import 'package:gameaway/views/product_preview.dart';
 
 class BuySellHistory extends StatefulWidget {
@@ -61,29 +62,7 @@ class _BuySellHistoryState extends State<BuySellHistory> {
                   itemCount: orders.length,
                   itemBuilder: (context, index) {
                     if (orders != null) {
-                      return Padding(
-                        padding: Dimen.listPadding,
-                        child: Card(
-                          color: AppColors.captionColor,
-                          child: ListTile(
-                            onTap: () {},
-                            title: Column(
-                              children: [
-                                Text(
-                                  orders[index].productName,
-                                  style: const TextStyle(
-                                      color: AppColors.notification,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            leading:
-                                Image.network(orders[index].url),
-                            trailing:
-                                Text('\$ ${orders[index].price}'),
-                          ),
-                        ),
-                      );
+                      return HistoryCard(order: orders[index]);
                     } else {
                       return const Center(child: Text("no purchase has been made"));
                     }
