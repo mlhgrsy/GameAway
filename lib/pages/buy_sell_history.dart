@@ -36,6 +36,8 @@ class _BuySellHistoryState extends State<BuySellHistory> {
           (await currentProduct.get()).get("picture");
       String currentPid = currentProduct.id;
       orders.add(Order(
+          oid: element.id,
+          reviewed: element.get("reviewed"),
           url: currentProductPicture,
           productName: currentProductName,
           pid: currentPid,
@@ -64,7 +66,8 @@ class _BuySellHistoryState extends State<BuySellHistory> {
                     if (orders != null) {
                       return HistoryCard(order: orders[index]);
                     } else {
-                      return const Center(child: Text("no purchase has been made"));
+                      return const Center(
+                          child: Text("no purchase has been made"));
                     }
                   },
                 ),
