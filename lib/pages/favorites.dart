@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/util.dart';
 import 'package:gameaway/views/action_bar.dart';
+import 'package:gameaway/views/product_grid.dart';
 import 'package:gameaway/views/product_preview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -56,18 +57,8 @@ class _FavoritesState extends State<Favorites> {
                       Text("You have no favorite products. Try adding some!"));
             }
             List<Product> favoritesList = snapshot.data;
-            return Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: GridView.count(
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  childAspectRatio: .6,
-                  crossAxisCount: 2,
-                  children: List.generate(
-                      favoritesList.length,
-                      (index) =>
-                          ProductPreview(product: favoritesList[index]))),
-            );
+            return SingleChildScrollView(
+                child: ProductGrid(list: favoritesList));
           }),
     );
   }

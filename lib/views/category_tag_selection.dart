@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/util.dart';
 import 'package:gameaway/utils/colors.dart';
+import 'package:gameaway/views/product_grid.dart';
 import 'package:gameaway/views/product_preview.dart';
 
 class CategoryTagSelection extends StatefulWidget {
@@ -137,19 +138,7 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
             },
           ),
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height + 30,
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: GridView.count(
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
-                childAspectRatio: .6,
-                crossAxisCount: 2,
-                children: List.generate(_resultList!.length,
-                    (index) => ProductPreview(product: _resultList![index]))),
-          ),
-        ),
+        ProductGrid(list: _resultList!)
       ],
     );
   }
@@ -188,16 +177,7 @@ class DataSearch extends SearchDelegate<String> {
     final resultList = products
         .where((p) => p.productName.toLowerCase().contains(query.toLowerCase()))
         .toList();
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: GridView.count(
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 20,
-          childAspectRatio: .6,
-          crossAxisCount: 2,
-          children: List.generate(resultList.length,
-              (index) => ProductPreview(product: resultList[index]))),
-    );
+    return SingleChildScrollView(child: ProductGrid(list: resultList));
   }
 
   @override

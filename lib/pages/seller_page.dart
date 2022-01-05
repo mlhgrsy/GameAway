@@ -4,6 +4,7 @@ import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/util.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/views/action_bar.dart';
+import 'package:gameaway/views/product_grid.dart';
 import 'package:gameaway/views/product_preview.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -124,18 +125,7 @@ class _SellerPageState extends State<SellerPage> {
         ),
         body: TabBarView(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: GridView.count(
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  childAspectRatio: 0.60,
-                  crossAxisCount: 2,
-                  children: List.generate(
-                      _onSaleProducts!.length,
-                      (index) =>
-                          ProductPreview(product: _onSaleProducts![index]))),
-            ),
+            SingleChildScrollView(child: ProductGrid(list: _onSaleProducts!)),
             SoldProducts(sellerID: widget.sellerID)
           ],
         ),
