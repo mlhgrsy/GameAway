@@ -106,7 +106,7 @@ class _RootState extends State<Root> {
               backgroundColor: AppColors.primaryBackground)
         ],
         currentIndex: currentNavIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: AppColors.primary,
         onTap: _onBottomTabPress,
       ),
     );
