@@ -14,15 +14,15 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class review extends StatefulWidget {
-  const review({Key? key, required this.productID}) : super(key: key);
+class Reviews extends StatefulWidget {
+  const Reviews({Key? key, required this.productID}) : super(key: key);
   final String productID;
 
   @override
-  _reviewState createState() => _reviewState();
+  _ReviewsState createState() => _ReviewsState();
 }
 
-class _reviewState extends State<review> {
+class _ReviewsState extends State<Reviews> {
   DBService db = DBService();
   String? _sellerID;
   String productName = "";
@@ -39,11 +39,8 @@ class _reviewState extends State<review> {
 
     for (int i = 0; i < reviews.length; i++) {
       String name = (await reviews[i]["reviewer"].get()).get("name");
-      print(name);
       usernames.add(name);
     }
-    print("aaaaaaaaa");
-    print(usernames);
 
     return reviews;
   }
@@ -57,17 +54,25 @@ class _reviewState extends State<review> {
       body: FutureBuilder(
           future: getReviews(),
           builder: (context, AsyncSnapshot snapshot) {
-            if (!snapshot.hasData)
+            if (!snapshot.hasData) {
               return const Center(child: Icon(Icons.hourglass_full));
+            }
             var _reviewlist = snapshot.data;
-            print("bbbbbb");
-
+            if (_reviewlist.isEmpty) {
+              return const Center(
+                child: Text("There are no reviews for this product"),
+              );
+            }
             return ListView.builder(
               scrollDirection: Axis.vertical,
               itemCount: _reviewlist.length,
               itemBuilder: (context, index) {
                 bool state = _reviewlist[index]["approved"];
-                if(state==false && (((Provider.of<User?>(context)!=null && (!(Provider.of<User?>(context)!.uid == seller))||Provider.of<User?>(context)==null)))) return Container();
+                if (state == false &&
+                    (((Provider.of<User?>(context) != null &&
+                            (!(Provider.of<User?>(context)!.uid == seller)) ||
+                        Provider.of<User?>(context) == null))))
+                  return Container();
                 return Padding(
                   padding: Dimen.listPadding,
                   child: Card(
@@ -93,8 +98,8 @@ class _reviewState extends State<review> {
                               ),
                               Text((usernames[index]), style: kProfileNameText),
                               Visibility(
-                                visible:
-                                (Provider.of<User?>(context)!=null &&  Provider.of<User?>(context)!.uid == seller) ,
+                                visible: (Provider.of<User?>(context) != null &&
+                                    Provider.of<User?>(context)!.uid == seller),
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment:
@@ -104,12 +109,15 @@ class _reviewState extends State<review> {
                                         value: _reviewlist[index]["approved"],
                                         onChanged: (bool s) async {
                                           print(s);
-                                          var new_review = Map.from(_reviewlist[index]);
-                                          print("reviewlist ${_reviewlist[index]}");
+                                          var new_review =
+                                              Map.from(_reviewlist[index]);
+                                          print(
+                                              "reviewlist ${_reviewlist[index]}");
                                           print("newreviewold $new_review ");
                                           new_review["approved"] = s;
                                           print("newreviewlater $new_review ");
-                                          print("reviewlistlater ${_reviewlist[index]}");
+                                          print(
+                                              "reviewlistlater ${_reviewlist[index]}");
                                           await db.productCollection
                                               .doc(widget.productID)
                                               .update({
@@ -122,9 +130,7 @@ class _reviewState extends State<review> {
                                             "reviews": FieldValue.arrayUnion(
                                                 [new_review])
                                           });
-                                         setState(() {
-
-                                          });
+                                          setState(() {});
                                         },
                                       ),
                                     ]),

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gameaway/pages/reviews.dart';
 import 'package:gameaway/pages/seller_page.dart';
 import 'package:gameaway/services/basket.dart';
 import 'package:gameaway/services/db.dart';
@@ -88,14 +89,14 @@ class _ProductPage extends State<ProductPage> {
                         widget.refreshFunc!();
                       }
                     },
-                    icon: Icon(prefs!.getStringList("favorites") == null ||
-                            !prefs
-                                .getStringList("favorites")!
-                                .contains(widget.productID)
-                        ? Icons.favorite_outline
-                        : Icons.favorite, color: AppColors.notification)
-
-                );
+                    icon: Icon(
+                        prefs!.getStringList("favorites") == null ||
+                                !prefs
+                                    .getStringList("favorites")!
+                                    .contains(widget.productID)
+                            ? Icons.favorite_outline
+                            : Icons.favorite,
+                        color: AppColors.notification));
               })
         ],
       ),
@@ -114,12 +115,13 @@ class _ProductPage extends State<ProductPage> {
                       children: [
                         Container(
                           padding: Dimen.regularPadding,
-                          child: CircleAvatar( //farklı bir clip
+                          child: CircleAvatar(
+                            //farklı bir clip
                             radius: 50,
                             backgroundImage: NetworkImage(
-                                _product.url,
+                              _product.url,
                             ),
-                            backgroundColor:Colors.transparent,
+                            backgroundColor: Colors.transparent,
                           ),
                         ),
                         const SizedBox(
@@ -134,8 +136,9 @@ class _ProductPage extends State<ProductPage> {
                                 "Price: \$ ${_product.price}",
                                 style: kButtonDarkTextStyle,
                               ),
-                              const SizedBox( height: 15,),
-
+                              const SizedBox(
+                                height: 15,
+                              ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -152,7 +155,8 @@ class _ProductPage extends State<ProductPage> {
                                   ),
                                   Text(
                                     "  ${_product.rating}",
-                                    style: const TextStyle(color: Colors.amber, fontSize: 16),
+                                    style: const TextStyle(
+                                        color: Colors.amber, fontSize: 16),
                                   ),
                                 ],
                               ),
@@ -169,41 +173,54 @@ class _ProductPage extends State<ProductPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const SizedBox(width: 1,),
+                          const SizedBox(
+                            width: 1,
+                          ),
                           Column(
                             children: [
                               Text(
                                 "Category:",
                                 style: kButtonDarkTextStyle,
                               ),
-
-                              Text(_product.category, style: kButtonLightTextStyle,),
+                              Text(
+                                _product.category,
+                                style: kButtonLightTextStyle,
+                              ),
                             ],
                           ),
-                          const SizedBox(height: 60, child: VerticalDivider(color: Colors.white)),
+                          const SizedBox(
+                              height: 60,
+                              child: VerticalDivider(color: Colors.white)),
                           Column(
                             children: [
                               Text(
                                 "Tag:",
                                 style: kButtonDarkTextStyle,
                               ),
-
-                              Text(_product.tag, style: kButtonLightTextStyle,),
+                              Text(
+                                _product.tag,
+                                style: kButtonLightTextStyle,
+                              ),
                             ],
                           ),
-
-                          const SizedBox(height: 60, child: VerticalDivider(color: Colors.white)),
+                          const SizedBox(
+                              height: 60,
+                              child: VerticalDivider(color: Colors.white)),
                           Column(
                             children: [
                               Text(
                                 "Stock:",
                                 style: kButtonDarkTextStyle,
                               ),
-
-                              Text("${_product.stocks}", style: kButtonLightTextStyle,),
+                              Text(
+                                "${_product.stocks}",
+                                style: kButtonLightTextStyle,
+                              ),
                             ],
                           ),
-                          const SizedBox(width: 1,),
+                          const SizedBox(
+                            width: 1,
+                          ),
                         ],
                       ),
                     ),
@@ -215,7 +232,10 @@ class _ProductPage extends State<ProductPage> {
                       children: [
                         Column(
                           children: [
-                            Text("Seller:", style: kButtonLightTextStyle,),
+                            Text(
+                              "Seller:",
+                              style: kButtonLightTextStyle,
+                            ),
                             OutlinedButton(
                               onPressed: () {
                                 Navigator.of(context).push(MaterialPageRoute(
@@ -224,7 +244,8 @@ class _ProductPage extends State<ProductPage> {
                               },
                               child: Text(
                                 _product.seller,
-                                style: const TextStyle(color: AppColors.secondary, fontSize: 18 ),
+                                style: const TextStyle(
+                                    color: AppColors.secondary, fontSize: 18),
                               ),
                             ),
                           ],
@@ -233,8 +254,15 @@ class _ProductPage extends State<ProductPage> {
                       ],
                     ),
                   ),
-                  Container(padding: const EdgeInsets.fromLTRB(16, 16, 0, 0), child: const Text("Description:", style: TextStyle(fontSize: 18.0,
-                    fontWeight: FontWeight.w600,),)),
+                  Container(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
+                      child: const Text(
+                        "Description:",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )),
                   Container(
                     padding: Dimen.regularPadding,
                     child: Text(
@@ -244,19 +272,30 @@ class _ProductPage extends State<ProductPage> {
                       //details
                     ),
                   ),
-                  const SizedBox(height: 16,),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       OutlinedButton.icon(
                           onPressed: () {
-                            Navigator.pushNamed(context, "homepage/explore")
-                                .then((value) {
-                              setState(() {});
-                            });
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => Reviews(
+                                          productID: widget.productID,
+                                        )));
                           },
-                          icon: const Icon(Icons.comment, color: AppColors.secondary,),
-                          label: const Text("See Reviews", style: TextStyle(color: AppColors.secondary, fontSize: 18 ),)),
+                          icon: const Icon(
+                            Icons.comment,
+                            color: AppColors.secondary,
+                          ),
+                          label: const Text(
+                            "See Reviews",
+                            style: TextStyle(
+                                color: AppColors.secondary, fontSize: 18),
+                          )),
                     ],
                   ),
                 ],
@@ -268,45 +307,60 @@ class _ProductPage extends State<ProductPage> {
   }
 }
 
-buyWidget (context, productID, stocks){
+buyWidget(context, productID, stocks) {
   if (stocks > 0) {
-  return OutlinedButton.icon(
-      onPressed: () async {
-        if (await Basket.isInBasket(productID)) {
-          showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                title: const Text("Already Added"),
-                content: const Text(
-                    "This product is already in your basket"),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(_);
-                      },
-                      child: const Text("Ok"))
-                ],
-              ));
-        } else {
-          Basket.addItem(productID);
-          showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                title: const Text("Success"),
-                content: const Text(
-                    "The product has been added to your basket!"),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(_);
-                      },
-                      child: const Text("Ok"))
-                ],
-              ));
-        }
-      },
-      icon: const Icon(Icons.shopping_cart, color: AppColors.secondary,),
-      label: const Text("Add to Basket", style: TextStyle(color: AppColors.secondary, fontSize: 18 ),));
+    return OutlinedButton.icon(
+        onPressed: () async {
+          if (await Basket.isInBasket(productID)) {
+            showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                      title: const Text("Already Added"),
+                      content:
+                          const Text("This product is already in your basket"),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(_);
+                            },
+                            child: const Text("Ok"))
+                      ],
+                    ));
+          } else {
+            Basket.addItem(productID);
+            showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                      title: const Text("Success"),
+                      content: const Text(
+                          "The product has been added to your basket!"),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(_);
+                            },
+                            child: const Text("Ok"))
+                      ],
+                    ));
+          }
+        },
+        icon: const Icon(
+          Icons.shopping_cart,
+          color: AppColors.secondary,
+        ),
+        label: const Text(
+          "Add to Basket",
+          style: TextStyle(color: AppColors.secondary, fontSize: 18),
+        ));
   }
-  return Container( padding: Dimen.smallPadding ,decoration: BoxDecoration(border: Border.all(width: 1), borderRadius: BorderRadius.all(Radius.circular(5.0)),), child: Text("Out of stock", style: TextStyle(color: AppColors.notification, fontSize:18),));
+  return Container(
+      padding: Dimen.smallPadding,
+      decoration: BoxDecoration(
+        border: Border.all(width: 1),
+        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      ),
+      child: Text(
+        "Out of stock",
+        style: TextStyle(color: AppColors.notification, fontSize: 18),
+      ));
 }
