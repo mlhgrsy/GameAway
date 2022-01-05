@@ -22,7 +22,6 @@ class _SellProductState extends State<SellProduct>
 
   @override
   Widget build(BuildContext context) {
-    print("deneme");
     return DefaultTabController(
       length: 2,
       child: Scaffold(
