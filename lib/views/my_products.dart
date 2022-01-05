@@ -7,9 +7,10 @@ import 'package:gameaway/views/product_preview.dart';
 import 'package:provider/provider.dart';
 
 class MyProducts extends StatefulWidget {
-  const MyProducts({Key? key,this.refreshFunc}) : super(key: key);
+  const MyProducts({Key? key, this.refreshFunc}) : super(key: key);
 
   final Function? refreshFunc;
+
   @override
   _MyProductsState createState() => _MyProductsState();
 }
@@ -28,15 +29,17 @@ class _MyProductsState extends State<MyProducts> {
       DocumentReference sellerRef = currentProductDoc.get("seller");
       String sellerName = (await sellerRef.get()).get("name");
       var currentProduct = Product(
-          pid: currentProductDoc.id,
-          stocks: currentProductDoc.get("stocks"),
-          url: currentProductDoc.get("picture"),
-          productName: currentProductDoc.get("name"),
-          rating: Util.avg(currentProductDoc.get("rating")),
-          price: currentProductDoc.get("price"),
-          seller: sellerName,
-          category: currentProductDoc.get("category"),
-          tag: currentProductDoc.get("tag"));
+        pid: currentProductDoc.id,
+        stocks: currentProductDoc.get("stocks"),
+        url: currentProductDoc.get("picture"),
+        productName: currentProductDoc.get("name"),
+        rating: Util.avg(currentProductDoc.get("rating")),
+        price: currentProductDoc.get("price"),
+        seller: sellerName,
+        category: currentProductDoc.get("category"),
+        tag: currentProductDoc.get("tag"),
+        desc: currentProductDoc.get("desc"),
+      );
       productsList.add(currentProduct);
     }
     return productsList;

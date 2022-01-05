@@ -24,6 +24,7 @@ class _AddProductState extends State<AddProduct> {
   String name = "";
   num price = 0;
   num stocks = 0;
+  String desc = "";
   File? productPicture;
   int? _currentCategory;
   String _currentTag = "All";
@@ -111,6 +112,16 @@ class _AddProductState extends State<AddProduct> {
                   }
                 },
               ),
+              TextField(
+                maxLines: null,
+                minLines: 3,
+                keyboardType: TextInputType.multiline,
+                decoration: const InputDecoration(
+                    hintText: "Description", border: OutlineInputBorder()),
+                onChanged: (value) {
+                  desc = value;
+                },
+              ),
               DropdownButton(
                 hint: const Text("Choose Category"),
                 isExpanded: true,
@@ -142,6 +153,7 @@ class _AddProductState extends State<AddProduct> {
               OutlinedButton.icon(
                 onPressed: () async {
                   if (name == "" ||
+                      desc == "" ||
                       productPicture == null ||
                       price == 0 ||
                       stocks == 0 ||
@@ -165,8 +177,15 @@ class _AddProductState extends State<AddProduct> {
                   } else {
                     var sellerRef = DBService.userCollection
                         .doc(Provider.of<User?>(context, listen: false)!.uid);
-                    await db.addProduct(_categories[_currentCategory!], name,
-                        price, sellerRef, _currentTag, productPicture!, stocks);
+                    await db.addProduct(
+                        _categories[_currentCategory!],
+                        name,
+                        price,
+                        sellerRef,
+                        _currentTag,
+                        productPicture!,
+                        stocks,
+                        desc);
                     widget.refreshFunc!();
                     showDialog(
                         context: context,

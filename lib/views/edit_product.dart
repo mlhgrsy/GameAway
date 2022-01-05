@@ -27,6 +27,7 @@ class _EditProductState extends State<EditProduct> {
   String name = "";
   num price = 0;
   num stocks = 0;
+  String desc = "";
   File? productPicture;
   int? _currentCategory;
   String _currentTag = "All";
@@ -57,6 +58,7 @@ class _EditProductState extends State<EditProduct> {
     stocks = widget.product.stocks;
     _currentCategory = _categories.indexOf(widget.product.category);
     _currentTag = widget.product.tag;
+    desc = widget.product.desc;
   }
 
   @override
@@ -139,6 +141,18 @@ class _EditProductState extends State<EditProduct> {
                   }
                 },
               ),
+              TextField(
+                controller:
+                    TextEditingController(text: widget.product.desc),
+                maxLines: null,
+                minLines: 3,
+                keyboardType: TextInputType.multiline,
+                decoration: const InputDecoration(
+                    hintText: "Description", border: OutlineInputBorder()),
+                onChanged: (value) {
+                  desc = value;
+                },
+              ),
               DropdownButton(
                 hint: const Text("Choose Category"),
                 isExpanded: true,
@@ -197,7 +211,7 @@ class _EditProductState extends State<EditProduct> {
                         price,
                         _currentTag,
                         productPicture,
-                        stocks);
+                        stocks,desc);
                     widget.refreshFunc!();
                     showDialog(
                         context: context,
