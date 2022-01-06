@@ -27,6 +27,7 @@ class _ProductPage extends State<ProductPage> {
   DBService db = DBService();
   String? _sellerID;
   String productName = "";
+  bool isSellerActive = true;
 
   Future<Product> getProduct() async {
     var docSnap = await DBService.productCollection.doc(widget.productID).get();
@@ -43,6 +44,7 @@ class _ProductPage extends State<ProductPage> {
         desc: docSnap.get("desc"));
 
     DocumentReference sellerRef = await docSnap.get("seller");
+    isSellerActive = (await sellerRef.get()).get("active");
     String sellerName = (await sellerRef.get()).get("name");
     product.seller = sellerName;
     _sellerID = (await sellerRef.get()).id;
@@ -236,18 +238,27 @@ class _ProductPage extends State<ProductPage> {
                               "Seller:",
                               style: kButtonLightTextStyle,
                             ),
-                            OutlinedButton(
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        SellerPage(sellerID: _sellerID!)));
-                              },
-                              child: Text(
-                                _product.seller,
-                                style: const TextStyle(
-                                    color: AppColors.secondary, fontSize: 18),
-                              ),
-                            ),
+                            isSellerActive
+                                ? OutlinedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) => SellerPage(
+                                                  sellerID: _sellerID!)));
+                                    },
+                                    child: Text(
+                                      _product.seller,
+                                      style: const TextStyle(
+                                          color: AppColors.secondary,
+                                          fontSize: 18),
+                                    ),
+                                  )
+                                : Text(
+                                    _product.seller,
+                                    style: const TextStyle(
+                                        color: AppColors.secondary,
+                                        fontSize: 18),
+                                  ),
                           ],
                         ),
                         buyWidget(context, widget.productID, _product.stocks),

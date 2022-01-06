@@ -45,7 +45,7 @@ class DBService {
       'name': name,
       'pp':
           "https://ih1.redbubble.net/image.1046392278.3346/pp,840x830-pad,1000x1000,f8f8f8.jpg",
-      'rating': 0
+      'active': true
     });
   }
 
@@ -72,7 +72,7 @@ class DBService {
     for (var element in sellQuery.docs) {
       await element.reference.update({"stocks": 0});
     }
-    await userRef.update({"name": "[Deleted User]"});
+    await userRef.update({"name": "[Deleted User]", "active": false});
   }
 
   static final CollectionReference productCollection =
