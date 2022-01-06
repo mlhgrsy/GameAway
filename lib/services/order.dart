@@ -8,6 +8,7 @@ class Order {
   num price;
   bool reviewed;
   Timestamp purchaseDate;
+  String buyer;
 
   Order(
       {required this.url,
@@ -16,5 +17,6 @@ class Order {
       required this.pid,
       required this.price,
       required this.purchaseDate,
-      this.reviewed = false});
+      this.reviewed = false,
+      this.buyer = "Anonymous"});
 }

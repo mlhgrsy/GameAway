@@ -10,8 +10,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gameaway/services/db.dart';
 import 'package:gameaway/views/action_bar.dart';
 import 'package:gameaway/views/action_bar.dart';
+import 'package:gameaway/views/buy_history.dart';
 import 'package:gameaway/views/history_card.dart';
 import 'package:gameaway/views/product_preview.dart';
+import 'package:gameaway/views/sell_history.dart';
 
 class BuySellHistory extends StatefulWidget {
   const BuySellHistory({Key? key, required this.uid}) : super(key: key);
@@ -22,58 +24,29 @@ class BuySellHistory extends StatefulWidget {
 }
 
 class _BuySellHistoryState extends State<BuySellHistory> {
-  Future<List<Order>> getOrders() async {
-    List<Order> orders = <Order>[];
-    var buyerRef = DBService.userCollection.doc(widget.uid);
-    var o = await DBService.ordersCollection
-        .where("buyer", isEqualTo: buyerRef)
-        .get();
-    for (var element in o.docs) {
-      DocumentReference currentProduct = element.get("product");
-      String currentProductName = (await currentProduct.get()).get("name");
-      num currentProductPrice = (await currentProduct.get()).get("price");
-      String currentProductPicture =
-          (await currentProduct.get()).get("picture");
-      String currentPid = currentProduct.id;
-      orders.add(Order(
-          oid: element.id,
-          reviewed: element.get("reviewed"),
-          url: currentProductPicture,
-          productName: currentProductName,
-          pid: currentPid,
-          price: currentProductPrice,
-          purchaseDate: element.get("purchaseDate")));
-    }
-    return orders;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: ActionBar(title: "Old Purchases"),
-      body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-        FutureBuilder(
-            future: getOrders(),
-            builder: (context, AsyncSnapshot asyncSnapshot) {
-              if (!asyncSnapshot.hasData) return const Text("Loading...");
-              List<Order> orders = asyncSnapshot.data;
-              return Flexible(
-                fit: FlexFit.loose,
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: orders.length,
-                  itemBuilder: (context, index) {
-                    if (orders != null) {
-                      return HistoryCard(order: orders[index]);
-                    } else {
-                      return const Center(
-                          child: Text("no purchase has been made"));
-                    }
-                  },
-                ),
-              );
-            }),
-      ]),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          titleTextStyle: kAppBarTitleTextStyle,
+          toolbarHeight: 55,
+          centerTitle: true,
+          title: const Text("Buy/Sell History"),
+          backgroundColor: AppColors.primaryBackground,
+          elevation: 0.0,
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: "Bought"),
+              Tab(text: "Sold"),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [BuyHistory(uid: widget.uid), SellHistory(uid: widget.uid)],
+        ),
+      ),
     );
   }
 }
