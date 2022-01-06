@@ -46,7 +46,8 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
           tag: doc['tag'],
           seller: "Anonymous Seller",
           url: doc['picture'],
-          rating: productRating);
+          rating: productRating,
+          desc: doc["desc"]);
     }).toList();
     for (var i = 0; i < r.docs.length; i++) {
       var r2 = await r.docs[i]["seller"].get();
@@ -174,16 +175,20 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
+    String lowerQuery = query.toLowerCase();
     final resultList = products
-        .where((p) => p.productName.toLowerCase().contains(query.toLowerCase()))
+        .where((p) =>
+            p.productName.toLowerCase().contains(lowerQuery) ||
+            p.desc.toLowerCase().contains(lowerQuery))
         .toList();
     return SingleChildScrollView(child: ProductGrid(list: resultList));
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    String lowerQuery = query.toLowerCase();
     final suggestionList = products
-        .where((p) => p.productName.toLowerCase().contains(query.toLowerCase()))
+        .where((p) => p.productName.toLowerCase().contains(lowerQuery))
         .toList();
 
     return ListView.builder(
