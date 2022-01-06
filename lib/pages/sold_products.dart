@@ -28,6 +28,7 @@ class _SoldProductsState extends State<SoldProducts> {
           (await currentProduct.get()).get("picture");
       String currentPid = currentProduct.id;
       orders.add(Order(
+          oid: element.id,
           url: currentProductPicture,
           productName: currentProductName,
           pid: currentPid,
@@ -55,8 +56,7 @@ class _SoldProductsState extends State<SoldProducts> {
                     return OrderRecord(order: orders[index]);
                   } else {
                     return const Center(
-                        child:
-                            Text("This user have not sold anything yet!"));
+                        child: Text("This user have not sold anything yet!"));
                   }
                 },
               ),

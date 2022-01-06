@@ -11,6 +11,8 @@ import 'package:gameaway/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart';
 
+import 'order.dart';
+
 CollectionReference users = _firestore.collection('Users');
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
 FirebaseAuth auth = FirebaseAuth.instance;
@@ -26,7 +28,7 @@ class DBService {
   static final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('Users');
 
-  static DocumentReference getSellerReference(String id) {
+  static DocumentReference getUserReference(String id) {
     return FirebaseFirestore.instance.collection("Users").doc(id);
   }
 
@@ -43,7 +45,7 @@ class DBService {
       'name': name,
       'pp':
           "https://ih1.redbubble.net/image.1046392278.3346/pp,840x830-pad,1000x1000,f8f8f8.jpg",
-      'rating': 0
+      'active': true
     });
   }
 
@@ -64,10 +66,16 @@ class DBService {
   }
 
   static Future deleteAccount(String uid) async {
-    return (await userCollection.doc(uid).delete());
+    final userRef = getUserReference(uid);
+    var sellQuery =
+        await productCollection.where("seller", isEqualTo: userRef).get();
+    for (var element in sellQuery.docs) {
+      await element.reference.update({"stocks": 0});
+    }
+    await userRef.update({"name": "[Deleted User]", "active": false});
   }
 
-  final CollectionReference productCollection =
+  static final CollectionReference productCollection =
       FirebaseFirestore.instance.collection('product');
 
   Future addProduct(
@@ -136,6 +144,30 @@ class DBService {
         .refFromURL((await productRef.get()).get("picture"));
     await pictureRef.delete();
     await productRef.delete();
+  }
+
+  Future addReview(Order order, num rating, String comment) async {
+    await ordersCollection.doc(order.oid).update({"reviewed": true});
+    var buyerRef = (await ordersCollection.doc(order.oid).get()).get("buyer");
+    var sellerRef = (await ordersCollection.doc(order.oid).get()).get("seller");
+    if (comment.trim() == "") {
+      await productCollection.doc(order.pid).update({
+        "rating": FieldValue.arrayUnion([rating])
+      });
+    } else {
+      await productCollection.doc(order.pid).update({
+        "rating": FieldValue.arrayUnion([rating]),
+        "reviews": FieldValue.arrayUnion([
+          {
+            "approved": false,
+            "comment": comment,
+            "rating": rating,
+            "reviewer": buyerRef,
+            "seller": sellerRef
+          }
+        ])
+      });
+    }
   }
 
   Future addnotif(String notif) async {

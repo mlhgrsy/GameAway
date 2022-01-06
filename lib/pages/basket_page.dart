@@ -30,7 +30,7 @@ class _BasketPageState extends State<BasketPage> {
     } else {
       List<Product> productsInBasket = <Product>[];
       for (var i = 0; i < pids.length; i++) {
-        DocumentReference productReference = db.productCollection.doc(pids[i]);
+        DocumentReference productReference = DBService.productCollection.doc(pids[i]);
         var currentSnapshot = await productReference.get();
         DocumentReference sellerRef = currentSnapshot.get("seller");
         String sellerName = (await sellerRef.get()).get("name");
@@ -149,13 +149,29 @@ class _BasketPageState extends State<BasketPage> {
                 ),
                 TextButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PaymentScreen(
-                                    sum: sum,
-                                    orderInfo: orderInfo,
-                                  )));
+                      if (sum != 0) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PaymentScreen(
+                                      sum: sum,
+                                      orderInfo: orderInfo,
+                                    )));
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                                  title: const Text("Oops"),
+                                  content: const Text("Your basket is empty"),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(_);
+                                        },
+                                        child: const Text("Ok"))
+                                  ],
+                                ));
+                      }
                     },
                     child: Text("purchase"))
               ],

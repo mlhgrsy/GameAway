@@ -11,6 +11,7 @@ import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/action_bar.dart';
 import 'package:gameaway/views/product_preview.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductPage extends StatefulWidget {
@@ -27,9 +28,10 @@ class _ProductPage extends State<ProductPage> {
   DBService db = DBService();
   String? _sellerID;
   String productName = "";
+  bool isSellerActive = true;
 
   Future<Product> getProduct() async {
-    var docSnap = await db.productCollection.doc(widget.productID).get();
+    var docSnap = await DBService.productCollection.doc(widget.productID).get();
     var product = Product(
         pid: widget.productID,
         productName: docSnap.get("name"),
@@ -43,6 +45,7 @@ class _ProductPage extends State<ProductPage> {
         desc: docSnap.get("desc"));
 
     DocumentReference sellerRef = await docSnap.get("seller");
+    isSellerActive = (await sellerRef.get()).get("active");
     String sellerName = (await sellerRef.get()).get("name");
     product.seller = sellerName;
     _sellerID = (await sellerRef.get()).id;
@@ -113,15 +116,35 @@ class _ProductPage extends State<ProductPage> {
                     color: AppColors.primary,
                     child: Row(
                       children: [
-                        Container(
-                          padding: Dimen.regularPadding,
-                          child: CircleAvatar(
-                            //farklı bir clip
-                            radius: 50,
-                            backgroundImage: NetworkImage(
-                              _product.url,
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Scaffold(
+                                          appBar:
+                                              ActionBar(title: "Photo View"),
+                                          body: InteractiveViewer(
+                                            child: Image.network(
+                                              _product.url,
+                                              fit: BoxFit.contain,
+                                              height: double.infinity,
+                                              width: double.infinity,
+                                              alignment: Alignment.center,
+                                            ),
+                                          ),
+                                        )));
+                          },
+                          child: Container(
+                            padding: Dimen.regularPadding,
+                            child: CircleAvatar(
+                              //farklı bir clip
+                              radius: 50,
+                              backgroundImage: NetworkImage(
+                                _product.url,
+                              ),
+                              backgroundColor: Colors.transparent,
                             ),
-                            backgroundColor: Colors.transparent,
                           ),
                         ),
                         const SizedBox(
@@ -236,18 +259,27 @@ class _ProductPage extends State<ProductPage> {
                               "Seller:",
                               style: kButtonLightTextStyle,
                             ),
-                            OutlinedButton(
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        SellerPage(sellerID: _sellerID!)));
-                              },
-                              child: Text(
-                                _product.seller,
-                                style: const TextStyle(
-                                    color: AppColors.secondary, fontSize: 18),
-                              ),
-                            ),
+                            isSellerActive
+                                ? OutlinedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) => SellerPage(
+                                                  sellerID: _sellerID!)));
+                                    },
+                                    child: Text(
+                                      _product.seller,
+                                      style: const TextStyle(
+                                          color: AppColors.secondary,
+                                          fontSize: 18),
+                                    ),
+                                  )
+                                : Text(
+                                    _product.seller,
+                                    style: const TextStyle(
+                                        color: AppColors.secondary,
+                                        fontSize: 18),
+                                  ),
                           ],
                         ),
                         buyWidget(context, widget.productID, _product.stocks),

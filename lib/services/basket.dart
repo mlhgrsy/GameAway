@@ -29,6 +29,12 @@ class Basket {
     instance.setStringList("basket", basket);
   }
 
+  static Future clean() async {
+    var instance = await SharedPreferences.getInstance();
+    createBasket(instance);
+    instance.setStringList("basket", <String>[]);
+  }
+
   static Future<bool> isInBasket(String pid) async {
     var instance = await SharedPreferences.getInstance();
     createBasket(instance);

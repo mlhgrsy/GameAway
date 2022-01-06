@@ -44,7 +44,7 @@ class ProfileBody extends StatelessWidget {
                 const SizedBox(height: 15),
                 const AccountButtons(),
                 const HistoryButtons(),
-                const NotificationButtons(),
+                // const NotificationButtons(),
               ],
             );
           }),
