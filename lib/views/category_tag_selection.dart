@@ -18,6 +18,18 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
   static final _categories = Util.categories;
   static int _currentCategory = 0;
 
+  //Sort
+  static String _sortType = "name";
+  static final _sortTypeItemsString = Util.sortTypes;
+  static final _sortTypeItems =
+      _sortTypeItemsString.map<DropdownMenuItem<String>>((String value) {
+    return DropdownMenuItem<String>(
+      value: value,
+      child: Text(value),
+    );
+  }).toList();
+  static bool _ascending = true;
+
   //DropDown
   static String _dropdownValue = 'All';
   static final _dropdownItemsString = Util.tags;
@@ -72,6 +84,7 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
             p.category == _categories[_currentCategory] &&
             (_dropdownValue == "All" || p.tag == _dropdownValue))
         .toList();
+    _resultList!.sort(Util.sortFuncs[_sortType]![_ascending]);
     return Column(
       children: [
         Column(children: [
@@ -121,23 +134,65 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
             }),
           ),
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            color: AppColors.headingColor.withAlpha(50),
-          ),
-          width: 200,
-          child: DropdownButton(
-            isExpanded: true,
-            dropdownColor: AppColors.headingColor.withAlpha(250),
-            items: _dropdownItems[_currentCategory],
-            value: _dropdownValue,
-            onChanged: (String? newValue) {
-              setState(() {
-                _dropdownValue = newValue!;
-              });
-            },
-          ),
+        Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: AppColors.headingColor.withAlpha(50),
+                  ),
+                  width: 150,
+                  child: DropdownButton(
+                    isExpanded: true,
+                    dropdownColor: AppColors.headingColor.withAlpha(250),
+                    items: _dropdownItems[_currentCategory],
+                    value: _dropdownValue,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _dropdownValue = newValue!;
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: AppColors.headingColor.withAlpha(50),
+                  ),
+                  child: DropdownButton(
+                    isExpanded: true,
+                    dropdownColor: AppColors.headingColor.withAlpha(250),
+                    items: _sortTypeItems,
+                    value: _sortType,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _sortType = newValue!;
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ),
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    _ascending = !_ascending;
+                  });
+                },
+                icon: _ascending
+                    ? const Icon(Icons.arrow_upward)
+                    : const Icon(Icons.arrow_downward)),
+          ],
         ),
         ProductGrid(list: _resultList!)
       ],

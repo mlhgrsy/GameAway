@@ -1,3 +1,5 @@
+import 'package:gameaway/views/product_preview.dart';
+
 class Util {
   static double avg(List<dynamic> list) {
     if (list.isEmpty) return 0;
@@ -45,4 +47,22 @@ class Util {
     ],
     <String>['All', 'Ranking', 'Achievement', 'Level', "Others"]
   ];
+
+  static final sortTypes = ["name", "rating", "price"];
+  static final sortFuncs = <String, Map<bool, int Function(Product, Product)>>{
+    "name": {
+      true: (Product a, Product b) =>
+          a.productName.toLowerCase().compareTo(b.productName.toLowerCase()),
+      false: (Product b, Product a) =>
+          a.productName.toLowerCase().compareTo(b.productName.toLowerCase())
+    },
+    "rating": {
+      true: (Product a, Product b) => a.rating.compareTo(b.rating),
+      false: (Product b, Product a) => a.rating.compareTo(b.rating)
+    },
+    "price": {
+      true: (Product a, Product b) => a.price.compareTo(b.price),
+      false: (Product b, Product a) => a.price.compareTo(b.price)
+    },
+  };
 }
