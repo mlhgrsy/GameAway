@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gameaway/services/basket.dart';
+import 'package:gameaway/services/bottom_nav.dart';
 import 'package:gameaway/services/db.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
@@ -249,7 +251,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       .doc(widget.orderInfo[i]["seller"]),
                                   "product": DBService.getProductReference(
                                       widget.orderInfo[i]["product"]!),
-                                  "purchaseDate": Timestamp.now()
+                                  "purchaseDate": Timestamp.now(),
+                                  "reviewed": false,
                                 });
                                 final productRef =
                                     DBService.getProductReference(
@@ -271,6 +274,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       .doc(widget.orderInfo[i]["seller"]),
                                   "product": DBService.getProductReference(
                                       widget.orderInfo[i]["product"]!),
+                                  "reviewed": false,
                                   "purchaseDate": Timestamp.now()
                                 });
                                 final productRef =
@@ -283,6 +287,24 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     .update({"stocks": currentStocks - 1});
                               }
                             }
+                            await Basket.clean();
+                            await showDialog(
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                      title: const Text("Success"),
+                                      content:
+                                          const Text("Transaction Complete"),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(_);
+                                            },
+                                            child: const Text("Ok"))
+                                      ],
+                                    ));
+                            Navigator.pop(context);
+                            Provider.of<BottomNav>(context, listen: false)
+                                .switchTo(0);
                           }
                         }
                       },

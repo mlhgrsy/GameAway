@@ -140,22 +140,28 @@ class DBService {
     await productRef.delete();
   }
 
-  Future addReview(Order order,num rating,String comment) async {
-    await ordersCollection.doc(order.oid).update({
-      "reviewed": true
-    });
+  Future addReview(Order order, num rating, String comment) async {
+    await ordersCollection.doc(order.oid).update({"reviewed": true});
     var buyerRef = (await ordersCollection.doc(order.oid).get()).get("buyer");
     var sellerRef = (await ordersCollection.doc(order.oid).get()).get("seller");
-    await productCollection.doc(order.pid).update({
-      "rating": FieldValue.arrayUnion([rating]),
-      "reviews": FieldValue.arrayUnion([{
-        "approved": false,
-        "comment": comment,
-        "rating": rating,
-        "reviewer": buyerRef,
-        "seller": sellerRef
-      }])
-    });
+    if (comment.trim() == "") {
+      await productCollection.doc(order.pid).update({
+        "rating": FieldValue.arrayUnion([rating])
+      });
+    } else {
+      await productCollection.doc(order.pid).update({
+        "rating": FieldValue.arrayUnion([rating]),
+        "reviews": FieldValue.arrayUnion([
+          {
+            "approved": false,
+            "comment": comment,
+            "rating": rating,
+            "reviewer": buyerRef,
+            "seller": sellerRef
+          }
+        ])
+      });
+    }
   }
 
   Future addnotif(String notif) async {

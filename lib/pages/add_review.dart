@@ -52,9 +52,25 @@ class _AddReviewState extends State<AddReview> {
           },
         ),
         OutlinedButton(
-            onPressed: () {
+            onPressed: () async {
               DBService db = DBService();
               db.addReview(widget.order, rating, comment);
+              await showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                        title: const Text("Success"),
+                        content: const Text(
+                            "Review submitted. It will be shown once approved by the seller."),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(_);
+                              },
+                              child: const Text("Ok"))
+                        ],
+                      ));
+              Navigator.pop(context);
+              Navigator.pop(context);
             },
             child: const Text("Submit"))
       ]),

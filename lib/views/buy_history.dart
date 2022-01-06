@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/order.dart';
 
-import 'action_bar.dart';
 import 'history_card.dart';
 
 class BuyHistory extends StatelessWidget {
@@ -44,7 +43,7 @@ class BuyHistory extends StatelessWidget {
           if (!asyncSnapshot.hasData) return const Text("Loading...");
           List<Order> orders = asyncSnapshot.data;
           if (orders.isEmpty) {
-            return const Center(child: Text("no purchase has been made"));
+            return const Center(child: Text("No purchase has been made"));
           }
           return ListView.builder(
             scrollDirection: Axis.vertical,

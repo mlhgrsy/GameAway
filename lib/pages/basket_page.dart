@@ -149,13 +149,29 @@ class _BasketPageState extends State<BasketPage> {
                 ),
                 TextButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PaymentScreen(
-                                    sum: sum,
-                                    orderInfo: orderInfo,
-                                  )));
+                      if (sum != 0) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PaymentScreen(
+                                      sum: sum,
+                                      orderInfo: orderInfo,
+                                    )));
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                                  title: const Text("Oops"),
+                                  content: const Text("Your basket is empty"),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(_);
+                                        },
+                                        child: const Text("Ok"))
+                                  ],
+                                ));
+                      }
                     },
                     child: Text("purchase"))
               ],
