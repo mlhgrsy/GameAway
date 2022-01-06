@@ -11,6 +11,7 @@ import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/action_bar.dart';
 import 'package:gameaway/views/product_preview.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductPage extends StatefulWidget {
@@ -115,15 +116,35 @@ class _ProductPage extends State<ProductPage> {
                     color: AppColors.primary,
                     child: Row(
                       children: [
-                        Container(
-                          padding: Dimen.regularPadding,
-                          child: CircleAvatar(
-                            //farklı bir clip
-                            radius: 50,
-                            backgroundImage: NetworkImage(
-                              _product.url,
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Scaffold(
+                                          appBar:
+                                              ActionBar(title: "Photo View"),
+                                          body: InteractiveViewer(
+                                            child: Image.network(
+                                              _product.url,
+                                              fit: BoxFit.contain,
+                                              height: double.infinity,
+                                              width: double.infinity,
+                                              alignment: Alignment.center,
+                                            ),
+                                          ),
+                                        )));
+                          },
+                          child: Container(
+                            padding: Dimen.regularPadding,
+                            child: CircleAvatar(
+                              //farklı bir clip
+                              radius: 50,
+                              backgroundImage: NetworkImage(
+                                _product.url,
+                              ),
+                              backgroundColor: Colors.transparent,
                             ),
-                            backgroundColor: Colors.transparent,
                           ),
                         ),
                         const SizedBox(
