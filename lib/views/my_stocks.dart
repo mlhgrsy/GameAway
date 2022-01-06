@@ -21,7 +21,7 @@ class _MyStocksState extends State<MyStocks> {
     var sellerRef =
         DBService.userCollection.doc(Provider.of<User?>(context)!.uid);
     var productsDocs =
-        (await db.productCollection.where("seller", isEqualTo: sellerRef).get())
+        (await DBService.productCollection.where("seller", isEqualTo: sellerRef).get())
             .docs;
     List<Product> productsList = <Product>[];
     for (var i = 0; i < productsDocs.length; i++) {

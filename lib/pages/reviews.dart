@@ -32,8 +32,8 @@ class _ReviewsState extends State<Reviews> {
 
   Future<List<dynamic>> getReviews() async {
     var reviews =
-        (await db.productCollection.doc(widget.productID).get()).get("reviews");
-    seller = (await db.productCollection.doc(widget.productID).get())
+        (await DBService.productCollection.doc(widget.productID).get()).get("reviews");
+    seller = (await DBService.productCollection.doc(widget.productID).get())
         .get("seller")
         .id;
 
@@ -118,13 +118,13 @@ class _ReviewsState extends State<Reviews> {
                                           print("newreviewlater $new_review ");
                                           print(
                                               "reviewlistlater ${_reviewlist[index]}");
-                                          await db.productCollection
+                                          await DBService.productCollection
                                               .doc(widget.productID)
                                               .update({
                                             "reviews": FieldValue.arrayRemove(
                                                 [_reviewlist[index]])
                                           });
-                                          await db.productCollection
+                                          await DBService.productCollection
                                               .doc(widget.productID)
                                               .update({
                                             "reviews": FieldValue.arrayUnion(

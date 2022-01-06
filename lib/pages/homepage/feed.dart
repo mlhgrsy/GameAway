@@ -23,7 +23,7 @@ class _FeedState extends State<Feed> {
   List<Product>? _recommendations;
 
   Future<void> getProducts() async {
-    var r = await db.productCollection.get();
+    var r = await DBService.productCollection.get();
     var _productsTemp = r.docs
         .map<Product>((doc) => Product(
             pid: doc.id,

@@ -25,7 +25,7 @@ class _FavoritesState extends State<Favorites> {
       List<Product> favoriteProducts = <Product>[];
       for (var i = 0; i < favoritesList.length; i++) {
         var currentSnapshot =
-            await db.productCollection.doc(favoritesList[i]).get();
+            await DBService.productCollection.doc(favoritesList[i]).get();
         DocumentReference sellerRef = currentSnapshot.get("seller");
         String sellerName = (await sellerRef.get()).get("name");
         var currentProduct = Product(

@@ -30,7 +30,7 @@ class _BasketPageState extends State<BasketPage> {
     } else {
       List<Product> productsInBasket = <Product>[];
       for (var i = 0; i < pids.length; i++) {
-        DocumentReference productReference = db.productCollection.doc(pids[i]);
+        DocumentReference productReference = DBService.productCollection.doc(pids[i]);
         var currentSnapshot = await productReference.get();
         DocumentReference sellerRef = currentSnapshot.get("seller");
         String sellerName = (await sellerRef.get()).get("name");

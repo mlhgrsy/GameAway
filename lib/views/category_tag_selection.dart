@@ -34,7 +34,7 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
   List<Product>? _resultList;
 
   Future<void> getProducts() async {
-    var r = await db.productCollection.get();
+    var r = await DBService.productCollection.get();
     var _productsTemp = r.docs.map<Product>((doc) {
       double productRating = Util.avg(doc['rating']);
       return Product(

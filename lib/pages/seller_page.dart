@@ -25,11 +25,11 @@ class _SellerPageState extends State<SellerPage> {
   List<Product>? _soldProducts;
 
   Future<void> getProducts() async {
-    var sellerReference = DBService.getSellerReference(widget.sellerID);
+    var sellerReference = DBService.getUserReference(widget.sellerID);
     final seller = await sellerReference.get();
     sellerName = seller["name"];
     sellerPP = seller["pp"];
-    var r = await db.productCollection
+    var r = await DBService.productCollection
         .where("seller", isEqualTo: sellerReference)
         .get();
     List<dynamic> sellerRatings = [];

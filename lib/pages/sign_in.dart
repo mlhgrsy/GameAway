@@ -5,6 +5,7 @@ import 'package:gameaway/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -114,7 +115,8 @@ class _SignInState extends State<SignIn> {
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                         title: const Text("Login Error"),
-                                        content: const Text("Invalid Credentials"),
+                                        content:
+                                            const Text("Invalid Credentials"),
                                         actions: [
                                           TextButton(
                                             child: const Text("Close"),
@@ -170,82 +172,56 @@ class _SignInState extends State<SignIn> {
                     ),
                   ],
                 ),
-                SizedBox(height: 120),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: OutlinedButton(
-                        onPressed: () {
-                          auth.signInWithGoogle();
-                          Navigator.pop(context);
-                        },
-                        child: Padding(
-                          padding: Dimen.smallPadding,
-                          child: Stack(
-                            children: <Widget>[
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Image.network(
-                                  'https://yt3.ggpht.com/ytc/AKedOLSLGq_D1XWmzA-gln_lFj_lxnP2uLlahawMniDurg=s900-c-k-c0x00ffffff-no-rj',
-                                  height: 30,
-                                  width: 30,
-                                ),
+                const SizedBox(height: 20),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 1,
+                          child: OutlinedButton(
+                            onPressed: () async {
+                              await auth.signInWithGoogle();
+                              Navigator.pop(context);
+                              String? name =
+                                  Provider.of<User?>(context, listen: false)!
+                                      .displayName;
+                              var snackBar = SnackBar(
+                                content: Text('Welcome, $name'),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            },
+                            child: Padding(
+                              padding: Dimen.smallPadding,
+                              child: Stack(
+                                children: <Widget>[
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Image.network(
+                                      'https://yt3.ggpht.com/ytc/AKedOLSLGq_D1XWmzA-gln_lFj_lxnP2uLlahawMniDurg=s900-c-k-c0x00ffffff-no-rj',
+                                      height: 30,
+                                      width: 30,
+                                    ),
+                                  ),
+                                  Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "Continue with Google",
+                                        textAlign: TextAlign.center,
+                                        style: kButtonDarkTextStyle,
+                                      ))
+                                ],
                               ),
-                              Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "Continue with Google",
-                                    textAlign: TextAlign.center,
-                                    style: kButtonDarkTextStyle,
-                                  ))
-                            ],
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                            ),
                           ),
                         ),
-                        style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 40),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/Notify');
-                        },
-                        child: Padding(
-                          padding: Dimen.smallPadding,
-                          child: Stack(
-                            children: <Widget>[
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Image.network(
-                                  'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Facebook_icon.svg/1200px-Facebook_icon.svg.png',
-                                  height: 30,
-                                  width: 30,
-                                ),
-                              ),
-                              Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "Continue with Facebook",
-                                    textAlign: TextAlign.center,
-                                    style: kButtonDarkTextStyle,
-                                  ))
-                            ],
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                        ),
-                      ),
+                      ],
                     ),
                   ],
                 ),

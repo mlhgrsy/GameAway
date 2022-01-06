@@ -29,7 +29,7 @@ class _ProductPage extends State<ProductPage> {
   String productName = "";
 
   Future<Product> getProduct() async {
-    var docSnap = await db.productCollection.doc(widget.productID).get();
+    var docSnap = await DBService.productCollection.doc(widget.productID).get();
     var product = Product(
         pid: widget.productID,
         productName: docSnap.get("name"),

@@ -28,7 +28,7 @@ class DBService {
   static final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('Users');
 
-  static DocumentReference getSellerReference(String id) {
+  static DocumentReference getUserReference(String id) {
     return FirebaseFirestore.instance.collection("Users").doc(id);
   }
 
@@ -66,10 +66,16 @@ class DBService {
   }
 
   static Future deleteAccount(String uid) async {
-    return (await userCollection.doc(uid).delete());
+    final userRef = getUserReference(uid);
+    var sellQuery =
+        await productCollection.where("seller", isEqualTo: userRef).get();
+    for (var element in sellQuery.docs) {
+      await element.reference.update({"stocks": 0});
+    }
+    await userRef.update({"name": "[Deleted User]"});
   }
 
-  final CollectionReference productCollection =
+  static final CollectionReference productCollection =
       FirebaseFirestore.instance.collection('product');
 
   Future addProduct(

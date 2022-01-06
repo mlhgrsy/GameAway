@@ -115,8 +115,7 @@ class _StockEditorState extends State<StockEditor> {
                                     ],
                                   ));
                         } else {
-                          DBService db = DBService();
-                          await db.productCollection
+                          await DBService.productCollection
                               .doc(widget.product.pid)
                               .update({"stocks": count});
                           showDialog(
