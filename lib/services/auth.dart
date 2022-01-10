@@ -110,8 +110,15 @@ class AuthService {
         idToken: googleAuth.idToken,
       );
       await FirebaseAuth.instance.signInWithCredential(credential);
-      DBService.addUser(_auth.currentUser!.uid, true, googleUser.displayName!);
-      return;
+      var userDoc =
+          await DBService.userCollection.doc(_auth.currentUser!.uid).get();
+      if (userDoc.exists) {
+        return;
+      } else {
+        await DBService.addUser(
+            _auth.currentUser!.uid, true, googleUser.displayName!);
+        return;
+      }
     } catch (e) {
       print(e.toString());
       return null;
