@@ -5,6 +5,7 @@ import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/util.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
+import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/action_bar.dart';
 import 'package:gameaway/views/product_preview.dart';
 
@@ -131,14 +132,16 @@ class _BasketPageState extends State<BasketPage> {
                     ),
                   ),
                 ),
-                Column(children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                   SizedBox(
                     height: 40,
                   ),
                   Divider(
                     height: 2,
                   ),
-                  Text("The sum is \$ $sum")
+                  Text("The sum is \$ $sum",style: kButtonLightTextStyle,)
                 ]),
                 Divider(
                   height: 2,
@@ -147,7 +150,11 @@ class _BasketPageState extends State<BasketPage> {
                 SizedBox(
                   height: 15,
                 ),
-                TextButton(
+                OutlinedButton(style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith(
+            (states) => AppColors.primary.withOpacity(0.1)),
+            padding: MaterialStateProperty.resolveWith(
+            (states) => EdgeInsets.zero,),),
                     onPressed: () {
                       if (sum != 0) {
                         Navigator.push(
@@ -173,7 +180,7 @@ class _BasketPageState extends State<BasketPage> {
                                 ));
                       }
                     },
-                    child: Text("purchase"))
+                    child: Text("Purchase"))
               ],
             );
           }),
