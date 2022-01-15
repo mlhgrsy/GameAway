@@ -63,6 +63,7 @@ class _EditProductState extends State<EditProduct> {
 
   @override
   Widget build(BuildContext context) {
+    num oldprice =price;
     return Scaffold(
       appBar: ActionBar(
         title: "Edit Product",
@@ -120,9 +121,12 @@ class _EditProductState extends State<EditProduct> {
                     TextEditingController(text: "${widget.product.price}"),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(hintText: "price"),
-                onChanged: (value) {
-                  try {
+                onChanged: (value) async {
+                  try  {
+
+
                     price = num.parse(value);
+
                   } catch (e) {
                     price = 0;
                   }
@@ -204,6 +208,14 @@ class _EditProductState extends State<EditProduct> {
                               ]);
                         });
                   } else {
+                    if(oldprice> price) {
+                      var x = await DBService.userCollection.get();
+                      for(var i in x.docs){
+                        print("aaa   ${i.get("name")}");
+                        db.addnotif_user("There is a great discount in product $name from $oldprice to $price", i);
+                      }
+
+                    }
                     await db.editProduct(
                         widget.product.pid,
                         _categories[_currentCategory!],

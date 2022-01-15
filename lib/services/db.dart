@@ -178,4 +178,16 @@ class DBService {
         .then((value) => print('notification added'))
         .catchError((error) => print('Error: ${error.toString()}'));
   }
+
+  Future addnotif_user(String notif,var reciever) async {
+    var loguser = users.doc(reciever.id);
+    var notify = loguser.collection("notification");
+    notify.add({
+    'notify': notif,
+    })
+        .then((value) => print('notification added'))
+        .catchError((error) => print('Error: ${error.toString()}'));
+  }
 }
+
+
