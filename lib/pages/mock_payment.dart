@@ -36,6 +36,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   Widget build(BuildContext context) {
     num sum = widget.sum;
+    DBService db = DBService();
     final user = Provider.of<User?>(context);
     return Scaffold(
       appBar: ActionBar(title: "Payment"),
@@ -244,6 +245,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               for (var i = 0;
                                   i < widget.orderInfo.length;
                                   i++) {
+
                                 await DBService.ordersCollection.add({
                                   "buyer":
                                       DBService.userCollection.doc("anonymous"),
@@ -262,6 +264,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 await DBService.getProductReference(
                                         widget.orderInfo[i]["product"]!)
                                     .update({"stocks": currentStocks - 1});
+                                var gamename =(await DBService.productCollection.doc(widget.orderInfo[i]["product"]).get()).get("name");
+                                String notif="anonymus user has bought this game named $gamename";
+                                await db.addnotif_user(notif, DBService.userCollection
+                                    .doc(widget.orderInfo[i]["seller"]!));
+
+
+
                               }
                             } else {
                               for (var i = 0;
@@ -277,6 +286,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   "reviewed": false,
                                   "purchaseDate": Timestamp.now()
                                 });
+                                //var loguser = users.doc(widget.orderInfo[i]["seller"].get());
+                                var buyername = ( await DBService.userCollection.doc(user.uid).get()).get("name");
+                                var gamename =(await DBService.productCollection.doc(widget.orderInfo[i]["product"]).get()).get("name");
+                               String notif="$buyername has bought $gamename";
+                                await db.addnotif_user(notif, DBService.userCollection
+                                    .doc(widget.orderInfo[i]["seller"]!));
                                 final productRef =
                                     DBService.getProductReference(
                                         widget.orderInfo[i]["product"]!);
