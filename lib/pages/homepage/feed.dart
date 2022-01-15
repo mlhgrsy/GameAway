@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/pages/seller_page.dart';
 import 'package:gameaway/services/db.dart';
@@ -8,6 +9,7 @@ import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/action_bar.dart';
 import 'package:gameaway/views/category_tag_selection.dart';
 import 'package:gameaway/views/product_preview.dart';
+import 'package:provider/provider.dart';
 
 class Feed extends StatefulWidget {
   const Feed({Key? key}) : super(key: key);
@@ -23,6 +25,7 @@ class _FeedState extends State<Feed> {
   List<Product>? _recommendations;
 
   Future<void> getProducts() async {
+    // Products
     var r = await DBService.productCollection.get();
     var _productsTemp = r.docs
         .map<Product>((doc) => Product(
@@ -41,10 +44,40 @@ class _FeedState extends State<Feed> {
       var r2 = await r.docs[i]["seller"].get();
       if (r2.data() != null) _productsTemp[i].seller = r2.data()["name"];
     }
+
+    List<Product> _recommendationsTemp = [];
+    var currentUser = Provider.of<User?>(context, listen: false);
+    if (currentUser == null) {
+      _recommendationsTemp =
+          _productsTemp.where((p) => (p.rating >= 4.5)).toList();
+    } else {
+      var userRef = DBService.userCollection.doc(currentUser.uid);
+      var now = DateTime.now();
+      var monthAgo = DateTime(now.year, now.month - 1, now.day);
+      print(monthAgo);
+      var lastOrders = (await DBService.ordersCollection
+              .where("buyer", isEqualTo: userRef)
+              .where("purchaseDate", isGreaterThan: Timestamp.fromDate(monthAgo))
+              .get())
+          .docs;
+      print(lastOrders);
+      if (lastOrders.isEmpty) {
+        _recommendationsTemp =
+            _productsTemp.where((p) => (p.rating >= 4)).toList();
+      } else {
+        var tagsList = <String>[];
+        for (var element in lastOrders) {
+          DocumentReference productRef = element.get("product");
+          tagsList.add((await productRef.get()).get("tag"));
+        }
+        _recommendationsTemp = _productsTemp.where((element) => tagsList.contains(element.tag)).toList();
+      }
+    }
+
     setState(() {
       _products = _productsTemp;
       _promotions = _products?.where((p) => (p.price < 100)).toList();
-      _recommendations = _products?.where((p) => (p.rating >= 4.5)).toList();
+      _recommendations = _recommendationsTemp;
     });
   }
 
