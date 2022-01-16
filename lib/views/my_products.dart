@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/util.dart';
+import 'package:gameaway/views/product_grid.dart';
 import 'package:gameaway/views/product_preview.dart';
 import 'package:provider/provider.dart';
 
@@ -20,9 +21,10 @@ class _MyProductsState extends State<MyProducts> {
     DBService db = DBService();
     var sellerRef =
         DBService.userCollection.doc(Provider.of<User?>(context)!.uid);
-    var productsDocs =
-        (await DBService.productCollection.where("seller", isEqualTo: sellerRef).get())
-            .docs;
+    var productsDocs = (await DBService.productCollection
+            .where("seller", isEqualTo: sellerRef)
+            .get())
+        .docs;
     List<Product> productsList = <Product>[];
     for (var i = 0; i < productsDocs.length; i++) {
       var currentProductDoc = productsDocs[i];
@@ -59,22 +61,16 @@ class _MyProductsState extends State<MyProducts> {
           }
           List<Product> productsList = snapshot.data;
           return Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: GridView.count(
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
-                childAspectRatio: .6,
-                crossAxisCount: 2,
-                children: List.generate(
-                    productsList.length,
-                    (index) => ProductPreview(
-                          editable: true,
-                          product: productsList[index],
-                          refreshFunc: () {
-                            setState(() {});
-                          },
-                        ))),
-          );
+              padding: const EdgeInsets.all(20.0),
+              child: SingleChildScrollView(
+                child: ProductGrid(
+                  list: productsList,
+                  refreshFunc: () {
+                    setState(() {});
+                  },
+                  editable: true,
+                ),
+              ));
         });
   }
 }

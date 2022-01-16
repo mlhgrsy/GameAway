@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:gameaway/views/product_preview.dart';
 
 class ProductGrid extends StatelessWidget {
-  const ProductGrid({Key? key, required this.list}) : super(key: key);
+  const ProductGrid({Key? key, required this.list, this.editable = false, this.refreshFunc})
+      : super(key: key);
 
   final List<Product> list;
+  final bool editable;
+  final Function? refreshFunc;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,11 @@ class ProductGrid extends StatelessWidget {
                       list.length,
                       (index) => Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: ProductPreview(product: list[index]),
+                            child: ProductPreview(
+                              refreshFunc: refreshFunc,
+                              product: list[index],
+                              editable: editable,
+                            ),
                           )),
                 ),
               ),
