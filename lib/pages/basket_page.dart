@@ -7,6 +7,7 @@ import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/action_bar.dart';
+import 'package:gameaway/views/loading.dart';
 import 'package:gameaway/views/product_preview.dart';
 
 import 'mock_payment.dart';
@@ -66,7 +67,7 @@ class _BasketPageState extends State<BasketPage> {
       body: FutureBuilder(
           future: getProducts(),
           builder: (context, AsyncSnapshot asyncSnapshot) {
-            if (!asyncSnapshot.hasData) return const Text("Loading...");
+            if (!asyncSnapshot.hasData) return const Loading();
             List<Product> products = asyncSnapshot.data;
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,

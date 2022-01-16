@@ -5,6 +5,8 @@ import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/order.dart';
 import 'package:gameaway/views/sell_history_card.dart';
 
+import 'loading.dart';
+
 class SellHistory extends StatefulWidget {
   const SellHistory({Key? key, required this.uid}) : super(key: key);
   final String uid;
@@ -46,7 +48,7 @@ class _SellHistoryState extends State<SellHistory> {
     return FutureBuilder(
         future: getOrders(),
         builder: (context, AsyncSnapshot asyncSnapshot) {
-          if (!asyncSnapshot.hasData) return const Text("Loading...");
+          if (!asyncSnapshot.hasData) return const Loading();
           List<Order> orders = asyncSnapshot.data;
           if (orders.isEmpty) {
             return const Center(child: Text("No products have been sold"));

@@ -6,6 +6,8 @@ import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/views/product_grid.dart';
 import 'package:gameaway/views/product_preview.dart';
 
+import 'loading.dart';
+
 class CategoryTagSelection extends StatefulWidget {
   const CategoryTagSelection({Key? key}) : super(key: key);
 
@@ -79,7 +81,7 @@ class _CategoryTagSelectionState extends State<CategoryTagSelection> {
 
   @override
   Widget build(BuildContext context) {
-    if (_products == null) return const Text("Loading...");
+    if (_products == null) return const Loading();
     _resultList = _products
         ?.where((p) =>
             p.category == _categories[_currentCategory] &&
