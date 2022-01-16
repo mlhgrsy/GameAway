@@ -8,6 +8,8 @@ import 'package:gameaway/views/profile/profile_buttons/history_button.dart';
 import 'package:gameaway/views/profile/profile_buttons/notify_button.dart';
 import 'package:provider/provider.dart';
 
+import '../loading.dart';
+
 class ProfileBody extends StatelessWidget {
   const ProfileBody({Key? key}) : super(key: key);
 
@@ -24,7 +26,7 @@ class ProfileBody extends StatelessWidget {
             String pp = Provider.of<User?>(context)!.photoURL!;
             String name = Provider.of<User?>(context)!.displayName!;
             String email = Provider.of<User?>(context)!.email!;
-            if (!snapshot.hasData) return const Text("Loading...");
+            if (!snapshot.hasData) return const Loading();
             return Column(
               children: [
                 CircleAvatar(

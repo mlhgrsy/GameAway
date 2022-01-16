@@ -8,6 +8,8 @@ import 'package:gameaway/views/product_preview.dart';
 import 'package:gameaway/views/stock_editor.dart';
 import 'package:provider/provider.dart';
 
+import 'loading.dart';
+
 class MyStocks extends StatefulWidget {
   const MyStocks({Key? key}) : super(key: key);
 
@@ -50,7 +52,7 @@ class _MyStocksState extends State<MyStocks> {
         future: getProducts(),
         builder: (context, AsyncSnapshot snapshot) {
           if (!snapshot.hasData) {
-            return const Text("Loading...");
+            return const Loading();
           } else if (snapshot.data.isEmpty) {
             return const Center(
                 child:

@@ -4,6 +4,7 @@ import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/order.dart';
 
 import 'history_card.dart';
+import 'loading.dart';
 
 class BuyHistory extends StatelessWidget {
   const BuyHistory({Key? key, required this.uid}) : super(key: key);
@@ -40,7 +41,7 @@ class BuyHistory extends StatelessWidget {
     return FutureBuilder(
         future: getOrders(),
         builder: (context, AsyncSnapshot asyncSnapshot) {
-          if (!asyncSnapshot.hasData) return const Text("Loading...");
+          if (!asyncSnapshot.hasData) return const Loading();
           List<Order> orders = asyncSnapshot.data;
           if (orders.isEmpty) {
             return const Center(child: Text("No purchase has been made"));

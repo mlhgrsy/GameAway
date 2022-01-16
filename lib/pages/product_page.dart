@@ -9,6 +9,7 @@ import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/action_bar.dart';
+import 'package:gameaway/views/loading.dart';
 import 'package:gameaway/views/product_preview.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:photo_view/photo_view.dart';
@@ -107,7 +108,7 @@ class _ProductPage extends State<ProductPage> {
       body: FutureBuilder(
           future: getProduct(),
           builder: (context, AsyncSnapshot snapshot) {
-            if (!snapshot.hasData) return const Text("Loading...");
+            if (!snapshot.hasData) return const Loading();
             Product _product = snapshot.data;
             return SingleChildScrollView(
               child: Column(

@@ -4,6 +4,7 @@ import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/util.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/views/action_bar.dart';
+import 'package:gameaway/views/loading.dart';
 import 'package:gameaway/views/product_grid.dart';
 import 'package:gameaway/views/product_preview.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -63,7 +64,7 @@ class _SellerPageState extends State<SellerPage> {
   @override
   Widget build(BuildContext context) {
     if (_onSaleProducts == null || sellerName == null) {
-      return const Text("Loading...");
+      return const Loading();
     }
     return DefaultTabController(
       length: 2,
