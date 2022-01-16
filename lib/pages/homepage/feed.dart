@@ -80,7 +80,7 @@ class _FeedState extends State<Feed> {
 
     setState(() {
       _products = _productsTemp;
-      _promotions = _products?.where((p) => (p.price < 100)).toList();
+      _promotions = _products?.where((p) => (p.oldPrice > p.price)).toList();
       _recommendations = _recommendationsTemp;
     });
   }
