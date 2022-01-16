@@ -148,7 +148,7 @@ class _ProductPreviewState extends State<ProductPreview> {
                                                 .getStringList("favorites")
                                                 .contains(widget.product.pid)
                                         ? Icons.favorite_outline
-                                        : Icons.favorite))
+                                        : Icons.favorite, color:AppColors.notification))
                           ]
                         : editableButtons(
                             context, widget.product, widget.refreshFunc)),
