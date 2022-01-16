@@ -37,6 +37,7 @@ class _ProductPage extends State<ProductPage> {
         productName: docSnap.get("name"),
         rating: Util.avg(docSnap.get("rating")),
         price: docSnap.get("price"),
+        oldPrice: docSnap.get("oldPrice"),
         seller: "Anonymous Seller",
         url: docSnap.get("picture"),
         category: docSnap.get("category"),

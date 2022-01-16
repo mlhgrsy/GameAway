@@ -91,6 +91,7 @@ class DBService {
       'category': category,
       'name': name,
       'picture': "",
+      'oldPrice': 0,
       'price': price,
       'rating': [],
       'seller': seller,
@@ -111,10 +112,12 @@ class DBService {
   Future editProduct(String id, String category, String name, num price,
       String tag, File? picture, num stocks, String desc) async {
     var productRef = productCollection.doc(id);
+    var oldPrice = (await productRef.get()).get("price");
     if (picture == null) {
       productRef.update({
         'category': category,
         'name': name,
+        'oldPrice': oldPrice,
         'price': price,
         'tag': tag,
         'stocks': stocks,
@@ -129,6 +132,7 @@ class DBService {
       await productRef.update({
         'category': category,
         'name': name,
+        'oldPrice': oldPrice,
         'price': price,
         'tag': tag,
         'stocks': stocks,

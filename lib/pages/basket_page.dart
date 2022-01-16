@@ -31,7 +31,8 @@ class _BasketPageState extends State<BasketPage> {
     } else {
       List<Product> productsInBasket = <Product>[];
       for (var i = 0; i < pids.length; i++) {
-        DocumentReference productReference = DBService.productCollection.doc(pids[i]);
+        DocumentReference productReference =
+            DBService.productCollection.doc(pids[i]);
         var currentSnapshot = await productReference.get();
         DocumentReference sellerRef = currentSnapshot.get("seller");
         String sellerName = (await sellerRef.get()).get("name");
@@ -42,7 +43,8 @@ class _BasketPageState extends State<BasketPage> {
             productName: currentSnapshot.get("name"),
             rating: Util.avg(currentSnapshot.get("rating")),
             price: currentSnapshot.get("price"),
-            seller: sellerName);
+            seller: sellerName,
+            oldPrice: currentSnapshot.get("oldPrice"));
         productsInBasket.add(currentProduct);
         orderInfo.add({"seller": sellerRef.id, "product": pids[i]});
       }
@@ -133,16 +135,19 @@ class _BasketPageState extends State<BasketPage> {
                   ),
                 ),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                  SizedBox(
-                    height: 40,
-                  ),
-                  Divider(
-                    height: 2,
-                  ),
-                  Text("The sum is \$ $sum",style: kButtonLightTextStyle,)
-                ]),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Divider(
+                        height: 2,
+                      ),
+                      Text(
+                        "The sum is \$ $sum",
+                        style: kButtonLightTextStyle,
+                      )
+                    ]),
                 Divider(
                   height: 2,
                   thickness: 3,
@@ -150,11 +155,14 @@ class _BasketPageState extends State<BasketPage> {
                 SizedBox(
                   height: 15,
                 ),
-                OutlinedButton(style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith(
-            (states) => AppColors.primary.withOpacity(0.1)),
-            padding: MaterialStateProperty.resolveWith(
-            (states) => EdgeInsets.zero,),),
+                OutlinedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith(
+                          (states) => AppColors.primary.withOpacity(0.1)),
+                      padding: MaterialStateProperty.resolveWith(
+                        (states) => EdgeInsets.zero,
+                      ),
+                    ),
                     onPressed: () {
                       if (sum != 0) {
                         Navigator.push(
