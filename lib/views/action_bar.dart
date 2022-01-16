@@ -25,7 +25,7 @@ class ActionBar extends StatelessWidget with PreferredSizeWidget {
             },
             icon: const Icon(
               Icons.notifications,
-              color: Colors.red,
+              color: AppColors.primary,
               size: 40,
             ))
       ],

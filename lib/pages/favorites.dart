@@ -35,6 +35,7 @@ class _FavoritesState extends State<Favorites> {
             productName: currentSnapshot.get("name"),
             rating: Util.avg(currentSnapshot.get("rating")),
             price: currentSnapshot.get("price"),
+            oldPrice: currentSnapshot.get("oldPrice"),
             seller: sellerName);
         favoriteProducts.add(currentProduct);
       }

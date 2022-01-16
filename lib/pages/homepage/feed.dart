@@ -29,6 +29,7 @@ class _FeedState extends State<Feed> {
     var r = await DBService.productCollection.get();
     var _productsTemp = r.docs
         .map<Product>((doc) => Product(
+            oldPrice: doc['oldPrice'],
             pid: doc.id,
             price: doc['price'],
             stocks: doc['stocks'],
@@ -57,7 +58,8 @@ class _FeedState extends State<Feed> {
       print(monthAgo);
       var lastOrders = (await DBService.ordersCollection
               .where("buyer", isEqualTo: userRef)
-              .where("purchaseDate", isGreaterThan: Timestamp.fromDate(monthAgo))
+              .where("purchaseDate",
+                  isGreaterThan: Timestamp.fromDate(monthAgo))
               .get())
           .docs;
       print(lastOrders);
@@ -70,13 +72,15 @@ class _FeedState extends State<Feed> {
           DocumentReference productRef = element.get("product");
           tagsList.add((await productRef.get()).get("tag"));
         }
-        _recommendationsTemp = _productsTemp.where((element) => tagsList.contains(element.tag)).toList();
+        _recommendationsTemp = _productsTemp
+            .where((element) => tagsList.contains(element.tag))
+            .toList();
       }
     }
 
     setState(() {
       _products = _productsTemp;
-      _promotions = _products?.where((p) => (p.price < 100)).toList();
+      _promotions = _products?.where((p) => (p.oldPrice > p.price)).toList();
       _recommendations = _recommendationsTemp;
     });
   }

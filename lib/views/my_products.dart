@@ -37,6 +37,7 @@ class _MyProductsState extends State<MyProducts> {
         productName: currentProductDoc.get("name"),
         rating: Util.avg(currentProductDoc.get("rating")),
         price: currentProductDoc.get("price"),
+        oldPrice: currentProductDoc.get("oldPrice"),
         seller: sellerName,
         category: currentProductDoc.get("category"),
         tag: currentProductDoc.get("tag"),

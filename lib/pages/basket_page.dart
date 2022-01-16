@@ -43,7 +43,8 @@ class _BasketPageState extends State<BasketPage> {
             productName: currentSnapshot.get("name"),
             rating: Util.avg(currentSnapshot.get("rating")),
             price: currentSnapshot.get("price"),
-            seller: sellerName);
+            seller: sellerName,
+            oldPrice: currentSnapshot.get("oldPrice"));
         productsInBasket.add(currentProduct);
         orderInfo.add({"seller": sellerRef.id, "product": pids[i]});
       }

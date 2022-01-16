@@ -40,6 +40,7 @@ class _SellerPageState extends State<SellerPage> {
           stocks: doc['stocks'],
           pid: doc.id,
           price: doc['price'],
+          oldPrice: doc['oldPrice'],
           productName: doc['name'],
           category: doc['category'],
           tag: doc['tag'],

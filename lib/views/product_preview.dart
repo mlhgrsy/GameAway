@@ -99,7 +99,31 @@ class _ProductPreviewState extends State<ProductPreview> {
                               const SizedBox(
                                 height: 20,
                               ),
-                              Text("\$ ${widget.product.price}")
+                              Column(
+                                children: [
+                                  Visibility(
+                                    visible: widget.product.oldPrice >
+                                        widget.product.price,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "\$ ${widget.product.oldPrice}",
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              color: AppColors.primary,
+                                              decoration:
+                                                  TextDecoration.lineThrough),
+                                        ),
+                                        // Text(
+                                        //     "${(((widget.product.oldPrice - widget.product.price) / widget.product.oldPrice) * 100).toStringAsFixed(0)}%"),
+                                      ],
+                                    ),
+                                  ),
+                                  Text("\$ ${widget.product.price}"),
+                                ],
+                              ),
                             ],
                           ),
                         )
@@ -107,45 +131,75 @@ class _ProductPreviewState extends State<ProductPreview> {
                     ),
                     ...(!widget.editable
                         ? [
-                            IconButton(
-                                onPressed: () {
-                                  if (prefs.data!.getStringList("favorites") ==
-                                      null) {
-                                    setState(() {
-                                      prefs.data!.setStringList(
-                                          "favorites", [widget.product.pid]);
-                                    });
-                                  } else if (prefs.data!
-                                      .getStringList("favorites")!
-                                      .contains(widget.product.pid)) {
-                                    var temp =
-                                        prefs.data!.getStringList("favorites")!;
-                                    temp.remove(widget.product.pid);
-                                    setState(() {
-                                      prefs.data!
-                                          .setStringList("favorites", temp);
-                                    });
-                                  } else {
-                                    var temp =
-                                        prefs.data!.getStringList("favorites")!;
-                                    temp.add(widget.product.pid);
-                                    setState(() {
-                                      prefs.data!
-                                          .setStringList("favorites", temp);
-                                    });
-                                  }
-                                  if (widget.refreshFunc != null) {
-                                    widget.refreshFunc!();
-                                  }
-                                },
-                                icon: Icon(
-                                    prefs.data!.getStringList("favorites") ==
-                                                null ||
-                                            !prefs.data!
-                                                .getStringList("favorites")
-                                                .contains(widget.product.pid)
-                                        ? Icons.favorite_outline
-                                        : Icons.favorite, color:AppColors.notification))
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: IconButton(
+                                  onPressed: () {
+                                    if (prefs.data!
+                                            .getStringList("favorites") ==
+                                        null) {
+                                      setState(() {
+                                        prefs.data!.setStringList(
+                                            "favorites", [widget.product.pid]);
+                                      });
+                                    } else if (prefs.data!
+                                        .getStringList("favorites")!
+                                        .contains(widget.product.pid)) {
+                                      var temp = prefs.data!
+                                          .getStringList("favorites")!;
+                                      temp.remove(widget.product.pid);
+                                      setState(() {
+                                        prefs.data!
+                                            .setStringList("favorites", temp);
+                                      });
+                                    } else {
+                                      var temp = prefs.data!
+                                          .getStringList("favorites")!;
+                                      temp.add(widget.product.pid);
+                                      setState(() {
+                                        prefs.data!
+                                            .setStringList("favorites", temp);
+                                      });
+                                    }
+                                    if (widget.refreshFunc != null) {
+                                      widget.refreshFunc!();
+                                    }
+                                  },
+                                  icon: Icon(
+                                      prefs.data!.getStringList("favorites") ==
+                                                  null ||
+                                              !prefs.data!
+                                                  .getStringList("favorites")
+                                                  .contains(widget.product.pid)
+                                          ? Icons.favorite_outline
+                                          : Icons.favorite,
+                                      color: AppColors.notification)),
+                            ),
+                            Visibility(
+                              visible: widget.product.oldPrice >
+                                  widget.product.price,
+                              child: Positioned(
+                                top: 0,
+                                left: 0,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.circle,
+                                        size: 40,
+                                        color: AppColors.background,
+                                      ),
+                                      Text(
+                                          "${(((widget.product.oldPrice - widget.product.price) / widget.product.oldPrice) * 100).toStringAsFixed(0)}%",
+                                          style: TextStyle(color: Colors.white))
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
                           ]
                         : editableButtons(
                             context, widget.product, widget.refreshFunc)),
@@ -200,18 +254,20 @@ class Product {
   String seller;
   num rating;
   num price;
+  num oldPrice;
   num stocks;
   String category;
   String tag;
   String desc;
 
-
-  Product({required this.pid,
+  Product({
+    required this.pid,
     required this.url,
     required this.productName,
     required this.rating,
     required this.price,
     required this.stocks,
+    required this.oldPrice,
     this.desc = "No Description",
     this.category = "Games",
     this.tag = "All",
