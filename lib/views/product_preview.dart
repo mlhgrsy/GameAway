@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -9,7 +7,6 @@ import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/edit_product.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'delete_product.dart';
 
 class ProductPreview extends StatefulWidget {

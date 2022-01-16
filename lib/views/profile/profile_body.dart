@@ -52,4 +52,3 @@ class ProfileBody extends StatelessWidget {
   }
 }
 
-//yapılması gerekenler: profile ad, soyad ve maili database den almak, deafult pp atamak

@@ -17,7 +17,6 @@ class _WalkThroughState extends State<WalkThrough> {
     "HOME",
     "BASKET",
     "FAVORITES",
-    "SUGGESTIONS",
     "SELL PRODUCT",
     "PROFILE",
   ];
@@ -27,7 +26,6 @@ class _WalkThroughState extends State<WalkThrough> {
     "Browsing Game Stuffs",
     "Add Products into Basket ",
     "Make Favorite Lists",
-    "Any Game Suggestions?",
     "Sell the Game Stuff Here!",
     "Customize the Profile ",
   ];
@@ -37,7 +35,6 @@ class _WalkThroughState extends State<WalkThrough> {
     "assets/walk_images/home.png",
     "assets/walk_images/basket.png",
     "assets/walk_images/fav.png",
-    "assets/walk_images/suggest.png",
     "assets/walk_images/sell.png",
     "assets/walk_images/profile.png",
   ];
@@ -47,13 +44,12 @@ class _WalkThroughState extends State<WalkThrough> {
     "See the trending game sales. Search and sort among all products.",
     "List the products added in the basket.",
     "List your favorite products, and sellers.",
-    "Get update with latest product of your interest.",
     "Sell your products easily. Also see your selling list.",
     "Sign up to see your settings, history and notifications.",
   ];
 
   int currentPage = 0;
-  int lastPage = 6;
+  int lastPage = 5;
 
   void nextPage() {
     if (currentPage < lastPage) {
@@ -82,13 +78,13 @@ class _WalkThroughState extends State<WalkThrough> {
         automaticallyImplyLeading: false,
         actions: [
           OutlinedButton(
-              child: Text(
-                "close",
+              child: const Text(
+                "Close",
                 style: TextStyle(color: AppColors.notification),
               ),
               onPressed: skipPage),
         ],
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColors.primaryBackground,
         title: Text(title[currentPage], style: kAppBarTitleTextStyle),
         centerTitle: true,
         elevation: 0.0,
@@ -119,24 +115,21 @@ class _WalkThroughState extends State<WalkThrough> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Container(
               child: Row(
                 children: [
                   OutlinedButton(
-                      child: Icon(Icons.arrow_left, color: AppColors.primary),
+                      child: const Icon(Icons.arrow_left,
+                          color: AppColors.primary),
                       onPressed: prevPage),
                   Spacer(),
-
-                  /* Text(
-                      "${currentPage +1} / ${lastPage +1}",
-                    ),*/
                   AnimatedSmoothIndicator(
                     activeIndex: currentPage,
-                    count: 7,
+                    count: 6,
                     effect: const ExpandingDotsEffect(
                       dotColor: AppColors.primary,
-                      activeDotColor: AppColors.background,
+                      activeDotColor: AppColors.primaryBackground,
                     ),
                   ),
                   Spacer(),

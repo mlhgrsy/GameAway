@@ -33,7 +33,7 @@ class _AccountButtonsState extends State<AccountButtons> {
             ),
             onPressed: () {
               Navigator.pushNamed(context, "/profile/account_settings");
-            }, // burası sayfaya göre doldurulacak
+            },
           ),
         )
     );

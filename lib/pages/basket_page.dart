@@ -31,7 +31,8 @@ class _BasketPageState extends State<BasketPage> {
     } else {
       List<Product> productsInBasket = <Product>[];
       for (var i = 0; i < pids.length; i++) {
-        DocumentReference productReference = DBService.productCollection.doc(pids[i]);
+        DocumentReference productReference =
+            DBService.productCollection.doc(pids[i]);
         var currentSnapshot = await productReference.get();
         DocumentReference sellerRef = currentSnapshot.get("seller");
         String sellerName = (await sellerRef.get()).get("name");
@@ -72,7 +73,7 @@ class _BasketPageState extends State<BasketPage> {
                 Flexible(
                   fit: FlexFit.loose,
                   child: Container(
-                    height: 475,
+                    height: MediaQuery.of(context).size.height - 290,
                     child: ListView.builder(
                       scrollDirection: Axis.vertical,
                       itemCount: products.length,
@@ -114,7 +115,7 @@ class _BasketPageState extends State<BasketPage> {
                                         sum = sumPrice;
                                       });
                                     },
-                                    child: Text(
+                                    child: const Text(
                                       "X",
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 30),
@@ -133,16 +134,19 @@ class _BasketPageState extends State<BasketPage> {
                   ),
                 ),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                  SizedBox(
-                    height: 40,
-                  ),
-                  Divider(
-                    height: 2,
-                  ),
-                  Text("The sum is \$ $sum",style: kButtonLightTextStyle,)
-                ]),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Divider(
+                        height: 2,
+                      ),
+                      Text(
+                        "The sum is \$ ${double.parse(sum.toStringAsFixed(2))}",
+                        style: kButtonLightTextStyle,
+                      )
+                    ]),
                 Divider(
                   height: 2,
                   thickness: 3,
@@ -150,18 +154,21 @@ class _BasketPageState extends State<BasketPage> {
                 SizedBox(
                   height: 15,
                 ),
-                OutlinedButton(style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith(
-            (states) => AppColors.primary.withOpacity(0.1)),
-            padding: MaterialStateProperty.resolveWith(
-            (states) => EdgeInsets.zero,),),
+                OutlinedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith(
+                          (states) => AppColors.primary.withOpacity(0.1)),
+                      padding: MaterialStateProperty.resolveWith(
+                        (states) => EdgeInsets.zero,
+                      ),
+                    ),
                     onPressed: () {
                       if (sum != 0) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => PaymentScreen(
-                                      sum: sum,
+                                      sum: double.parse(sum.toStringAsFixed(2)),
                                       orderInfo: orderInfo,
                                     )));
                       } else {

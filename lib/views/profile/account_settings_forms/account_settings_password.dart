@@ -76,17 +76,20 @@ class _AccountSettingsPasswordState extends State<AccountSettingsPassword> {
               autocorrect: false,
               validator: (value) {
                 if (value == null) {
-                  return "password can not be empty";
+                  return "New password cannot be empty.";
                 } else {
                   String trimmedValue = value.trim();
                   if (trimmedValue.isEmpty) {
-                    return "password can not be empty";
+                    return "New password cannot be empty.";
                   }
                   if (trimmedValue.toLowerCase() == trimmedValue) {
-                    return "there must be upper case letter in the password ";
+                    return "There must be upper case letter in the new password.";
                   }
                   if (trimmedValue.toUpperCase() == trimmedValue) {
-                    return "there must be lower case letter in the password ";
+                    return "There must be lower case letter in the new password.";
+                  }
+                  if (trimmedValue.length < 6) {
+                    return "New password must have at least 6 characters.";
                   }
                 }
                 return null;
