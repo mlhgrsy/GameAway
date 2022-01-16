@@ -62,11 +62,11 @@ class _SignUpState extends State<SignUp> {
                           keyboardType: TextInputType.name,
                           validator: (value) {
                             if (value == null) {
-                              return "name can not be empty";
+                              return "Name cannot be empty.";
                             } else {
                               String trimmedValue = value.trim();
                               if (trimmedValue.isEmpty) {
-                                return "name can not be empty";
+                                return "Name cannot be empty.";
                               }
                             }
                             return null;
@@ -104,11 +104,11 @@ class _SignUpState extends State<SignUp> {
                           keyboardType: TextInputType.text,
                           validator: (value) {
                             if (value == null) {
-                              return "Surname can not be empty";
+                              return "Surname cannot be empty.";
                             } else {
                               String trimmedValue = value.trim();
                               if (trimmedValue.isEmpty) {
-                                return "Surname can not be empty";
+                                return "Surname cannot be empty.";
                               }
                             }
                             return null;
@@ -146,14 +146,14 @@ class _SignUpState extends State<SignUp> {
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
                             if (value == null) {
-                              return "email can not be empty";
+                              return "Email cannot be empty.";
                             } else {
                               String trimmedValue = value.trim();
                               if (trimmedValue.isEmpty) {
-                                return "email can not be empty";
+                                return "Email can not be empty.";
                               }
                               if (!EmailValidator.validate(trimmedValue)) {
-                                return "email is not valid";
+                                return "Email is not valid.";
                               }
                             }
                             return null;
@@ -192,17 +192,20 @@ class _SignUpState extends State<SignUp> {
                         autocorrect: false,
                         validator: (value) {
                           if (value == null) {
-                            return "password can not be empty";
+                            return "Password cannot be empty.";
                           } else {
                             String trimmedValue = value.trim();
                             if (trimmedValue.isEmpty) {
-                              return "password can not be empty";
+                              return "Password cannot be empty.";
                             }
                             if (trimmedValue.toLowerCase() == trimmedValue) {
-                              return "there must be upper case letter in the password ";
+                              return "There must be upper case letter in the password.";
                             }
                             if (trimmedValue.toUpperCase() == trimmedValue) {
-                              return "there must be lower case letter in the password ";
+                              return "There must be lower case letter in the password.";
+                            }
+                            if (trimmedValue.length < 6) {
+                              return "Password must have at least 6 characters.";
                             }
                           }
                           return null;

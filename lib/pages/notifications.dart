@@ -34,7 +34,7 @@ class _notifyState extends State<notify> {
           'Notifications',
           style: kAppBarTitleTextStyle,
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryBackground,
         centerTitle: true,
         elevation: 0.0,
       ),
@@ -50,7 +50,7 @@ class _notifyState extends State<notify> {
                 return Flexible(
                   fit: FlexFit.loose,
                   child: Container(
-                    height: 400,
+                    height: double.infinity,
                     color: AppColors.primary,
                     child: ListView.builder(
                       scrollDirection: Axis.vertical,
@@ -65,9 +65,7 @@ class _notifyState extends State<notify> {
                                 onTap: () {},
                                 title: Text(
                                   '${listofnotify[index]["notify"]}',
-                                  style: TextStyle(
-                                      color: AppColors.notification,
-                                      fontWeight: FontWeight.bold),
+                                  style: kButtonDarkTextStyle
                                 ),
                                 trailing: IconButton(
                                   onPressed: () async {
@@ -82,62 +80,28 @@ class _notifyState extends State<notify> {
                                   color: AppColors.notification,
                                   iconSize: 30,
                                 ),
-                                leading: IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.arrow_right_alt_rounded),
-                                  color: Colors.blue,
+                                leading: const IconButton(
+                                  onPressed: null,
+                                  icon: Icon(Icons.arrow_right_alt_rounded, color: AppColors.notification),
                                   iconSize: 25,
                                 ),
                               ),
                             ),
                           );
                         } else {
-                          return Center(child: Text("no notifications"));
+                          return Center(child: Text("No notifications"));
                         }
                       },
                     ),
                   ),
                 );
               }),
-          Icon(Icons.arrow_downward_sharp, color: Colors.blueAccent, size: 45),
-          Icon(
-            Icons.arrow_downward_sharp,
-            color: Colors.blueAccent,
-            size: 45,
-          ),
-          Divider(
-            color: AppColors.primary,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Product Announcements",
-                      style: kSmallTitle,
-                    ),
-                    Text("When your game bought, notify me")
-                  ],
-                ),
-                Switch(
-                  value: state,
-                  onChanged: (bool s) {
-                    setState(() {
-                      state = s;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-          OutlinedButton(
-              onPressed: () => db.addnotif("a notification has been send"),
-              child: Text("send notification"))
+
+
+          // mock send notification
+          /*OutlinedButton(
+              onPressed: () => db.addnotif("A notification has been send"),
+              child: Text("Send notification"))*/
         ],
       ),
     );

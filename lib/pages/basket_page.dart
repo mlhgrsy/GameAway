@@ -74,7 +74,7 @@ class _BasketPageState extends State<BasketPage> {
                 Flexible(
                   fit: FlexFit.loose,
                   child: Container(
-                    height: 475,
+                    height: MediaQuery.of(context).size.height - 290,
                     child: ListView.builder(
                       scrollDirection: Axis.vertical,
                       itemCount: products.length,
@@ -116,7 +116,7 @@ class _BasketPageState extends State<BasketPage> {
                                         sum = sumPrice;
                                       });
                                     },
-                                    child: Text(
+                                    child: const Text(
                                       "X",
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 30),
@@ -144,7 +144,7 @@ class _BasketPageState extends State<BasketPage> {
                         height: 2,
                       ),
                       Text(
-                        "The sum is \$ $sum",
+                        "The sum is \$ ${double.parse(sum.toStringAsFixed(2))}",
                         style: kButtonLightTextStyle,
                       )
                     ]),
@@ -169,7 +169,7 @@ class _BasketPageState extends State<BasketPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => PaymentScreen(
-                                      sum: sum,
+                                      sum: double.parse(sum.toStringAsFixed(2)),
                                       orderInfo: orderInfo,
                                     )));
                       } else {
