@@ -24,6 +24,7 @@ class AccountSettingsForm extends StatefulWidget {
 class _AccountSettingsFormState extends State<AccountSettingsForm> {
   @override
   Widget build(BuildContext context) {
+    if (Provider.of<User?>(context) == null) return Container();
     return Padding(
       padding: Dimen.regularPadding,
       child: SingleChildScrollView(

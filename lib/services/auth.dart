@@ -134,12 +134,12 @@ class AuthService {
     }
   }
 
-  Future deleteAccount(String? pass, bool hasProvider) async {
+  Future reAuth(String? pass, bool hasProvider) async {
     AuthCredential cred;
     if (hasProvider) {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       final GoogleSignInAuthentication googleAuth =
-          await googleUser!.authentication;
+      await googleUser!.authentication;
       cred = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -150,6 +150,14 @@ class AuthService {
     }
     try {
       await _auth.currentUser!.reauthenticateWithCredential(cred);
+      return true;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future deleteAccount() async {
+    try {
       await _auth.currentUser!.delete();
       return true;
     } catch (e) {

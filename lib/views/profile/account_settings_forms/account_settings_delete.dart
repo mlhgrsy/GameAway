@@ -22,8 +22,9 @@ class _AccountSettingsDeleteState extends State<AccountSettingsDelete> {
   Widget build(BuildContext context) {
     String uid = Provider.of<User>(context).uid;
     return FutureBuilder(
-        future: DBService.hasProvider(Provider.of<User?>(context)!.uid),
+        future: DBService.hasProvider(Provider.of<User?>(context) == null ? "" : Provider.of<User?>(context)!.uid),
         builder: (context, AsyncSnapshot hasProvider) {
+          if(!hasProvider.hasData) return Container();
           return OutlinedButton(
             onPressed: () async {
               if (hasProvider.data) {
@@ -41,8 +42,8 @@ class _AccountSettingsDeleteState extends State<AccountSettingsDelete> {
                                 Provider.of<BottomNav>(context, listen: false)
                                     .switchTo(0);
                                 Navigator.of(context).pop();
-                                await _auth.deleteAccount(
-                                    null, hasProvider.data);
+                                await _auth.reAuth(null, hasProvider.data);
+                                await _auth.deleteAccount();
                                 await DBService.deleteAccount(uid);
                                 await _auth.signOut();
                               },
@@ -81,8 +82,7 @@ class _AccountSettingsDeleteState extends State<AccountSettingsDelete> {
                               style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () async {
-                              if (await _auth.deleteAccount(
-                                      pass, hasProvider.data) ==
+                              if (await _auth.reAuth(pass, hasProvider.data) ==
                                   null) {
                                 showDialog(
                                     context: context,
@@ -91,7 +91,7 @@ class _AccountSettingsDeleteState extends State<AccountSettingsDelete> {
                                           title: const Text(
                                               "Account Deletion Error"),
                                           content: const Text(
-                                              "An error occurred. Please notify admins"),
+                                              "An error occurred. Make sure to write your credentials correctly"),
                                           actions: [
                                             TextButton(
                                               child: const Text("Close"),
@@ -102,6 +102,9 @@ class _AccountSettingsDeleteState extends State<AccountSettingsDelete> {
                                           ]);
                                     });
                               } else {
+                                Provider.of<BottomNav>(context, listen: false)
+                                    .switchTo(0);
+                                await _auth.deleteAccount();
                                 FocusScope.of(context).unfocus();
                                 showDialog(
                                     context: context,
