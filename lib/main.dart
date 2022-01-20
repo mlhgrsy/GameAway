@@ -107,7 +107,7 @@ class BaseApp extends StatelessWidget {
                       const AccountSettings(),
                 },
               ),
-              const LoadingIndicator()
+              const LoadingIndicator(main: true)
             ],
           ),
         ),

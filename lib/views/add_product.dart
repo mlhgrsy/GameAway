@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/bottom_nav.dart';
 import 'package:gameaway/services/db.dart';
+import 'package:gameaway/services/loading.dart';
 import 'package:gameaway/services/util.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/views/action_bar.dart';
@@ -158,7 +159,7 @@ class _AddProductState extends State<AddProduct> {
                       price == 0 ||
                       stocks == 0 ||
                       _currentCategory == null) {
-                    showDialog(
+                    await showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
@@ -175,6 +176,7 @@ class _AddProductState extends State<AddProduct> {
                               ]);
                         });
                   } else {
+                    Provider.of<Loading>(context, listen: false).increment();
                     var sellerRef = DBService.userCollection
                         .doc(Provider.of<User?>(context, listen: false)!.uid);
                     await db.addProduct(
@@ -187,7 +189,8 @@ class _AddProductState extends State<AddProduct> {
                         stocks,
                         desc);
                     widget.refreshFunc!();
-                    showDialog(
+                    Provider.of<Loading>(context, listen: false).decrement();
+                    await showDialog(
                         context: context,
                         builder: (BuildContext context2) {
                           return AlertDialog(
@@ -199,13 +202,11 @@ class _AddProductState extends State<AddProduct> {
                                   child: const Text("Ok"),
                                   onPressed: () {
                                     Navigator.of(context2).pop();
-                                    Navigator.of(context).pop();
-                                    // Provider.of<BottomNav>(context, listen: false)
-                                    //     .switchTo(0);
                                   },
                                 )
                               ]);
                         });
+                    Navigator.of(context).pop();
                   }
                 },
                 icon: const Icon(Icons.add),

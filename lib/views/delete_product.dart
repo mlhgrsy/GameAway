@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/db.dart';
+import 'package:gameaway/services/loading.dart';
 import 'package:gameaway/views/product_preview.dart';
+import 'package:provider/provider.dart';
 
 class DeleteProduct extends StatefulWidget {
   const DeleteProduct({Key? key, required this.pid, this.refreshFunc})
@@ -25,9 +27,11 @@ class _DeleteProductState extends State<DeleteProduct> {
         TextButton(
           child: const Text("Confirm"),
           onPressed: () async {
+            Provider.of<Loading>(context,listen: false).increment();
             await db.deleteProduct(widget.pid);
             widget.refreshFunc!();
             Navigator.of(context).pop();
+            Provider.of<Loading>(context,listen: false).decrement();
           },
         ),
         TextButton(
