@@ -128,7 +128,7 @@ class _AccountSettingsPasswordState extends State<AccountSettingsPassword> {
                   } else {
                     Provider.of<Loading>(context, listen: false).decrement();
                     FocusScope.of(context).unfocus();
-                    showDialog(
+                    await showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
@@ -140,11 +140,11 @@ class _AccountSettingsPasswordState extends State<AccountSettingsPassword> {
                                   child: const Text("Okay"),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    Navigator.of(context).pop();
                                   },
                                 )
                               ]);
                         });
+                    Navigator.of(context).pop();
                   }
                 }
               },

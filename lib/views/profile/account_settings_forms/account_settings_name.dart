@@ -65,7 +65,7 @@ class _AccountSettingsNameState extends State<AccountSettingsName> {
                   Provider.of<Loading>(context, listen: false).increment();
                   if (await _auth.updateName(name) == null) {
                     Provider.of<Loading>(context, listen: false).decrement();
-                    showDialog(
+                    await showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
@@ -84,7 +84,7 @@ class _AccountSettingsNameState extends State<AccountSettingsName> {
                   } else {
                     Provider.of<Loading>(context, listen: false).decrement();
                     FocusScope.of(context).unfocus();
-                    showDialog(
+                    await showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
@@ -95,11 +95,11 @@ class _AccountSettingsNameState extends State<AccountSettingsName> {
                                   child: const Text("Okay"),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    Navigator.of(context).pop();
                                   },
                                 )
                               ]);
                         });
+                    Navigator.of(context).pop();
                   }
                 }
               },
