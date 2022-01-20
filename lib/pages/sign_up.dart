@@ -1,9 +1,11 @@
 import 'package:gameaway/services/auth.dart';
+import 'package:gameaway/services/loading.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:provider/provider.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -231,9 +233,13 @@ class _SignUpState extends State<SignUp> {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
+                            Provider.of<Loading>(context, listen: false)
+                                .increment();
                             if (await auth.signupWithMailAndPass(
                                     mail, pass, name, sur) ==
                                 null) {
+                              Provider.of<Loading>(context, listen: false)
+                                  .decrement();
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -252,6 +258,8 @@ class _SignUpState extends State<SignUp> {
                                         ]);
                                   });
                             } else {
+                              Provider.of<Loading>(context, listen: false)
+                                  .decrement();
                               FocusScope.of(context).unfocus();
                               showDialog(
                                   context: context,
