@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gameaway/services/auth.dart';
 import 'package:gameaway/services/bottom_nav.dart';
 import 'package:gameaway/services/db.dart';
+import 'package:gameaway/services/loading.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
@@ -22,9 +23,11 @@ class _AccountSettingsDeleteState extends State<AccountSettingsDelete> {
   Widget build(BuildContext context) {
     String uid = Provider.of<User>(context).uid;
     return FutureBuilder(
-        future: DBService.hasProvider(Provider.of<User?>(context) == null ? "" : Provider.of<User?>(context)!.uid),
+        future: DBService.hasProvider(Provider.of<User?>(context) == null
+            ? ""
+            : Provider.of<User?>(context)!.uid),
         builder: (context, AsyncSnapshot hasProvider) {
-          if(!hasProvider.hasData) return Container();
+          if (!hasProvider.hasData) return Container();
           return OutlinedButton(
             onPressed: () async {
               if (hasProvider.data) {
@@ -38,12 +41,16 @@ class _AccountSettingsDeleteState extends State<AccountSettingsDelete> {
                             TextButton(
                               child: const Text("Yes, I am Sure!"),
                               onPressed: () async {
+                                Provider.of<Loading>(context, listen: false)
+                                    .increment();
                                 Navigator.of(context).pop();
                                 Provider.of<BottomNav>(context, listen: false)
                                     .switchTo(0);
-                                Navigator.of(context).pop();
                                 await _auth.reAuth(null, hasProvider.data);
                                 await _auth.deleteAccount();
+                                Provider.of<Loading>(context, listen: false)
+                                    .decrement();
+                                Navigator.of(context).pop();
                                 await DBService.deleteAccount(uid);
                                 await _auth.signOut();
                               },
@@ -82,8 +89,12 @@ class _AccountSettingsDeleteState extends State<AccountSettingsDelete> {
                               style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () async {
+                              Provider.of<Loading>(context, listen: false)
+                                  .increment();
                               if (await _auth.reAuth(pass, hasProvider.data) ==
                                   null) {
+                                Provider.of<Loading>(context, listen: false)
+                                    .decrement();
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
@@ -105,6 +116,8 @@ class _AccountSettingsDeleteState extends State<AccountSettingsDelete> {
                                 Provider.of<BottomNav>(context, listen: false)
                                     .switchTo(0);
                                 await _auth.deleteAccount();
+                                Provider.of<Loading>(context, listen: false)
+                                    .decrement();
                                 FocusScope.of(context).unfocus();
                                 showDialog(
                                     context: context,

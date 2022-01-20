@@ -15,6 +15,7 @@ class ProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(Provider.of<User?>(context) == null) return Container();
     return Padding(
       padding: const EdgeInsets.fromLTRB(5, 20, 5, 20),
       child: StreamBuilder(
