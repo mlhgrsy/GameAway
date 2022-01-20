@@ -1,4 +1,3 @@
-
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,6 +20,7 @@ import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/loading_indicator.dart';
 import 'package:gameaway/views/product_preview.dart';
 import 'package:provider/provider.dart';
+import 'dart:ui' as ui;
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
@@ -89,22 +89,27 @@ class BaseApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => BottomNav()),
         ChangeNotifierProvider(create: (_) => Loading()),
       ],
-      child: MaterialApp(
-        home: Stack(
-          children: [
-            MaterialApp(
-              navigatorObservers: <NavigatorObserver>[observer],
-              home: Root(analytics: analytics, observer: observer),
-              routes: {
-                '/walk': (context) => const WalkThrough(),
-                '/signUp': (context) => const SignUp(),
-                '/signIn': (context) => const SignIn(),
-                '/Notify': (context) => const notify(),
-                '/profile/account_settings': (context) => const AccountSettings(),
-              },
-            ),
-            const LoadingIndicator()
-          ],
+      child: MediaQuery(
+        data: MediaQueryData.fromWindow(ui.window),
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: Stack(
+            children: [
+              MaterialApp(
+                navigatorObservers: <NavigatorObserver>[observer],
+                home: Root(analytics: analytics, observer: observer),
+                routes: {
+                  '/walk': (context) => const WalkThrough(),
+                  '/signUp': (context) => const SignUp(),
+                  '/signIn': (context) => const SignIn(),
+                  '/Notify': (context) => const notify(),
+                  '/profile/account_settings': (context) =>
+                      const AccountSettings(),
+                },
+              ),
+              const LoadingIndicator()
+            ],
+          ),
         ),
       ),
     );
