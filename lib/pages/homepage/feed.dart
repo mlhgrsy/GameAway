@@ -8,7 +8,7 @@ import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/action_bar.dart';
 import 'package:gameaway/views/category_tag_selection.dart';
-import 'package:gameaway/views/loading.dart';
+import 'package:gameaway/views/loading_indicator.dart';
 import 'package:gameaway/views/product_preview.dart';
 import 'package:provider/provider.dart';
 
@@ -97,7 +97,7 @@ class _FeedState extends State<Feed> {
     return Scaffold(
       appBar: ActionBar(),
       body: _products == null
-          ? const Loading()
+          ? const LoadingIndicator()
           : SingleChildScrollView(
               child: Column(
                 children: [

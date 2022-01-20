@@ -7,7 +7,7 @@ import 'package:gameaway/views/product_grid.dart';
 import 'package:gameaway/views/product_preview.dart';
 import 'package:provider/provider.dart';
 
-import 'loading.dart';
+import 'loading_indicator.dart';
 
 class MyProducts extends StatefulWidget {
   const MyProducts({Key? key, this.refreshFunc}) : super(key: key);
@@ -56,7 +56,7 @@ class _MyProductsState extends State<MyProducts> {
         future: getProducts(),
         builder: (context, AsyncSnapshot snapshot) {
           if (!snapshot.hasData) {
-            return const Loading();
+            return const LoadingIndicator();
           } else if (snapshot.data.isEmpty) {
             return const Center(
                 child:

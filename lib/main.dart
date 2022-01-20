@@ -15,8 +15,10 @@ import 'package:gameaway/pages/sign_up.dart';
 import 'package:gameaway/pages/walkthrough.dart';
 import 'package:gameaway/services/auth.dart';
 import 'package:gameaway/services/bottom_nav.dart';
+import 'package:gameaway/services/loading.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
+import 'package:gameaway/views/loading_indicator.dart';
 import 'package:gameaway/views/product_preview.dart';
 import 'package:provider/provider.dart';
 
@@ -84,18 +86,26 @@ class BaseApp extends StatelessWidget {
           initialData: null,
           value: AuthService().user,
         ),
-        ChangeNotifierProvider(create: (_) => BottomNav())
+        ChangeNotifierProvider(create: (_) => BottomNav()),
+        ChangeNotifierProvider(create: (_) => Loading()),
       ],
       child: MaterialApp(
-        navigatorObservers: <NavigatorObserver>[observer],
-        home: Root(analytics: analytics, observer: observer),
-        routes: {
-          '/walk': (context) => const WalkThrough(),
-          '/signUp': (context) => const SignUp(),
-          '/signIn': (context) => const SignIn(),
-          '/Notify': (context) => const notify(),
-          '/profile/account_settings': (context) => const AccountSettings(),
-        },
+        home: Stack(
+          children: [
+            MaterialApp(
+              navigatorObservers: <NavigatorObserver>[observer],
+              home: Root(analytics: analytics, observer: observer),
+              routes: {
+                '/walk': (context) => const WalkThrough(),
+                '/signUp': (context) => const SignUp(),
+                '/signIn': (context) => const SignIn(),
+                '/Notify': (context) => const notify(),
+                '/profile/account_settings': (context) => const AccountSettings(),
+              },
+            ),
+            const LoadingIndicator()
+          ],
+        ),
       ),
     );
   }

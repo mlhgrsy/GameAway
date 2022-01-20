@@ -11,7 +11,7 @@ import 'package:gameaway/views/profile/account_settings_forms/account_settings_p
 import 'package:gameaway/views/profile/account_settings_forms/account_settings_pp.dart';
 import 'package:provider/provider.dart';
 
-import '../loading.dart';
+import '../loading_indicator.dart';
 import 'account_settings_forms/account_settings_delete.dart';
 
 class AccountSettingsForm extends StatefulWidget {
@@ -33,7 +33,7 @@ class _AccountSettingsFormState extends State<AccountSettingsForm> {
                 .doc(Provider.of<User?>(context)!.uid)
                 .snapshots(),
             builder: (context, AsyncSnapshot snapshot) {
-              if (!snapshot.hasData) return const Loading();
+              if (!snapshot.hasData) return const LoadingIndicator();
               return Column(
                   children: getAccountSettingsIfHasProvider(snapshot));
             }),

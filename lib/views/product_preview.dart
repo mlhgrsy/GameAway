@@ -8,7 +8,7 @@ import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/edit_product.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'delete_product.dart';
-import 'loading.dart';
+import 'loading_indicator.dart';
 
 class ProductPreview extends StatefulWidget {
   const ProductPreview({
@@ -36,7 +36,7 @@ class _ProductPreviewState extends State<ProductPreview> {
     return FutureBuilder(
         future: SharedPreferences.getInstance(),
         builder: (context, AsyncSnapshot prefs) {
-          if (!prefs.hasData) return const Loading();
+          if (!prefs.hasData) return const LoadingIndicator();
           return OutlinedButton(
             style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith(
