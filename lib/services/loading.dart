@@ -13,4 +13,9 @@ class Loading with ChangeNotifier {
     queue++;
     notifyListeners();
   }
+
+  void decrement() {
+    queue--;
+    notifyListeners();
+  }
 }
