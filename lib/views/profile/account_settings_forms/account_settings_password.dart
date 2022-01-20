@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/auth.dart';
+import 'package:gameaway/services/loading.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
+import 'package:provider/provider.dart';
 
 class AccountSettingsPassword extends StatefulWidget {
   const AccountSettingsPassword({Key? key}) : super(key: key);
@@ -104,7 +106,9 @@ class _AccountSettingsPasswordState extends State<AccountSettingsPassword> {
               onPressed: () async {
                 if (_formKey2.currentState!.validate()) {
                   _formKey2.currentState!.save();
+                  Provider.of<Loading>(context, listen: false).increment();
                   if (await _auth.updatePassword(oldPass, newPass) == null) {
+                    Provider.of<Loading>(context, listen: false).decrement();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -122,6 +126,7 @@ class _AccountSettingsPasswordState extends State<AccountSettingsPassword> {
                               ]);
                         });
                   } else {
+                    Provider.of<Loading>(context, listen: false).decrement();
                     FocusScope.of(context).unfocus();
                     showDialog(
                         context: context,
