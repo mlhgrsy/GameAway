@@ -13,7 +13,6 @@ import 'package:gameaway/views/loading_indicator.dart';
 import 'package:gameaway/views/product_preview.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geocode/geocode.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductPage extends StatefulWidget {
@@ -64,9 +63,10 @@ class _ProductPage extends State<ProductPage> {
       address = null;
     }
     setState(() {
-      if (address != null)
+      if (address != null) {
         productAddress =
             "${address.streetAddress}\n${address.postal}\n${address.city}/${address.countryName}";
+      }
       productName = product.productName;
     });
     return product;
@@ -307,7 +307,7 @@ class _ProductPage extends State<ProductPage> {
                           ],
                         ),
                         Column(children: [
-                        buyWidget(context, widget.productID, _product.stocks),
+                          buyWidget(context, widget.productID, _product.stocks),
                           OutlinedButton.icon(
                               onPressed: () {
                                 Navigator.push(
