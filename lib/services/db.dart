@@ -9,6 +9,7 @@ import 'package:gameaway/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:path/path.dart';
 
 import 'order.dart';
@@ -62,7 +63,7 @@ class DBService {
   }
 
   static Future hasProvider(String uid) async {
-    if(uid == "") return null;
+    if (uid == "") return null;
     return (await userCollection.doc(uid).get())["has_provider"];
   }
 
@@ -88,6 +89,7 @@ class DBService {
       File picture,
       num stocks,
       String desc) async {
+    var currentLocation = (await Geolocator.getCurrentPosition());
     var productRef = await productCollection.add({
       'category': category,
       'name': name,
@@ -99,7 +101,8 @@ class DBService {
       'tag': tag,
       'stocks': stocks,
       'reviews': [],
-      'desc': desc
+      'desc': desc,
+      'location': GeoPoint(currentLocation.latitude, currentLocation.longitude)
     });
 
     var ref = FirebaseStorage.instance.ref();
@@ -184,15 +187,14 @@ class DBService {
         .catchError((error) => print('Error: ${error.toString()}'));
   }
 
-  Future addnotif_user(String notif,var reciever) async {
+  Future addnotif_user(String notif, var reciever) async {
     var loguser = users.doc(reciever.id);
     var notify = loguser.collection("notification");
-    notify.add({
-    'notify': notif,
-    })
+    notify
+        .add({
+          'notify': notif,
+        })
         .then((value) => print('notification added'))
         .catchError((error) => print('Error: ${error.toString()}'));
   }
 }
-
-

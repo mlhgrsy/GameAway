@@ -4,6 +4,7 @@ import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/add_product.dart';
 import 'package:gameaway/views/my_products.dart';
 import 'package:gameaway/views/my_stocks.dart';
+import 'package:geolocator/geolocator.dart';
 
 class SellProduct extends StatefulWidget {
   const SellProduct({Key? key}) : super(key: key);
@@ -56,7 +57,28 @@ class _SellProductState extends State<SellProduct>
             visible: _currentTab == 0,
             child: FloatingActionButton.extended(
                 backgroundColor: AppColors.primaryBackground,
-                onPressed: () {
+                onPressed: () async {
+                  var permissionStatus = await Geolocator.checkPermission();
+                  if (permissionStatus == LocationPermission.denied) {
+                    var lp = await Geolocator.requestPermission();
+                    if (lp == LocationPermission.denied) {
+                      showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                                title: const Text("Need Permission"),
+                                content: const Text(
+                                    "To add a product, we need your location information"),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(_);
+                                      },
+                                      child: const Text("OK"))
+                                ],
+                              ));
+                      return;
+                    }
+                  }
                   Navigator.push(
                       context,
                       MaterialPageRoute(

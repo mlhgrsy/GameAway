@@ -12,7 +12,7 @@ import 'package:gameaway/views/action_bar.dart';
 import 'package:gameaway/views/loading_indicator.dart';
 import 'package:gameaway/views/product_preview.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:photo_view/photo_view.dart';
+import 'package:geocode/geocode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductPage extends StatefulWidget {
@@ -30,6 +30,7 @@ class _ProductPage extends State<ProductPage> {
   String? _sellerID;
   String productName = "";
   bool isSellerActive = true;
+  String? productAddress;
 
   Future<Product> getProduct() async {
     var docSnap = await DBService.productCollection.doc(widget.productID).get();
@@ -45,16 +46,38 @@ class _ProductPage extends State<ProductPage> {
         stocks: docSnap.get("stocks"),
         tag: docSnap.get("tag"),
         desc: docSnap.get("desc"));
-
     DocumentReference sellerRef = await docSnap.get("seller");
     isSellerActive = (await sellerRef.get()).get("active");
     String sellerName = (await sellerRef.get()).get("name");
     product.seller = sellerName;
     _sellerID = (await sellerRef.get()).id;
+
+    GeoPoint location = docSnap.get("location");
+    print("basladi");
+    Address? address;
+    try {
+      address = await GeoCode(apiKey: "578947513342419599352x20694")
+          .reverseGeocoding(
+              latitude: location.latitude, longitude: location.longitude);
+    } catch (e) {
+      address = null;
+    }
     setState(() {
+      if (address != null) {
+        productAddress =
+            "${address.streetAddress}\n${address.postal}\n${address.city}/${address.countryName}";
+      }
       productName = product.productName;
     });
     return product;
+  }
+
+  Future? future;
+
+  @override
+  void initState() {
+    super.initState();
+    future = getProduct();
   }
 
   @override
@@ -106,7 +129,7 @@ class _ProductPage extends State<ProductPage> {
         ],
       ),
       body: FutureBuilder(
-          future: getProduct(),
+          future: future,
           builder: (context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) return const LoadingIndicator();
             Product _product = snapshot.data;
@@ -140,7 +163,6 @@ class _ProductPage extends State<ProductPage> {
                           child: Container(
                             padding: Dimen.regularPadding,
                             child: CircleAvatar(
-                              //farklı bir clip
                               radius: 50,
                               backgroundImage: NetworkImage(
                                 _product.url,
@@ -284,7 +306,27 @@ class _ProductPage extends State<ProductPage> {
                                   ),
                           ],
                         ),
-                        buyWidget(context, widget.productID, _product.stocks),
+                        Column(children: [
+                          buyWidget(context, widget.productID, _product.stocks),
+                          OutlinedButton.icon(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => Reviews(
+                                              productID: widget.productID,
+                                            )));
+                              },
+                              icon: const Icon(
+                                Icons.comment,
+                                color: AppColors.secondary,
+                              ),
+                              label: const Text(
+                                "See Reviews",
+                                style: TextStyle(
+                                    color: AppColors.secondary, fontSize: 18),
+                              )),
+                        ])
                       ],
                     ),
                   ),
@@ -309,28 +351,31 @@ class _ProductPage extends State<ProductPage> {
                   const SizedBox(
                     height: 16,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      OutlinedButton.icon(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => Reviews(
-                                          productID: widget.productID,
-                                        )));
-                          },
-                          icon: const Icon(
-                            Icons.comment,
-                            color: AppColors.secondary,
+                  Visibility(
+                    visible: productAddress != null,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            padding: const EdgeInsets.fromLTRB(16, 16, 0, 0),
+                            child: const Text(
+                              "Address:",
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )),
+                        Container(
+                          padding: Dimen.regularPadding,
+                          child: Text(
+                            productAddress ?? "",
+                            style: const TextStyle(color: Colors.black),
+                            textAlign: TextAlign.left,
+                            //details
                           ),
-                          label: const Text(
-                            "See Reviews",
-                            style: TextStyle(
-                                color: AppColors.secondary, fontSize: 18),
-                          )),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
