@@ -119,7 +119,9 @@ class _AccountSettingsDeleteState extends State<AccountSettingsDelete> {
                                 Provider.of<Loading>(context, listen: false)
                                     .decrement();
                                 FocusScope.of(context).unfocus();
-                                showDialog(
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                                await showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
@@ -130,8 +132,6 @@ class _AccountSettingsDeleteState extends State<AccountSettingsDelete> {
                                             TextButton(
                                               child: const Text("Okay"),
                                               onPressed: () {
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
                                                 Navigator.of(context).pop();
                                               },
                                             )

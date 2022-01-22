@@ -261,7 +261,7 @@ class _SignUpState extends State<SignUp> {
                               Provider.of<Loading>(context, listen: false)
                                   .decrement();
                               FocusScope.of(context).unfocus();
-                              showDialog(
+                              await showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
@@ -274,12 +274,12 @@ class _SignUpState extends State<SignUp> {
                                             child: const Text("Okay"),
                                             onPressed: () {
                                               Navigator.of(context).pop();
-                                              Navigator.of(context).pop();
-                                              Navigator.of(context).pop();
                                             },
                                           )
                                         ]);
                                   });
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
                             }
                           }
                         },

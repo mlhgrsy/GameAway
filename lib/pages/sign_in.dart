@@ -115,6 +115,8 @@ class _SignInState extends State<SignIn> {
                               .signInWithMailAndPass(mail, pass)
                               .then((value) async {
                             if (value == null) {
+                              Provider.of<Loading>(context, listen: false)
+                                  .decrement();
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
