@@ -232,7 +232,7 @@ List<Widget> editableButtons(context, product, refreshFunc) {
                     builder: (_) => EditProduct(
                         product: product, refreshFunc: refreshFunc)));
           },
-          icon: const Icon(Icons.edit)),
+          icon: const Icon(Icons.edit,color: Colors.black,)),
     ),
     Positioned(
         top: 0,
@@ -244,7 +244,7 @@ List<Widget> editableButtons(context, product, refreshFunc) {
                   builder: (context) => DeleteProduct(
                       pid: product.pid, refreshFunc: refreshFunc));
             },
-            icon: const Icon(Icons.delete))),
+            icon: const Icon(Icons.delete,color: Colors.red,))),
   ];
 }
 

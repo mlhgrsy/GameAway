@@ -6,7 +6,9 @@ import 'package:gameaway/services/bottom_nav.dart';
 import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/loading.dart';
 import 'package:gameaway/services/util.dart';
+import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
+import 'package:gameaway/utils/styles.dart';
 import 'package:gameaway/views/action_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +62,10 @@ class _AddProductState extends State<AddProduct> {
           child: Column(
             children: [
               TextField(
-                decoration: const InputDecoration(hintText: "name"),
+                decoration: const InputDecoration(
+                    hintText: "name",
+                    border: OutlineInputBorder(),
+                    isDense: true),
                 onChanged: (value) {
                   name = value;
                 },
@@ -93,7 +98,10 @@ class _AddProductState extends State<AddProduct> {
               ),
               TextField(
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(hintText: "price"),
+                decoration: const InputDecoration(
+                    hintText: "price",
+                    border: OutlineInputBorder(),
+                    isDense: true),
                 onChanged: (value) {
                   try {
                     price = num.parse(value);
@@ -102,9 +110,13 @@ class _AddProductState extends State<AddProduct> {
                   }
                 },
               ),
+              const SizedBox(height: 10),
               TextField(
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(hintText: "stocks"),
+                decoration: const InputDecoration(
+                    hintText: "stocks",
+                    border: OutlineInputBorder(),
+                    isDense: true),
                 onChanged: (value) {
                   try {
                     stocks = num.parse(value);
@@ -113,6 +125,7 @@ class _AddProductState extends State<AddProduct> {
                   }
                 },
               ),
+              const SizedBox(height: 10),
               TextField(
                 maxLines: null,
                 minLines: 3,
@@ -123,35 +136,54 @@ class _AddProductState extends State<AddProduct> {
                   desc = value;
                 },
               ),
-              DropdownButton(
-                hint: const Text("Choose Category"),
-                isExpanded: true,
-                items: _categoryItems,
-                value: _currentCategory,
-                onChanged: (int? newValue) {
-                  setState(() {
-                    _currentCategory = newValue!;
-                    _currentTag = _tags[_currentCategory!][0];
-                  });
-                },
-              ),
-              Visibility(
-                visible: _currentCategory != null,
-                child: DropdownButton(
-                  hint: const Text("Choose Tag"),
-                  isExpanded: true,
-                  items: _currentCategory == null
-                      ? _tagItems[0]
-                      : _tagItems[_currentCategory!],
-                  value: _currentTag,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _currentTag = newValue!;
-                    });
-                  },
+              const SizedBox(height: 10),
+              InputDecorator(
+                decoration: const InputDecoration(border: OutlineInputBorder()),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                    isDense: true,
+                    hint: const Text("Choose Category"),
+                    isExpanded: true,
+                    items: _categoryItems,
+                    value: _currentCategory,
+                    onChanged: (int? newValue) {
+                      setState(() {
+                        _currentCategory = newValue!;
+                        _currentTag = _tags[_currentCategory!][0];
+                      });
+                    },
+                  ),
                 ),
               ),
+              const SizedBox(height: 10),
+              Visibility(
+                visible: _currentCategory != null,
+                child: InputDecorator(
+                  decoration:
+                      const InputDecoration(border: OutlineInputBorder()),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton(
+                      isDense: true,
+                      hint: const Text("Choose Tag"),
+                      isExpanded: true,
+                      items: _currentCategory == null
+                          ? _tagItems[0]
+                          : _tagItems[_currentCategory!],
+                      value: _currentTag,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _currentTag = newValue!;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
               OutlinedButton.icon(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith(
+                        (states) => AppColors.primaryBackground)),
                 onPressed: () async {
                   if (name == "" ||
                       desc == "" ||
@@ -209,8 +241,14 @@ class _AddProductState extends State<AddProduct> {
                     Navigator.of(context).pop();
                   }
                 },
-                icon: const Icon(Icons.add),
-                label: const Text("Add Product"),
+                icon: const Icon(
+                  Icons.add,
+                  color: AppColors.DarkTextColor,
+                ),
+                label: Text(
+                  "Add Product",
+                  style: kButtonDarkTextStyle,
+                ),
               )
             ],
           ),
