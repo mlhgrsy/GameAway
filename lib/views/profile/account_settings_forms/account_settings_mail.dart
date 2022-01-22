@@ -3,6 +3,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/auth.dart';
+import 'package:gameaway/services/loading.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
@@ -96,8 +97,11 @@ class _AccountSettingsMailState extends State<AccountSettingsMail> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () async {
+                                FocusScope.of(context).unfocus();
+                                Provider.of<Loading>(context, listen: false).increment();
                                 if (await _auth.updateMail(mail, pass) ==
                                     null) {
+                                  Provider.of<Loading>(context, listen: false).decrement();
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -116,8 +120,9 @@ class _AccountSettingsMailState extends State<AccountSettingsMail> {
                                             ]);
                                       });
                                 } else {
+                                  Provider.of<Loading>(context, listen: false).decrement();
                                   FocusScope.of(context).unfocus();
-                                  showDialog(
+                                  await showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
@@ -130,12 +135,12 @@ class _AccountSettingsMailState extends State<AccountSettingsMail> {
                                                 child: const Text("Okay"),
                                                 onPressed: () {
                                                   Navigator.of(context).pop();
-                                                  Navigator.of(context).pop();
-                                                  Navigator.of(context).pop();
                                                 },
                                               )
                                             ]);
                                       });
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
                                 }
                               },
                               style: ButtonStyle(

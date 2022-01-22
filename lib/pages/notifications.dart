@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:gameaway/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gameaway/services/db.dart';
-import 'package:gameaway/views/loading.dart';
+import 'package:gameaway/views/loading_indicator.dart';
 
 class notify extends StatefulWidget {
   const notify({Key? key}) : super(key: key);
@@ -45,7 +45,7 @@ class _notifyState extends State<notify> {
           StreamBuilder<QuerySnapshot>(
               stream: notify.snapshots(),
               builder: (context, AsyncSnapshot asyncSnapshot) {
-                if (!asyncSnapshot.hasData) return const Loading();
+                if (!asyncSnapshot.hasData) return const LoadingIndicator();
                 print(asyncSnapshot.data.docs);
                 List<DocumentSnapshot> listofnotify = asyncSnapshot.data.docs;
                 return Flexible(

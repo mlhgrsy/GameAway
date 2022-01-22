@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gameaway/services/auth.dart';
+import 'package:gameaway/services/loading.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
@@ -61,8 +62,10 @@ class _AccountSettingsNameState extends State<AccountSettingsName> {
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
+                  Provider.of<Loading>(context, listen: false).increment();
                   if (await _auth.updateName(name) == null) {
-                    showDialog(
+                    Provider.of<Loading>(context, listen: false).decrement();
+                    await showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
@@ -79,8 +82,9 @@ class _AccountSettingsNameState extends State<AccountSettingsName> {
                               ]);
                         });
                   } else {
+                    Provider.of<Loading>(context, listen: false).decrement();
                     FocusScope.of(context).unfocus();
-                    showDialog(
+                    await showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
@@ -91,11 +95,11 @@ class _AccountSettingsNameState extends State<AccountSettingsName> {
                                   child: const Text("Okay"),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    Navigator.of(context).pop();
                                   },
                                 )
                               ]);
                         });
+                    Navigator.of(context).pop();
                   }
                 }
               },

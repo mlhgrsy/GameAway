@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gameaway/services/loading.dart';
 import 'package:gameaway/utils/colors.dart';
 import 'package:gameaway/utils/dimensions.dart';
 import 'package:gameaway/utils/styles.dart';
@@ -108,7 +109,11 @@ class _SignInState extends State<SignIn> {
                       child: OutlinedButton(
                         onPressed: () {
                           _formKey.currentState!.save();
-                          auth.signInWithMailAndPass(mail, pass).then((value) {
+                          Provider.of<Loading>(context, listen: false)
+                              .increment();
+                          auth
+                              .signInWithMailAndPass(mail, pass)
+                              .then((value) async {
                             if (value == null) {
                               showDialog(
                                   context: context,
@@ -127,8 +132,9 @@ class _SignInState extends State<SignIn> {
                                         ]);
                                   });
                             } else {
-                              auth.signInWithMailAndPass(mail, pass);
                               Navigator.pop(context);
+                              Provider.of<Loading>(context, listen: false)
+                                  .decrement();
                             }
                           });
                         },
@@ -183,7 +189,11 @@ class _SignInState extends State<SignIn> {
                           flex: 1,
                           child: OutlinedButton(
                             onPressed: () async {
+                              Provider.of<Loading>(context, listen: false)
+                                  .increment();
                               await auth.signInWithGoogle();
+                              Provider.of<Loading>(context, listen: false)
+                                  .decrement();
                               Navigator.pop(context);
                               String? name =
                                   Provider.of<User?>(context, listen: false)!

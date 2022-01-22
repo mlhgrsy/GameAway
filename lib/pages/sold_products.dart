@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gameaway/services/db.dart';
 import 'package:gameaway/services/order.dart';
 import 'package:gameaway/views/action_bar.dart';
-import 'package:gameaway/views/loading.dart';
+import 'package:gameaway/views/loading_indicator.dart';
 import 'package:gameaway/views/order_record.dart';
 
 class SoldProducts extends StatefulWidget {
@@ -45,7 +45,7 @@ class _SoldProductsState extends State<SoldProducts> {
       FutureBuilder(
           future: getOrders(),
           builder: (context, AsyncSnapshot asyncSnapshot) {
-            if (!asyncSnapshot.hasData) return const Loading();
+            if (!asyncSnapshot.hasData) return const LoadingIndicator();
             List<Order> orders = asyncSnapshot.data;
             return Flexible(
               fit: FlexFit.loose,

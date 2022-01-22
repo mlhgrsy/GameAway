@@ -8,13 +8,14 @@ import 'package:gameaway/views/profile/profile_buttons/history_button.dart';
 import 'package:gameaway/views/profile/profile_buttons/notify_button.dart';
 import 'package:provider/provider.dart';
 
-import '../loading.dart';
+import '../loading_indicator.dart';
 
 class ProfileBody extends StatelessWidget {
   const ProfileBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if(Provider.of<User?>(context) == null) return Container();
     return Padding(
       padding: const EdgeInsets.fromLTRB(5, 20, 5, 20),
       child: StreamBuilder(
@@ -26,7 +27,7 @@ class ProfileBody extends StatelessWidget {
             String pp = Provider.of<User?>(context)!.photoURL!;
             String name = Provider.of<User?>(context)!.displayName!;
             String email = Provider.of<User?>(context)!.email!;
-            if (!snapshot.hasData) return const Loading();
+            if (!snapshot.hasData) return const LoadingIndicator();
             return Column(
               children: [
                 CircleAvatar(

@@ -62,6 +62,7 @@ class DBService {
   }
 
   static Future hasProvider(String uid) async {
+    if(uid == "") return null;
     return (await userCollection.doc(uid).get())["has_provider"];
   }
 
