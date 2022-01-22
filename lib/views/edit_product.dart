@@ -211,7 +211,6 @@ class _EditProductState extends State<EditProduct> {
                     if(oldprice> price) {
                       var x = await DBService.userCollection.get();
                       for(var i in x.docs){
-                        print("aaa   ${i.get("name")}");
                         db.addnotif_user("There is a great discount in product $name from \$$oldprice to \$$price", i);
                       }
 
