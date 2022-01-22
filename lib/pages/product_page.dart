@@ -53,7 +53,6 @@ class _ProductPage extends State<ProductPage> {
     _sellerID = (await sellerRef.get()).id;
 
     GeoPoint location = docSnap.get("location");
-    print("basladi");
     Address? address;
     try {
       address = await GeoCode(apiKey: "578947513342419599352x20694")
