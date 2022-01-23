@@ -95,7 +95,7 @@ class _BasketPageState extends State<BasketPage> {
                                         color: AppColors.secondary,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  leading: SizedBox(width: 100,child: Image.network(products[index].url)),
+                                  leading: SizedBox(width: 50,child: Image.network(products[index].url)),
                                   subtitle: Text(
                                     '\$ ${products[index].price}',
                                     style: const TextStyle(

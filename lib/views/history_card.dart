@@ -98,21 +98,18 @@ class _HistoryCardState extends State<HistoryCard> {
                   panelController.toggle();
                 });
               },
-              title: Column(
-                children: [
-                  Text(
-                    widget.order.productName,
-                    maxLines: 2,
-                    style: const TextStyle(
-                      color: AppColors.secondary,
-                      fontWeight: FontWeight.bold,
-                      overflow: TextOverflow.ellipsis,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
+              title: Text(
+                widget.order.productName,
+                maxLines: 2,
+                style: const TextStyle(
+                  color: AppColors.secondary,
+                  fontWeight: FontWeight.bold,
+                  overflow: TextOverflow.ellipsis,
+                  fontSize: 20,
+                ),
               ),
-              leading: Image.network(widget.order.url),
+              leading:
+                  SizedBox(width: 50, child: Image.network(widget.order.url)),
               trailing: Text(
                 '\$ ${widget.order.price}',
                 style: kButtonLightTextStyle,
