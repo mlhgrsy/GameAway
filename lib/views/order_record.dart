@@ -24,7 +24,7 @@ class OrderRecord extends StatelessWidget {
               ),
             ],
           ),
-          leading: Image.network(order.url),
+          leading: SizedBox(width: 50, child: Image.network(order.url)),
           trailing: Text('\$ ${order.price}'),
         ),
       ),
