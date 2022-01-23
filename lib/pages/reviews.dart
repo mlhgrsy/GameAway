@@ -24,7 +24,6 @@ class Reviews extends StatefulWidget {
 
 class _ReviewsState extends State<Reviews> {
   DBService db = DBService();
-  String? _sellerID;
   String productName = "";
   List<String> usernames = [];
 
@@ -58,9 +57,15 @@ class _ReviewsState extends State<Reviews> {
             if (!snapshot.hasData) {
               return const Center(child: Icon(Icons.hourglass_full));
             }
-            var _reviewList =
+            var _reviewList = snapshot.data;
+            var _reviewListFiltered =
                 snapshot.data.where((e) => e["approved"] == true).toList();
-            if (_reviewList.isEmpty) {
+            if (_reviewList.isEmpty ||
+                (Provider.of<User?>(context) == null &&
+                    _reviewListFiltered.isEmpty) ||
+                (Provider.of<User?>(context) != null &&
+                        seller != Provider.of<User?>(context)!.uid) &&
+                    _reviewListFiltered.isEmpty) {
               return const Center(
                 child: Text("There are no reviews for this product"),
               );
