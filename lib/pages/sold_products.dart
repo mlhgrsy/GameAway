@@ -45,7 +45,11 @@ class _SoldProductsState extends State<SoldProducts> {
       FutureBuilder(
           future: getOrders(),
           builder: (context, AsyncSnapshot asyncSnapshot) {
-            if (!asyncSnapshot.hasData) return const LoadingIndicator();
+            if (!asyncSnapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
             List<Order> orders = asyncSnapshot.data;
             return Flexible(
               fit: FlexFit.loose,
