@@ -65,23 +65,25 @@ class _ProductPreviewState extends State<ProductPreview> {
                           width: 150,
                           padding: Dimen.smallPadding,
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Image.network(
                                 widget.product.url,
                                 height: 150,
                                 width: 75,
                               ),
-                              SizedBox(
-                                height: 30,
-                                child: Text(
-                                  widget.product.productName,
-                                  style: kSmallTitle,
-                                ),
+                              Text(
+                                widget.product.productName,
+                                style: kSmallTitle,
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                               Text(
                                 widget.product.seller,
                                 style: kSmallText,
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(
                                 height: 20,
