@@ -66,7 +66,7 @@ class _StockEditorState extends State<StockEditor> {
                         },
                         icon: const Icon(Icons.remove)),
                     SizedBox(
-                      width: 50,
+                      width: 70,
                       child: TextField(
                         controller: TextEditingController(text: "$count"),
                         keyboardType: TextInputType.number,

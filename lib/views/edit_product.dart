@@ -30,9 +30,9 @@ class _EditProductState extends State<EditProduct> {
   String desc = "";
   File? productPicture;
   int? _currentCategory;
-  String _currentTag = "All";
+  String _currentTag = "Others";
   static final _categories = Util.categories;
-  static final _tags = Util.tags;
+  static final _tags = Util.tagsEditable;
   static final _categoryItems = _categories
       .asMap()
       .entries

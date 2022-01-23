@@ -49,7 +49,8 @@ class _SellerPageState extends State<SellerPage> {
           url: doc['picture'],
           rating: productRating);
     }).toList();
-    sellerRating = Util.avg(sellerRatings);
+    var sellerRatingsFiltered = sellerRatings.where((e) => e != 0).toList();
+    sellerRating = Util.avg(sellerRatingsFiltered);
     setState(() {
       _onSaleProducts = _onSaleProductsTemp;
     });

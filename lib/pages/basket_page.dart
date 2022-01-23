@@ -86,17 +86,16 @@ class _BasketPageState extends State<BasketPage> {
                             child: Card(
                               child: ListTile(
                                   onTap: () {},
-                                  title: Column(
-                                    children: [
-                                      Text(
-                                        products[index].productName,
-                                        style: const TextStyle(
-                                            color: AppColors.secondary,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
+                                  title: Text(
+                                    products[index].productName,
+                                    textAlign: TextAlign.start,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    style: const TextStyle(
+                                        color: AppColors.secondary,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  leading: Image.network(products[index].url),
+                                  leading: SizedBox(width: 50,child: Image.network(products[index].url)),
                                   subtitle: Text(
                                     '\$ ${products[index].price}',
                                     style: const TextStyle(

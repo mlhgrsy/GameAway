@@ -24,7 +24,6 @@ class Reviews extends StatefulWidget {
 
 class _ReviewsState extends State<Reviews> {
   DBService db = DBService();
-  String? _sellerID;
   String productName = "";
   List<String> usernames = [];
 
@@ -32,7 +31,8 @@ class _ReviewsState extends State<Reviews> {
 
   Future<List<dynamic>> getReviews() async {
     var reviews =
-        (await DBService.productCollection.doc(widget.productID).get()).get("reviews");
+        (await DBService.productCollection.doc(widget.productID).get())
+            .get("reviews");
     seller = (await DBService.productCollection.doc(widget.productID).get())
         .get("seller")
         .id;
@@ -57,17 +57,24 @@ class _ReviewsState extends State<Reviews> {
             if (!snapshot.hasData) {
               return const Center(child: Icon(Icons.hourglass_full));
             }
-            var _reviewlist = snapshot.data;
-            if (_reviewlist.isEmpty) {
+            var _reviewList = snapshot.data;
+            var _reviewListFiltered =
+                snapshot.data.where((e) => e["approved"] == true).toList();
+            if (_reviewList.isEmpty ||
+                (Provider.of<User?>(context) == null &&
+                    _reviewListFiltered.isEmpty) ||
+                (Provider.of<User?>(context) != null &&
+                        seller != Provider.of<User?>(context)!.uid) &&
+                    _reviewListFiltered.isEmpty) {
               return const Center(
                 child: Text("There are no reviews for this product"),
               );
             }
             return ListView.builder(
               scrollDirection: Axis.vertical,
-              itemCount: _reviewlist.length,
+              itemCount: _reviewList.length,
               itemBuilder: (context, index) {
-                bool state = _reviewlist[index]["approved"];
+                bool state = _reviewList[index]["approved"];
                 if (state == false &&
                     (((Provider.of<User?>(context) != null &&
                             (!(Provider.of<User?>(context)!.uid == seller)) ||
@@ -86,7 +93,7 @@ class _ReviewsState extends State<Reviews> {
                             children: [
                               RatingBarIndicator(
                                 rating:
-                                    (_reviewlist[index]["rating"]).toDouble(),
+                                    (_reviewList[index]["rating"]).toDouble(),
                                 itemBuilder: (context, index) => const Icon(
                                   Icons.star,
                                   color: Colors.amber,
@@ -106,23 +113,23 @@ class _ReviewsState extends State<Reviews> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Switch(
-                                        value: _reviewlist[index]["approved"],
+                                        value: _reviewList[index]["approved"],
                                         onChanged: (bool s) async {
                                           print(s);
                                           var new_review =
-                                              Map.from(_reviewlist[index]);
+                                              Map.from(_reviewList[index]);
                                           print(
-                                              "reviewlist ${_reviewlist[index]}");
+                                              "reviewlist ${_reviewList[index]}");
                                           print("newreviewold $new_review ");
                                           new_review["approved"] = s;
                                           print("newreviewlater $new_review ");
                                           print(
-                                              "reviewlistlater ${_reviewlist[index]}");
+                                              "reviewlistlater ${_reviewList[index]}");
                                           await DBService.productCollection
                                               .doc(widget.productID)
                                               .update({
                                             "reviews": FieldValue.arrayRemove(
-                                                [_reviewlist[index]])
+                                                [_reviewList[index]])
                                           });
                                           await DBService.productCollection
                                               .doc(widget.productID)
@@ -139,7 +146,7 @@ class _ReviewsState extends State<Reviews> {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            (_reviewlist[index]["comment"]),
+                            (_reviewList[index]["comment"]),
                             style: kProfileMailText,
                           ),
                         ],

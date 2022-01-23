@@ -121,6 +121,7 @@ class _AccountSettingsDeleteState extends State<AccountSettingsDelete> {
                                 FocusScope.of(context).unfocus();
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
+                                await DBService.deleteAccount(uid);
                                 await showDialog(
                                     context: context,
                                     builder: (BuildContext context) {

@@ -276,56 +276,68 @@ class _ProductPage extends State<ProductPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          children: [
-                            Text(
-                              "Seller:",
-                              style: kButtonLightTextStyle,
-                            ),
-                            isSellerActive
-                                ? OutlinedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) => SellerPage(
-                                                  sellerID: _sellerID!)));
-                                    },
-                                    child: Text(
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            children: [
+                              Text(
+                                "Seller:",
+                                style: kButtonLightTextStyle,
+                              ),
+                              isSellerActive
+                                  ? TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SellerPage(
+                                                        sellerID: _sellerID!)));
+                                      },
+                                      child: Text(
+                                        _product.seller,
+                                        style: const TextStyle(
+                                            color: AppColors.secondary,
+                                            fontSize: 18),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    )
+                                  : Text(
                                       _product.seller,
                                       style: const TextStyle(
                                           color: AppColors.secondary,
                                           fontSize: 18),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                  )
-                                : Text(
-                                    _product.seller,
-                                    style: const TextStyle(
-                                        color: AppColors.secondary,
-                                        fontSize: 18),
-                                  ),
-                          ],
+                            ],
+                          ),
                         ),
-                        Column(children: [
-                          buyWidget(context, widget.productID, _product.stocks),
-                          OutlinedButton.icon(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => Reviews(
-                                              productID: widget.productID,
-                                            )));
-                              },
-                              icon: const Icon(
-                                Icons.comment,
-                                color: AppColors.secondary,
-                              ),
-                              label: const Text(
-                                "See Reviews",
-                                style: TextStyle(
-                                    color: AppColors.secondary, fontSize: 18),
-                              )),
-                        ])
+                        Expanded(
+                          flex: 1,
+                          child: Column(children: [
+                            buyWidget(
+                                context, widget.productID, _product.stocks),
+                            OutlinedButton.icon(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => Reviews(
+                                                productID: widget.productID,
+                                              )));
+                                },
+                                icon: const Icon(
+                                  Icons.comment,
+                                  color: AppColors.secondary,
+                                ),
+                                label: const Text(
+                                  "See Reviews",
+                                  style: TextStyle(
+                                      color: AppColors.secondary, fontSize: 18),
+                                )),
+                          ]),
+                        )
                       ],
                     ),
                   ),
