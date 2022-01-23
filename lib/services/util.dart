@@ -48,6 +48,22 @@ class Util {
     <String>['All', 'Ranking', 'Achievement', 'Level', "Others"]
   ];
 
+  static final tagsEditable = [
+    <String>['Horror', 'RPG', 'Shooter', "Sandbox", "Open World", "Others"],
+    <String>[
+      'Abstract',
+      'Area Control',
+      'Campaign',
+      "Deckbuilder",
+      "Drafting",
+      "Dungeon-crawler",
+      "Others"
+    ],
+    <String>["PC", "XBOX", "PlayStation", "Nintendo", "Atari", "Others"],
+    <String>['Steam', 'Epic Games', 'Uplay', "Battle.net", "Origin", "Others"],
+    <String>['Ranking', 'Achievement', 'Level', "Others"]
+  ];
+
   static final sortTypes = ["name", "rating", "price"];
   static final sortFuncs = <String, Map<bool, int Function(Product, Product)>>{
     "name": {

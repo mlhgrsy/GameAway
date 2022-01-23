@@ -32,7 +32,7 @@ class _AddProductState extends State<AddProduct> {
   int? _currentCategory;
   String _currentTag = "All";
   static final _categories = Util.categories;
-  static final _tags = Util.tags;
+  static final _tags = Util.tagsEditable;
   static final _categoryItems = _categories
       .asMap()
       .entries
