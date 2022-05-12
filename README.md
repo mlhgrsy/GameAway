@@ -1,12 +1,20 @@
 # gameaway
 
 An E-Commerce App for Gaming (Ahmet Berk TAŞ, Murat KARACA, Melih GÜRSOY, Emre Can EŞKİ)
-![image](https://user-images.githubusercontent.com/91908079/168070340-21aa5d1e-76c8-410e-b3a0-35414198f4ac.png)
-![image](https://user-images.githubusercontent.com/91908079/168070363-0de7aa55-7591-4ee6-bb96-54d498837e2e.png)
-![image](https://user-images.githubusercontent.com/91908079/168070374-ceba17da-e4a8-4b0d-9866-49aec3e2541b.png)
-![image](https://user-images.githubusercontent.com/91908079/168070383-18439f3e-0a4c-497d-9866-85e01aa00585.png)
-![image](https://user-images.githubusercontent.com/91908079/168070394-47c3afab-a811-4e07-b8ba-e9ae12d1ba8f.png)
-![image](https://user-images.githubusercontent.com/91908079/168070406-cb3e3c68-4a0c-4808-95fb-d3c31df2dfb6.png)
-![image](https://user-images.githubusercontent.com/91908079/168070421-780630a3-cc5a-4644-8639-860122ad779b.png)
-![image](https://user-images.githubusercontent.com/91908079/168070432-037ba29f-5394-47ea-9a11-e0c420f618d8.png)
-![image](https://user-images.githubusercontent.com/91908079/168070447-c5d1e1b6-e7cc-48ed-9443-b91f20628554.png)
+<p float="left">
+  <img src="https://user-images.githubusercontent.com/63806963/151192944-a48dd2d9-9025-41d4-b40e-809c1f87087e.jpeg" width="200" />
+  <img src="https://user-images.githubusercontent.com/63806963/151192943-d4c81849-7df7-46f8-8f74-9d5bd5d79b00.jpeg" width="200" /> 
+  <img src="https://user-images.githubusercontent.com/63806963/151192941-a68493fd-c762-4ac4-9f62-956bba1cf4a8.jpeg" width="200" />
+</p>
+
+<p float="left">
+  <img src="https://user-images.githubusercontent.com/63806963/151192940-2ada9880-bd22-4b3d-878d-0579dbbf9a54.jpeg" width="200" />
+  <img src="https://user-images.githubusercontent.com/63806963/151192937-0f51e4cd-9186-4af2-a5f9-cabcce431c86.jpeg" width="200" /> 
+  <img src="https://user-images.githubusercontent.com/63806963/151192934-b2afd321-4151-476c-a2e0-26704c148431.jpeg" width="200" />
+</p>
+
+<p float="left">
+  <img src="https://user-images.githubusercontent.com/63806963/151192930-805887f4-5766-43a7-808a-7070b258ca80.jpeg" width="200" />
+  <img src="https://user-images.githubusercontent.com/63806963/151192920-1dfa7064-ce9d-4ec9-977c-171d5b272fe1.jpeg" width="200" /> 
+  <img src="https://user-images.githubusercontent.com/63806963/151192949-fcf502c8-79d9-477e-937c-60d17146ac19.jpeg" width="200" />
+</p>
